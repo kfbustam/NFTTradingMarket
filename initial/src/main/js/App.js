@@ -1,22 +1,15 @@
+import SignIn from './SignIn';
+
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-class App extends React.Component {
+function App() {
 
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
-	componentDidMount() {
-
-	}
-
-	render() {
-		return (
-      <div>TEST</div>
-		)
-	}
+	return (
+		<div id="landingPage">
+			<SignIn />
+		</div>
+	)
 }
 
 ReactDOM.render(
