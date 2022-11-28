@@ -1,2 +1,5 @@
 .vscode
 initial/node_modules
+initial/yarn.lock
+initial/package-lock.json
+initial/target/classes/static/built/bundle.js
