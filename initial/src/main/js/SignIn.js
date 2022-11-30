@@ -14,14 +14,25 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { GoogleLogin } from 'react-google-login';
 import Copyright from './Copyright';
+import { gapi } from 'gapi-script';
 
 const CLIENT_ID = "104101427642-9kkv6e3v2hk1rd01k96nqk1pmgu81vpe.apps.googleusercontent.com"
 const SIGN_IN_URL = "http://localhost:8080/signin"
 const theme = createTheme();
 
-export default function SignIn({setData}) {
+export default function SignIn({setProfileData}) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState()
+
+  useEffect(() => {
+    const initClient = () => {
+          gapi.client.init({
+          clientId: CLIENT_ID,
+          scope: ''
+        });
+     };
+     gapi.load('client:auth2', initClient);
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -45,7 +56,7 @@ export default function SignIn({setData}) {
       throw response
     })
     .then(data => {
-      setData(data)
+      setProfileData(data)
     })
     .catch(error => {
       console.error(error)
@@ -57,6 +68,7 @@ export default function SignIn({setData}) {
 	const responseGoogleSuccess = (response) => {
 		console.log("Successful");
     console.log(response);
+    setProfileData(response);
 	}
 	const responseGoogleFailure = (response) => {
 		console.log("Failure");
@@ -118,6 +130,7 @@ export default function SignIn({setData}) {
             onSuccess={responseGoogleSuccess}
             onFailure={responseGoogleFailure}
             cookiePolicy={'single_host_origin'}
+            isSignedIn={true}
           />
           <Grid container>
             <Grid item xs>
