@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -9,14 +9,13 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import PersonIcon from '@mui/icons-material/Person';
 import MenuItems from './MenuItems';
-import StickyFooter from '../StickyFooter';
+import StickyFooter from './StickyFooter';
+import UserMenu from './UserMenu';
 
 const drawerWidth = 240;
 
@@ -66,12 +65,21 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-function DashboardContent() {
-  const [open, setOpen] = React.useState(true)
-  const [selectedMenuItem, setSelectedMenuItem] = React.useState("dashboard")
+export default function Dashboard() {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleUserIconClick = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleUserMenuClose = () => {
+    setAnchorEl(null);
+  }
+
+  const [open, setOpen] = useState(true)
+  const [selectedMenuItem, setSelectedMenuItem] = useState("dashboard")
   const toggleDrawer = () => {
     setOpen(!open)
-  };
+  }
+
   let content;
   if (selectedMenuItem == "dashboard") {
     content = <>DASHBOARD CONTENT</>
@@ -118,11 +126,10 @@ function DashboardContent() {
             >
               Dashboard
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
+            <IconButton color="inherit" onClick={handleUserIconClick}>
+              <PersonIcon />
             </IconButton>
+            <UserMenu anchorEl={anchorEl} handleClose={handleUserMenuClose} isOpen={anchorEl != null} />
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -166,8 +173,4 @@ function DashboardContent() {
       <StickyFooter />
     </ThemeProvider>
   );
-}
-
-export default function Dashboard() {
-  return <DashboardContent />;
 }
