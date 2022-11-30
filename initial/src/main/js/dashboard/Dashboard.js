@@ -16,6 +16,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import MenuItems from './MenuItems';
 import StickyFooter from './StickyFooter';
 import UserMenu from './UserMenu';
+import Wallet from '../wallet/Wallet';
 
 const drawerWidth = 240;
 
@@ -84,7 +85,7 @@ export default function Dashboard() {
   if (selectedMenuItem == "dashboard") {
     content = <>DASHBOARD CONTENT</>
   } else if (selectedMenuItem == "wallet") {
-    content = <>WALLET CONTENT</>
+    content = <Wallet></Wallet>
   } else if (selectedMenuItem == "cryptocurrencies") {
     content = <>CRYPTOCURRENCIES CONTENT</>
   } else if (selectedMenuItem == "nfts") {
