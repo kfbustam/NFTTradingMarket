@@ -38,8 +38,13 @@ export default function SignIn() {
       password: data.get('password'),
     });
   };
-	const responseGoogle = (response) => {
-		console.log(response);
+	const responseGoogleSuccess = (response) => {
+		console.log("Successful");
+    console.log(response);
+	}
+	const responseGoogleFailure = (response) => {
+		console.log("Failure");
+    console.log(response);
 	}
   return (
     <ThemeProvider theme={theme}>
@@ -95,8 +100,8 @@ export default function SignIn() {
             <GoogleLogin
               clientId="104101427642-9kkv6e3v2hk1rd01k96nqk1pmgu81vpe.apps.googleusercontent.com"
               buttonText="Sign in with Google"
-              onSuccess={responseGoogle}
-              onFailure={responseGoogle}
+              onSuccess={responseGoogleSuccess}
+              onFailure={responseGoogleFailure}
               cookiePolicy={'single_host_origin'}
             />
             <Grid container>
