@@ -60,6 +60,7 @@ export default function SignIn({setProfileData}) {
     })
     .catch(error => {
       console.error(error)
+      setProfileData(null)
       setError(error)
     }).finally(() => {
       setLoading(false)
