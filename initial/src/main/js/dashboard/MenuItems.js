@@ -38,7 +38,7 @@ export default function MenuItems({selected, setSelected}) {
         </ListItemIcon>
         <ListItemText primary="NFTs" />
       </ListItemButton>
-      <ListItemButton onClick={(e) => setSelected("balences")} selected={selected == "balences"}>
+      <ListItemButton onClick={(e) => setSelected("balances")} selected={selected == "balances"}>
         <ListItemIcon>
           <LayersIcon />
         </ListItemIcon>
