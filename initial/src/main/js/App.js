@@ -1,4 +1,4 @@
-import SignIn from './SignIn';
+import LandingPage from './LandingPage';
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -7,7 +7,7 @@ function App() {
 
 	return (
 		<div id="landingPage">
-			<SignIn />
+			<LandingPage />
 		</div>
 	)
 }
