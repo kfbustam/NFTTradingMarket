@@ -6,14 +6,14 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 const theme = createTheme();
 
 export default function LandingPage() {
-  const [data, setData] = useState({sessionToken: 'asdasd'})
+  const [profileData, setProfileData] = useState(null)
 
   return (
     <ThemeProvider theme={theme}>
       {
-        data != null && data.sessionToken != null
-        ? <Dashboard /> 
-        : <SignIn setData={setData}/>
+        profileData != null && profileData.profileObj != null
+        ? <Dashboard profileData={profileData.profileObj}/> 
+        : <SignIn setProfileData={setProfileData}/>
       }
     </ThemeProvider>
   );

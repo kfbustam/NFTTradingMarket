@@ -13,6 +13,7 @@ import Container from '@mui/material/Container';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import PersonIcon from '@mui/icons-material/Person';
+import Avatar from '@mui/material/Avatar';
 import MenuItems from './MenuItems';
 import StickyFooter from './StickyFooter';
 import UserMenu from './UserMenu';
@@ -66,7 +67,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-export default function Dashboard() {
+export default function Dashboard({profileData}) {
   const [anchorEl, setAnchorEl] = useState(null);
   const handleUserIconClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -95,7 +96,7 @@ export default function Dashboard() {
   } else {
     content = <>DASHBOARD CONTENT</>
   }
-  
+
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -128,9 +129,9 @@ export default function Dashboard() {
               Dashboard
             </Typography>
             <IconButton color="inherit" onClick={handleUserIconClick}>
-              <PersonIcon />
+              { profileData.imageUrl != null ? <Avatar alt="Cindy Baker" src={profileData.imageUrl} /> : <PersonIcon />}
             </IconButton>
-            <UserMenu anchorEl={anchorEl} handleClose={handleUserMenuClose} isOpen={anchorEl != null} />
+            <UserMenu anchorEl={anchorEl} handleClose={handleUserMenuClose} isOpen={anchorEl != null} profileData={profileData}/>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>

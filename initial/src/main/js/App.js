@@ -1,18 +1,12 @@
 import LandingPage from './LandingPage';
+import * as ReactDOMClient from 'react-dom/client';
 
 const React = require('react');
-const ReactDOM = require('react-dom');
 
-function App() {
+const container = document.getElementById('react');
 
-	return (
-		<div id="landingPage">
-			<LandingPage />
-		</div>
-	)
-}
+// Create a root.
+const root = ReactDOMClient.createRoot(container);
 
-ReactDOM.render(
-	<App />,
-	document.getElementById('react')
-)
+// Initial render: Render an element to the root.
+root.render(<LandingPage />);

@@ -12,7 +12,8 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 
-export default function AccountMenu({anchorEl, handleClose, isOpen}) {
+export default function AccountMenu({anchorEl, handleClose, isOpen, profileData}) {
+  const {name, imageUrl, givenName, familyName, email} = profileData;
   return (
     <Menu
     anchorEl={anchorEl}
