@@ -16,7 +16,7 @@ export default function LandingPage() {
         isSigningUp ? <SignUp setIsSigningUp={setIsSigningUp}/> 
         : (
           profileData != null && profileData.profileObj != null
-            ? <Dashboard profileData={profileData.profileObj}/> 
+            ? <Dashboard profileData={profileData.profileObj} setProfileData={setProfileData} setIsSigningUp={setIsSigningUp}/> 
             : <SignIn setProfileData={setProfileData} setIsSigningUp={setIsSigningUp}/>
         )
       }

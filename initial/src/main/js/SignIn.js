@@ -133,7 +133,6 @@ export default function SignIn({setProfileData, setIsSigningUp}) {
                 onSuccess={responseGoogleSuccess}
                 onFailure={responseGoogleFailure}
                 cookiePolicy={'single_host_origin'}
-                isSignedIn={true}
                 style={{display: "flex", flexDirection: "row", justifyContent: "center"}}
               />
             </Grid>
