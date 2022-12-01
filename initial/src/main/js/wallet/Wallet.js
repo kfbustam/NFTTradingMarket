@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import CryptoCard from './CryptoCard';
+import Button from '@mui/material/Button';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -22,7 +23,12 @@ export default function Wallet() {
     };
   return (
     <div>
-        <h2>My NFT Collection</h2>
+
+        <div>
+            <h2>My NFT Collection</h2>
+
+            <Button variant="contained">Create NFT</Button>
+        </div>
         <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
             {Array.from(Array(6)).map((_, index) => (
