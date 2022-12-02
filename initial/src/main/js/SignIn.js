@@ -11,16 +11,15 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 import { GoogleLogin } from 'react-google-login';
 import Copyright from './Copyright';
 import { gapi } from 'gapi-script';
 
 const CLIENT_ID = "104101427642-9kkv6e3v2hk1rd01k96nqk1pmgu81vpe.apps.googleusercontent.com"
 const SIGN_IN_URL = "http://localhost:8080/signin"
-const theme = createTheme();
 
-export default function SignIn({setProfileData}) {
+export default function SignIn({setProfileData, setIsSigningUp}) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState()
 
@@ -117,22 +116,27 @@ export default function SignIn({setProfileData}) {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Sign In
-          </Button>
-          <GoogleLogin
-            clientId={CLIENT_ID}
-            buttonText="Sign in with Google"
-            onSuccess={responseGoogleSuccess}
-            onFailure={responseGoogleFailure}
-            cookiePolicy={'single_host_origin'}
-            isSignedIn={true}
-          />
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <Button
+                type="submit"
+                variant="contained"
+                style={{width: 180, height: 41}}
+              >
+                Sign In
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <GoogleLogin
+                clientId={CLIENT_ID}
+                buttonText="Sign in with Google"
+                onSuccess={responseGoogleSuccess}
+                onFailure={responseGoogleFailure}
+                cookiePolicy={'single_host_origin'}
+                style={{display: "flex", flexDirection: "row", justifyContent: "center"}}
+              />
+            </Grid>
+          </Grid>
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
@@ -140,7 +144,7 @@ export default function SignIn({setProfileData}) {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="#" variant="body2" onClick={() => setIsSigningUp(true)}>
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

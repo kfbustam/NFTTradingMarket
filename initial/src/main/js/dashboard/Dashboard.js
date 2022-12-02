@@ -67,7 +67,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-export default function Dashboard({profileData}) {
+export default function Dashboard({profileData, setProfileData, setIsSigningUp}) {
   const [anchorEl, setAnchorEl] = useState(null);
   const handleUserIconClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -131,7 +131,7 @@ export default function Dashboard({profileData}) {
             <IconButton color="inherit" onClick={handleUserIconClick}>
               { profileData.imageUrl != null ? <Avatar alt="Cindy Baker" src={profileData.imageUrl} /> : <PersonIcon />}
             </IconButton>
-            <UserMenu anchorEl={anchorEl} handleClose={handleUserMenuClose} isOpen={anchorEl != null} profileData={profileData}/>
+            <UserMenu anchorEl={anchorEl} handleClose={handleUserMenuClose} isOpen={anchorEl != null} profileData={profileData} setProfileData={setProfileData} setIsSigningUp={setIsSigningUp}/>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
