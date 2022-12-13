@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-const SIGN_UP_URL = "http://localhost:8080/signup"
+const SIGN_UP_URL = "http://localhost:8080/test"
 
 function Copyright(props) {
   return (
@@ -72,9 +72,7 @@ export default function SignUp({setIsSigningUp}) {
       console.error(error)
       setProfileData(null)
       setError(error)
-    }).finally(() => {
-      setLoading(false)
-    });
+    }).finally(() => {});
   };
 
   return (
