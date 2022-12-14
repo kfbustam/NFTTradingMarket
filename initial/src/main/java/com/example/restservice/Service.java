@@ -72,6 +72,9 @@ public class Service {
 
     public void moveNFT(Wallet toWallet, NFT nft) {
         nft.setWallet(toWallet);
+        nft.setListing(null);
+        nft.setLastRecordedTime(new Date());
+        nft.setSmartContractAddress(UUID.randomUUID().toString());
         nftRepository.save(nft);
     }
 
@@ -163,8 +166,8 @@ public class Service {
         return wallet;
     }
 
-    public void updateUserWalletBalance(Wallet wallet, Long newBalance) {
-        wallet.setCryptoBalance(new BigDecimal(newBalance));
+    public void updateUserWalletBalance(Wallet wallet, BigDecimal newBalance) {
+        wallet.setCryptoBalance(newBalance);
         walletRepository.saveAndFlush(wallet);
     }
 

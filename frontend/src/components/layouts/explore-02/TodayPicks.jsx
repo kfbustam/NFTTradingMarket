@@ -9,9 +9,9 @@ import Countdown from "react-countdown";
 import { Link, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 
-const IMAGE_BASE_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/images?image_name="
-const BUY_NOW_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft/buy"
-const PLACE_BID_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft/auction/offer"
+const IMAGE_BASE_URL = process.env.REACT_APP_API_URL + "/images?image_name="
+const BUY_NOW_URL = process.env.REACT_APP_API_URL + "/nft/buy"
+const PLACE_BID_URL = process.env.REACT_APP_API_URL + "/nft/auction/offer"
 
 const TodayPicks = ({ dataPanel }) => {
     const [itemShown, setItemShown] = useState();

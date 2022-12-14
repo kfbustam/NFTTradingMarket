@@ -37,7 +37,7 @@ Go to the directory "NFTTradingMarket/frontend" and run the following command to
 
 then start the frontend react server by running in that same directory:
 
-"npm run start"
+"npm run start:production"
 
 ==============
 

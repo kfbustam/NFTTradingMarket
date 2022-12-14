@@ -5,6 +5,8 @@ import com.example.restservice.crypto.CryptoType;
 import com.example.restservice.nft.NFT;
 import com.example.restservice.nft.NftCategory;
 import com.example.restservice.nft.NftService;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,23 +21,16 @@ import org.springframework.context.MessageSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
-import javax.activation.FileTypeMap;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.io.StringWriter;
-import java.io.PrintWriter;
 import java.util.stream.Collectors;
 
 /**
@@ -50,7 +45,7 @@ public class NFTTradingMarketRESTController {
 	 * The App url.
 	 */
 	public String appURL = "http://Cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com";
-	public String frontendUrl = "https://surfacery.com";
+	public String frontendUrl = "http://surfacery.com";
 
     @Autowired
     private Service service;
@@ -65,12 +60,20 @@ public class NFTTradingMarketRESTController {
     private JavaMailSender mailSender;
 
 	@GetMapping("images")
-	public ResponseEntity<byte[]> getImage(
+	@Cacheable(value = "images", key = "{ #image_name }")
+	public ResponseEntity<InputStreamResource> getImage(
 			@RequestParam(name="image_name", required=true) @NotNull String image_name
 	) throws IOException {
-		File img = new File("tmp/" + image_name);
-		return ResponseEntity.ok().contentType(MediaType.valueOf(FileTypeMap.getDefaultFileTypeMap().getContentType(img)))
-				.body(Files.readAllBytes(img.toPath()));
+		InputStream inputStream = nftService.getNftImage(image_name);
+		var jpg = Optional.ofNullable(image_name)
+				.filter(f -> f.contains("."))
+				.map(f -> f.substring(image_name.lastIndexOf(".") + 1));
+		MediaType contentType = jpg.isPresent() ? MediaType.IMAGE_JPEG : MediaType.IMAGE_PNG;
+
+		return ResponseEntity.ok()
+				.contentType(contentType)
+				.body(new InputStreamResource(inputStream));
+
 	}
 
 	/**
@@ -495,12 +498,12 @@ public class NFTTradingMarketRESTController {
 					.get(0).getId();
 
 			// get user's wallet ID based on email and NFT Type
-            StringBuilder fileNames = new StringBuilder();
-            Path fileNameAndPath = Paths.get("tmp", file.getOriginalFilename());
-            fileNames.append(file.getOriginalFilename());
-            Files.write(fileNameAndPath, file.getBytes());
+//            StringBuilder fileNames = new StringBuilder();
+//            Path fileNameAndPath = Paths.get("static/tmp", file.getOriginalFilename());
+//            fileNames.append(file.getOriginalFilename());
+//            Files.write(fileNameAndPath, file.getBytes());
 
-            NFT nft = nftService.createNft(fileNameAndPath.getFileName(), type, walletId, name, description, NftCategory.Anime);
+            NFT nft = nftService.createNft(file, type, walletId, name, description, NftCategory.Anime);
 
             JSONObject json = new JSONObject()
                     .put("name", nft.getName())
@@ -734,17 +737,17 @@ public class NFTTradingMarketRESTController {
 			BigDecimal balance = buyerWallet.getCryptoBalance();
 
 			assert nft.getListing() != null;
-			if (balance.longValue() < nft.getListing().getListingPrice().longValue()) {
+			if (balance.compareTo(nft.getListing().getListingPrice()) < 0) {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"You do not have enough of this currency to proceed with this transaction.\"}}", HttpStatus.BAD_REQUEST);
 			}
 
-			service.updateUserWalletBalance(buyerWallet, balance.longValue()-nft.getListing().getListingPrice().longValue());
+			service.updateUserWalletBalance(buyerWallet, balance.subtract(nft.getListing().getListingPrice()));
 
-			service.updateUserWalletBalance(sellerWallet, balance.longValue()+nft.getListing().getListingPrice().longValue());
+			service.updateUserWalletBalance(sellerWallet, balance.add(nft.getListing().getListingPrice()));
 
 			service.deleteListingForNFT(nft);
 
-			service.createNftTrancsaction(buyer, seller, nft, nft.getNftType(),new Date(), nft.getListing().getListingPrice(),BigDecimal.valueOf(balance.longValue()-nft.getListing().getListingPrice().longValue()));
+			service.createNftTrancsaction(buyer, seller, nft, nft.getNftType(),new Date(), nft.getListing().getListingPrice(),balance.subtract(nft.getListing().getListingPrice()));
 
 			service.moveNFT(buyerWallet, nft);
 
@@ -852,7 +855,7 @@ public class NFTTradingMarketRESTController {
 				buyerWallet = service.findUsersWalletByType(buyer, CryptoType.ETHEREUM);
 			}
 
-			if (buyerWallet.getCryptoBalance().longValue() < nft.getListing().getListingPrice().longValue()) {
+			if (buyerWallet.getCryptoBalance().compareTo(nft.getListing().getListingPrice()) < 0) {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"You do not have enough of this currency to proceed with this transaction.\"}}", HttpStatus.BAD_REQUEST);
 			}
 
@@ -901,7 +904,13 @@ public class NFTTradingMarketRESTController {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
 			}
 
-			ArrayList<Offer> offerHistory = service.getOfferHistory(nftID);
+			List<Offer> offerHistory = service.getOfferHistory(nftID);
+
+			var userId = optionalSession.get().getUser().getID();
+
+			offerHistory = offerHistory.stream()
+					.filter(x -> x.getUser().getID().equals(userId))
+					.collect(Collectors.toList());
 			
 			ArrayList<JSONObject> json = new ArrayList<>();
 			offerHistory.forEach(offer -> {
@@ -922,6 +931,49 @@ public class NFTTradingMarketRESTController {
 
 			ResponseEntity<String> res = new ResponseEntity<String>(
 				new JSONArray(json).toString(),
+					responseHeaders,
+					200
+			);
+
+			return res;
+		} catch (Exception ex) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			System.out.println(sw.toString());
+			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 500 \",\"msg\": " + ex.getMessage() + "}}", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/nft/auction/offers/all")
+	@ResponseBody
+	public ResponseEntity<String> nftOffers(
+			@RequestParam(name = "nftID", required = true) @NotEmpty String nftID
+	) {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		try {
+
+			ArrayList<Offer> offerHistory = service.getOfferHistory(nftID);
+
+			ArrayList<JSONObject> json = new ArrayList<>();
+			offerHistory.forEach(offer -> {
+				User userThatMadeOffer = offer.getUser();
+				json.add(
+						new JSONObject()
+								.put("price", offer.getOfferPrice())
+								.put("time", offer.getCreatedDate())
+								.put("user",
+										new JSONObject()
+												.put("id", userThatMadeOffer.getID())
+												.put("firstName", userThatMadeOffer.getFirstName())
+												.put("lastName", userThatMadeOffer.getLastName())
+												.put("nickName", userThatMadeOffer.getNickName())
+								)
+				);
+			});
+
+			ResponseEntity<String> res = new ResponseEntity<String>(
+					new JSONArray(json).toString(),
 					responseHeaders,
 					200
 			);

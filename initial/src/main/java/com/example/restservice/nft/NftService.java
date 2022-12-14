@@ -4,7 +4,10 @@ import com.example.restservice.*;
 import com.example.restservice.crypto.CryptoType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,12 +26,20 @@ public class NftService {
     @Autowired
     private WalletRepository walletRepository;
 
-    public NFT createNft (Path fileNameAndPath, CryptoType type, String walletId, String name, String description, NftCategory category) {
+    @Autowired
+    private S3Repository s3Repository;
+
+    public InputStream getNftImage(String fileName) throws IOException {
+        return s3Repository.getImage(fileName);
+    }
+    public NFT createNft (MultipartFile file, CryptoType type, String walletId, String name, String description, NftCategory category) throws IOException {
         //todo is any duplicate check required?
+
+        String imageUrl = s3Repository.uploadFile(file);
 
         NFT nft = new NFT();
         nft.setWallet(walletRepository.findById(walletId).orElseThrow());
-        nft.setImageUrl(fileNameAndPath.toString());
+        nft.setImageUrl(imageUrl);
         nft.setNftType(type);
         nft.setTokenId(UUID.randomUUID().toString());
         nft.setSmartContractAddress(UUID.randomUUID().toString());

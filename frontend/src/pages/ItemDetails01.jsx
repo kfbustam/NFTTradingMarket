@@ -21,11 +21,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
-const BID_HISTORY_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft/auction/offers"
-const IMAGE_BASE_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/images?image_name="
-const BUY_NOW_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft/buy"
-const PLACE_BID_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft/auction/offer"
-const CANCEL_BID_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft/auction/offer/cancel"
+const BID_HISTORY_URL = process.env.REACT_APP_API_URL + "/nft/auction/offers/all"
+const BID_HISTORY_SELF_URL = process.env.REACT_APP_API_URL + "/nft/auction/offers"
+const IMAGE_BASE_URL = process.env.REACT_APP_API_URL + "/images?image_name="
+const BUY_NOW_URL = process.env.REACT_APP_API_URL + "/nft/buy"
+const PLACE_BID_URL = process.env.REACT_APP_API_URL + "/nft/auction/offer"
+const CANCEL_BID_URL = process.env.REACT_APP_API_URL + "/nft/auction/offer/cancel"
 
 const ItemDetails01 = () => {
     let navigate = useNavigate();
@@ -37,50 +38,9 @@ const ItemDetails01 = () => {
     const [currencyAmount, setCurrencyAmount] = useState(0);
     const [itemShown, setItemShown] = useState(item);
     const [modalShow, setModalShow] = useState(false);
+    const [ownDataHistory, setOwnDataHistory] = useState([]);
     const [dataHistory, setDataHistory] = useState(
         [
-            {
-                img: img1,
-                name: "Mason Woodward",
-                time: "8 hours ago",
-                price: "4.89 ETH",
-                priceChange: "$12.246"
-            },
-            {
-                img: img2,
-                name: "Mason Woodward",
-                time: "at 06/10/2021, 3:20 AM",
-                price: "4.89 ETH",
-                priceChange: "$12.246"
-            },
-            {
-                img: img3,
-                name: "Mason Woodward",
-                time: "8 hours ago",
-                price: "4.89 ETH",
-                priceChange: "$12.246"
-            },
-            {
-                img: img4,
-                name: "Mason Woodward",
-                time: "8 hours ago",
-                price: "4.89 ETH",
-                priceChange: "$12.246"
-            },
-            {
-                img: img5,
-                name: "Mason Woodward",
-                time: "8 hours ago",
-                price: "4.89 ETH",
-                priceChange: "$12.246"
-            },
-            {
-                img: img6,
-                name: "Mason Woodward",
-                time: "8 hours ago",
-                price: "4.89 ETH",
-                priceChange: "$12.246"
-            },
         ]
     )
 
@@ -188,7 +148,7 @@ const ItemDetails01 = () => {
         () => {
             if (item && item.nftId) {
                 console.log("Fetching History...");
-                fetch(BID_HISTORY_URL + "?token=" + token + "&nftID=" + item.nftId, {
+                fetch(BID_HISTORY_URL + "?nftID=" + item.nftId, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
@@ -205,6 +165,38 @@ const ItemDetails01 = () => {
                     .then(data => {
                         console.log(data);
                         setDataHistory(data)
+                    })
+                    .catch(error => {
+                        console.error(error)
+                    }).finally(() => {
+                    });
+            }
+        }
+        , [item, item.nftId]
+    )
+
+    useEffect(
+        () => {
+            let token = localStorage.getItem("token");
+            if (item && item.nftId) {
+                console.log("Fetching Own History...");
+                fetch(BID_HISTORY_SELF_URL + "?token=" + token + "&nftID=" + item.nftId, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "GET"
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log("History Fetched Successfully!");
+                            return response.json()
+                        }
+                        throw response
+                    })
+                    .then(data => {
+                        console.log(data);
+                        setOwnDataHistory(data)
                     })
                     .catch(error => {
                         console.error(error)
@@ -270,27 +262,14 @@ const ItemDetails01 = () => {
                                                 </div>
                                                 <div className="info">
                                                     <span>Owned By</span>
-                                                    <h6> <Link to="/author-02">Ralph Garraway</Link> </h6>
+                                                    <h6> <Link to="/author-02">{item.seller.name}</Link> </h6>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="meta-info">
-                                            <div className="author">
-                                                <div className="avatar">
-                                                    <img src={img7} alt="Axies" />
-                                                </div>
-                                                <div className="info">
-                                                    <span>Create By</span>
-                                                    <h6> <Link to="/author-02">Freddie Carpenter</Link> </h6>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                     </div>
                                     <p>Smart Contract Address: {item.smartContractAddress}</p>
-                                    <p>Habitant sollicitudin faucibus cursus lectus pulvinar dolor non ultrices eget.
-                                        Facilisi lobortisal morbi fringilla urna amet sed ipsum vitae ipsum malesuada.
-                                        Habitant sollicitudin faucibus cursus lectus pulvinar dolor non ultrices eget.
-                                        Facilisi lobortisal morbi fringilla urna amet sed ipsum</p>
+                                    <p>{item.description}</p>
                                     <div className="meta-item-details style2">
                                         <div className="item meta-price">
                                             <span className="heading">Current Bid/Price</span>
@@ -301,12 +280,16 @@ const ItemDetails01 = () => {
                                                 </div>
                                             </div>
                                         </div>
+                                        {
+                                        (item.saleType === "BOTH" || item.saleType === "AUCTION") &&
+                                    
                                         <div className="item count-down">
                                             <span className="heading style-2">Countdown</span>
                                             <Countdown date={item.expirationTime ?? (Date.now() + 500000000)}>
-                                                <span>You are good to go!</span>
+                                                <span>Auction Over!</span>
                                             </Countdown>
                                         </div>
+                                        }
                                     </div>
                                     {
                                         (item.saleType === "BOTH" || item.saleType === "AUCTION") &&
@@ -324,13 +307,13 @@ const ItemDetails01 = () => {
                                         <Tabs>
                                             <TabList>
                                                 <Tab>Bid History</Tab>
-                                                <Tab>Info</Tab>
-                                                <Tab>Provenance</Tab>
+                                                <Tab>Your History</Tab>
                                             </TabList>
 
                                             <TabPanel>
                                                 <ul className="bid-history-list">
                                                     {
+                                                        dataHistory.length ?
                                                         dataHistory.map((dataItem, index) => (
                                                             <li key={index} item={dataItem}>
                                                                 <div className="content">
@@ -344,7 +327,7 @@ const ItemDetails01 = () => {
                                                                             </div>
                                                                             <div className="author-infor">
                                                                                 <div className="name">
-                                                                                    <h6><Link to="/author-02">{item.seller.name ?? "someone"} </Link></h6> <span> placed a bid</span>
+                                                                                    <h6>{dataItem.user.nickName ?? "Anonymous"}</h6> <span> placed a bid</span>
                                                                                 </div>
                                                                                 <span className="time">{dataItem.time}</span>
                                                                             </div>
@@ -355,13 +338,8 @@ const ItemDetails01 = () => {
                                                                     </div>
                                                                 </div>
                                                             </li>
-                                                        ))
-                                                    }
-                                                </ul>
-                                            </TabPanel>
-                                            <TabPanel>
-                                                <ul className="bid-history-list">
-                                                    <li>
+                                                        ))  : 
+                                                        <li>
                                                         <div className="content">
                                                             <div className="client">
                                                                 <div className="sc-author-box style-2">
@@ -373,26 +351,66 @@ const ItemDetails01 = () => {
                                                                     </div>
                                                                     <div className="author-infor">
                                                                         <div className="name">
-                                                                            <h6> <Link to="/author-02">Mason Woodward </Link></h6> <span> place a bid</span>
+                                                                            <h6>No one has</h6> <span> placed a bid</span>
                                                                         </div>
-                                                                        <span className="time">8 hours ago</span>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </li>
+                                                    </li> 
+                                                    }
                                                 </ul>
                                             </TabPanel>
                                             <TabPanel>
-
-                                                <div className="provenance">
-                                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                                        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                                        It has survived not only five centuries, but also the leap into electronic typesetting,
-                                                        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-                                                        and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                                                </div>
+                                            <ul className="bid-history-list">
+                                                    {
+                                                    ownDataHistory.length ? 
+                                                        ownDataHistory.map((dataItem, index) => (
+                                                            <li key={index} item={dataItem}>
+                                                                <div className="content">
+                                                                    <div className="client">
+                                                                        <div className="sc-author-box style-2">
+                                                                            <div className="author-avatar">
+                                                                                <Link to="#">
+                                                                                    <img src={img1} alt="Axies" className="avatar" />
+                                                                                </Link>
+                                                                                <div className="badge"></div>
+                                                                            </div>
+                                                                            <div className="author-infor">
+                                                                                <div className="name">
+                                                                                    <h6>{dataItem.user.nickName ?? "No one has"}</h6> <span> placed a bid</span>
+                                                                                </div>
+                                                                                <span className="time">{dataItem.time}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="price">
+                                                                        <h5>{dataItem.price} {item.nftType}</h5>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        ))
+                                                    : <li>
+                                                    <div className="content">
+                                                        <div className="client">
+                                                            <div className="sc-author-box style-2">
+                                                                <div className="author-avatar">
+                                                                    <Link to="#">
+                                                                        <img src={img1} alt="Axies" className="avatar" />
+                                                                    </Link>
+                                                                    <div className="badge"></div>
+                                                                </div>
+                                                                <div className="author-infor">
+                                                                    <div className="name">
+                                                                        <h6>You don't a bidding history yet.</h6> <span></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li> 
+                                                }
+                                                </ul>
                                             </TabPanel>
                                         </Tabs>
                                     </div>

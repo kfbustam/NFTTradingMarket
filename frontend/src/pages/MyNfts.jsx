@@ -4,7 +4,7 @@ import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import img1 from '../alice_video.png'
 
-const GET_TRANSACTIONS = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft?token="
+const GET_TRANSACTIONS = process.env.REACT_APP_API_URL + "/nft/token?token="
 
 const MyNfts = () => {
     let navigate = useNavigate();
@@ -174,10 +174,10 @@ const MyNfts = () => {
                                         <div key={index} className="sc-card-activity">
                                             <div className="content">
                                                 <div className="media">
-                                                    <img src={"http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/images?image_name=" + item.imageUrl} alt="" />
+                                                    <img src={process.env.REACT_APP_API_URL + "/images?image_name=" + item.imageUrl} alt="" />
                                                 </div>
                                                 <div className="infor">
-                                                    <h4><Link to="/item-details-01">{item.name}</Link></h4>
+                                                    <h4><Link state={{ item: item }} to="/item-details-01">{item.name}</Link></h4>
                                                     <p>{item.description}</p>
                                                     <div className="status"> <span className="author">Smart Contract Address: {item.smartContractAddress}</span></div>
                                                     <div className="time">
@@ -188,7 +188,7 @@ const MyNfts = () => {
                                                     {item.tokenId}
 
                                                     <p><b>Asset URL</b></p>
-                                                    <Link to="/item-details-01">Click Here</Link>
+                                                    <Link state={{ item: item }} to="/item-details-01">Click Here</Link>
                                                     </div>
                                         
                                                 </div>
