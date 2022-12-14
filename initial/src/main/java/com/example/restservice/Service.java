@@ -44,6 +44,10 @@ public class Service {
         return userRepository.saveAndFlush(user);
     }
 
+    public void deleteUser(User user) {
+        userRepository.delete(user);
+    }
+
     public void createVerificationToken(User user, String token) {
         VerificationToken myToken = new VerificationToken(token, user);
         verificationTokenRepository.save(myToken);

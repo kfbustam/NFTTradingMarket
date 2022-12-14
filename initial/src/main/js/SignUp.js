@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-const SIGN_UP_URL = "http://localhost:8080/test"
+const SIGN_UP_URL = "http://localhost:8080/signup"
 
 function Copyright(props) {
   return (
@@ -45,22 +45,28 @@ export default function SignUp({setIsSigningUp}) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    fetch(SIGN_UP_URL, {
+    fetch(
+      SIGN_UP_URL 
+      + "?email="
+      + data.get('email') 
+      + "&password=" 
+      + data.get('password') 
+      + "&firstname=" 
+      + data.get('firstName') 
+      + "&lastname=" 
+      + data.get('lastName') 
+      + "&nickname=" 
+      + data.get('nickname'),
+    {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
       method: "POST",
-      body: JSON.stringify({
-        email: data.get('email'),
-        password: data.get('password'),
-        firstname: data.get('firstname'),
-        lastname: data.get('lastname'),
-        nickname: data.get('nickname'),
-      })
     })
     .then(response => {
       if (response.ok) {
+        setIsSigningUp(false)
         return response.json()
       }
       throw response

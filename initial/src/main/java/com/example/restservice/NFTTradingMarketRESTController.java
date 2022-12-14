@@ -3,7 +3,8 @@ package com.example.restservice;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.http.ResponseEntity;
-		import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.context.MessageSource;
 
@@ -13,6 +14,8 @@ import java.util.UUID;
 import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 
 /**
  * The type Airline reservation system rest controller.
@@ -46,13 +49,13 @@ public class NFTTradingMarketRESTController {
 		try {
 			Optional<User> optionalUser = service.findUserByEmail(email);
 
-			if (optionalUser == null) {
+			if (optionalUser.isEmpty()) {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"User not found.\"}}", HttpStatus.BAD_REQUEST);
 			}
 
 			User userFound = optionalUser.map(
 				user -> user
-			).orElse(null);
+			).orElseThrow();
 
 			JSONObject json = new JSONObject()
 				.put("email", userFound.getEmail());
@@ -65,7 +68,12 @@ public class NFTTradingMarketRESTController {
 
 	  return res;
 		} catch (Exception ex) {
-			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + ex.getMessage() +"}}", HttpStatus.BAD_REQUEST);
+					StringWriter sw = new StringWriter();
+					PrintWriter pw = new PrintWriter(sw);
+					ex.printStackTrace(pw);
+					String stackTrace = sw.toString(); // stack trace as a string
+					System.out.println(sw.toString());
+			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + stackTrace +"}}", HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -87,32 +95,27 @@ public class NFTTradingMarketRESTController {
 		try {
 			Optional<User> optionalUser = service.findUserByEmail(email);
 
-			if (optionalUser != null) {
-				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"another User with the same email already exists.\"}}", HttpStatus.BAD_REQUEST);
+   			if (optionalUser.isPresent()) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Another user with the same email already exists.\"}}", HttpStatus.BAD_REQUEST);
 			}
 
-			User user = service.createUser(email, password, firstname, lastname, nickname);
-
-			String token = UUID.randomUUID().toString();
+				 User user = service.createUser(email, password, firstname, lastname, nickname);
+	String token = UUID.randomUUID().toString();
 			service.createVerificationToken(user, token);
-			
-			String recipientAddress = user.getEmail();
+	String recipientAddress = user.getEmail();
 			String subject = "Registration Confirmation";
 			String confirmationUrl = this.appURL + "/registrationConfirm?token=" + token;
-			
-			SimpleMailMessage emailMessage = new SimpleMailMessage();
-			emailMessage.setTo(recipientAddress);
+	SimpleMailMessage emailMessage = new SimpleMailMessage();
+	emailMessage.setTo(recipientAddress);
 			emailMessage.setSubject(subject);
 			emailMessage.setText("http://localhost:8080" + confirmationUrl);
-			mailSender.send(emailMessage);
-
+	mailSender.send(emailMessage);
 			JSONObject json = new JSONObject()
 				.put("email", user.getEmail())
 				.put("firstname", user.getFirstName())
 				.put("lastname", user.getLastName())
 				.put("nickname", user.getNickName());
-
-			ResponseEntity<String> res = new ResponseEntity<String>(
+	ResponseEntity<String> res = new ResponseEntity<String>(
 				json.toString(),
 				responseHeaders,
 				200
@@ -120,7 +123,11 @@ public class NFTTradingMarketRESTController {
 
 	  return res;
 		} catch (Exception ex) {
-			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + ex.getMessage() +"}}", HttpStatus.BAD_REQUEST);
+					StringWriter sw = new StringWriter();
+					PrintWriter pw = new PrintWriter(sw);
+					ex.printStackTrace(pw);
+								System.out.println(sw.toString());
+			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + sw.toString() +"}}", HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -137,13 +144,13 @@ public class NFTTradingMarketRESTController {
 		try {
 			Optional<VerificationToken> optionalVerificationToken = service.findByToken(token);
 
-			if (optionalVerificationToken == null) {
+			if (optionalVerificationToken.isEmpty()) {
 				return new RedirectView(this.appURL + "?error=TokenNotFound");
 			}
 
 			VerificationToken tokenFound = optionalVerificationToken.map(
 				user -> user
-			).orElse(null);
+			).orElseThrow();
 
 			User user = tokenFound.getUser();
 			user.setVerified();
@@ -151,7 +158,12 @@ public class NFTTradingMarketRESTController {
 
 			return new RedirectView(this.appURL);
 		} catch (Exception ex) {
-			return new RedirectView(this.appURL + "?error=" + ex.getMessage());
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			String stackTrace = sw.toString(); // stack trace as a string
+			System.out.println(sw.toString());
+			return new RedirectView(this.appURL);
 		}
 	}
 }
