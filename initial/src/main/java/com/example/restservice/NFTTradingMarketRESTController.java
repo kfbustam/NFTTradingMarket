@@ -57,6 +57,10 @@ public class NFTTradingMarketRESTController {
 				user -> user
 			).orElseThrow();
 
+			if (!userFound.isVerified()) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"User is not yet verified. Please check your email for the verification link.\"}}", HttpStatus.BAD_REQUEST);
+			}
+
 			JSONObject json = new JSONObject()
 				.put("email", userFound.getEmail());
 
@@ -104,11 +108,11 @@ public class NFTTradingMarketRESTController {
 			service.createVerificationToken(user, token);
 	String recipientAddress = user.getEmail();
 			String subject = "Registration Confirmation";
-			String confirmationUrl = this.appURL + "/registrationConfirm?token=" + token;
+			String confirmationUrl = this.appURL + "/registrationConfirm/" + token;
 	SimpleMailMessage emailMessage = new SimpleMailMessage();
 	emailMessage.setTo(recipientAddress);
 			emailMessage.setSubject(subject);
-			emailMessage.setText("http://localhost:8080" + confirmationUrl);
+			emailMessage.setText("\nPlease go to the following link to verify your account: \n\n" + confirmationUrl);
 	mailSender.send(emailMessage);
 			JSONObject json = new JSONObject()
 				.put("email", user.getEmail())
@@ -135,9 +139,9 @@ public class NFTTradingMarketRESTController {
 	 * Verify user.
 	 *
 	 */
-	@PostMapping("/registrationConfirm")
+	@GetMapping("/registrationConfirm/{token}")
 	public RedirectView registrationConfirm(
-		@RequestParam(name="token", required=true) String token
+		@PathVariable String token
 	) {
 		HttpHeaders responseHeaders = new HttpHeaders();
 
@@ -156,14 +160,14 @@ public class NFTTradingMarketRESTController {
 			user.setVerified();
 			service.updateUser(user);
 
-			return new RedirectView(this.appURL);
+			return new RedirectView(this.appURL + "?message=success");
 		} catch (Exception ex) {
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
 			ex.printStackTrace(pw);
 			String stackTrace = sw.toString(); // stack trace as a string
 			System.out.println(sw.toString());
-			return new RedirectView(this.appURL);
+			return new RedirectView(this.appURL + "?error=" + ex.getMessage());
 		}
 	}
 }

@@ -72,11 +72,9 @@ export default function SignUp({setIsSigningUp}) {
       throw response
     })
     .then(data => {
-      setProfileData(data)
     })
     .catch(error => {
       console.error(error)
-      setProfileData(null)
       setError(error)
     }).finally(() => {});
   };

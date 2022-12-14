@@ -27,7 +27,7 @@ public class User {
   @Column(unique = true)
 	private String email;
 
-  @Pattern(regexp = "[A-Za-z0-9]+", message = "{invalid.password}")
+  @Pattern(regexp = "[A-Za-z0-9!#$%&]+", message = "{invalid.password}")
   @NotEmpty
   @Column(unique = true)
   private String password;
@@ -116,5 +116,13 @@ public class User {
    */
   public void setVerified() {
     this.isVerified = true;
+  }
+
+  /**
+   * Checks if user is verified.
+   *
+   */
+  public Boolean isVerified() {
+    return this.isVerified;
   }
 }

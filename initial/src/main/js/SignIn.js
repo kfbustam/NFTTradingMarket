@@ -37,16 +37,12 @@ export default function SignIn({setProfileData, setIsSigningUp}) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    fetch(SIGN_IN_URL, {
+    fetch(SIGN_IN_URL + "?email=" + data.get('email') + "&password=" + data.get('password'), {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      method: "POST",
-      body: JSON.stringify({
-        email: data.get('email'),
-        password: data.get('password'),
-      })
+      method: "POST"
     })
     .then(response => {
       if (response.ok) {
@@ -55,7 +51,7 @@ export default function SignIn({setProfileData, setIsSigningUp}) {
       throw response
     })
     .then(data => {
-      setProfileData(data)
+      setProfileData({...data, profileObj: {}})
     })
     .catch(error => {
       console.error(error)
