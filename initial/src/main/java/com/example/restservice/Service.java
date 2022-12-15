@@ -9,12 +9,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Optional;
 
 @org.springframework.stereotype.Service
 @Transactional
 public class Service {
+    @Autowired
+    private OfferRepository offerRepository;
+
+    @Autowired
+    private ListingRepository listingRepository;
+
     @Autowired
     private NFTRepository nftRepository;
 
@@ -59,6 +65,19 @@ public class Service {
         return walletCreated;
     }
 
+    public void moveNFT(Wallet toWallet, NFT nft) {
+        nft.setWallet(toWallet);
+        nftRepository.save(nft);
+    }
+
+    public void deleteListingForNFT(NFT nft) {
+        listingRepository.deleteListingByNFTID(nft.getId());
+    }
+
+    public ArrayList<Wallet> getUserWallets(User user) {
+        Collection<Wallet> usersWallets = walletRepository.findUserWallet(user.getID());
+        return new ArrayList<>(usersWallets);
+    }
 
     public User updateUser(User user) {
         return userRepository.saveAndFlush(user);
@@ -73,14 +92,25 @@ public class Service {
         verificationTokenRepository.save(myToken);
     }
 
-    public ArrayList<Wallet> getUserWallets(User user) {
-        Collection<Wallet> usersWallets = walletRepository.findUserWallets(user.getID());
-        return new ArrayList<>(usersWallets);
+    public Optional<Wallet> getUserWallet(Wallet wallet) {
+        Optional<Wallet> userWallet = walletRepository.findById(wallet.getId());
+        return userWallet;
     }
 
-    public List<CryptographicAsset> getWalletContents(Wallet wallet) {
-        Collection<NFT> nfts = nftRepository.findByWalletID(wallet.getId());
-        return new ArrayList<>(nfts);
+    public Wallet findUsersWalletByType(User user, CryptoType type) throws Exception {
+        ArrayList<Wallet> userWallet = new ArrayList<Wallet>(walletRepository.findUserWalletByType(user.getID(), type));
+        if (userWallet.size() > 1) {
+            throw new Exception("Should not have more than one wallet for a specific type");
+        }
+        return userWallet.get(0);
+    }
+
+    public Collection<NFT> getNFTsInWallet(Wallet wallet) {
+        return nftRepository.findByWalletID(wallet.getId());
+    }
+
+    public double getNFTsTotalPrice(Wallet wallet) {
+        return nftRepository.findTotalPriceInWallet(wallet.getId());
     }
 
     public Optional<SessionToken> getSessionByToken(String token) {
@@ -114,5 +144,19 @@ public class Service {
         wallet.setCryptoBalance(wallet.getCryptoBalance().add(amount));
         walletRepository.save(wallet);
         return wallet;
+    }
+
+    public void updateUserWalletBalance(Wallet wallet, Long newBalance) {
+        wallet.setCryptoBalance(new BigDecimal(newBalance));
+        walletRepository.saveAndFlush(wallet);
+    }
+
+    public void createOffer(User user, Double price, NFT nft) {
+        Offer offer = new Offer(user, price, nft);
+        offerRepository.saveAndFlush(offer);
+    }
+
+    public Collection<Listing> getAllListings() {
+        return listingRepository.findAll();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.restservice.nft;
 
-import com.example.restservice.CryptographicAsset;
+import com.example.restservice.Listing;
+import com.example.restservice.Offer;
 import com.example.restservice.Wallet;
 import com.example.restservice.crypto.CryptoType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -9,13 +10,14 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * The type Flight.
  */
 @Entity
 @Table(name="nft")
-public class NFT implements CryptographicAsset {
+public class NFT {
 	@Id @GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String id; // primary key
@@ -40,6 +42,12 @@ public class NFT implements CryptographicAsset {
 	private CryptoType nftType;
 
 	private double price;
+
+	@OneToMany
+	private List<Offer> offers;     // Full form only
+
+	@OneToOne
+	private Listing listing;     // Full form only
 
 	@ManyToOne
 	@JoinColumn(name = "wallet_id")
@@ -77,7 +85,6 @@ public class NFT implements CryptographicAsset {
 		this.name = name;
 	}
 
-	@Override
 	public String getId() {
 		return id;
 	}
