@@ -231,9 +231,9 @@ public class NFTTradingMarketRESTController {
 			optionalSession.ifPresent(session -> {
 				User user = session.getUser();
 				if (type == "eth") {
-					service.createWallet(user, NftType.ETH);
+					service.createWallet(user, CryptoType.ETHEREUM);
 				} else if (type == "btc") {
-					service.createWallet(user, NftType.BTC);
+					service.createWallet(user, CryptoType.BITCOIN);
 				}
 	});
 			
@@ -293,10 +293,7 @@ public class NFTTradingMarketRESTController {
 			for (int i=0; i<wallets.size(); i++) {
 				listOfWallets.add(
 					new JSONObject()
-						.put("id", wallets.get(i).getID())
-						.put("img", wallets.get(i).getImageUrl())
-						.put("title", wallets.get(i).getName())
-						.put("description", wallets.get(i).getDescription())
+						.put("id", wallets.get(i).getId())
 				);
 			}
 

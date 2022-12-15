@@ -48,6 +48,11 @@ public class Wallet {
       this.cryptoCurrencies = cryptoCurrencies;
 	  }
 
+	public Wallet(User user, CryptoType type) {
+		this.user = user;
+		this.type = type;
+	}
+
 	public String getId() {
 		return id;
 	}
