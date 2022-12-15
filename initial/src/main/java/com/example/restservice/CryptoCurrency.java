@@ -13,13 +13,19 @@ import com.example.restservice.*;
  * The type Passenger.
  */
 @Entity
-public class CryptoCurrency {
+public class CryptoCurrency implements CryptographicAsset{
 
 	@Id @GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String id;   // primary key
 
 	private int price; 
+
+	private String name;
+
+	private String imageUrl;
+
+	private String description;
 
 	@ManyToOne
 	@JoinColumn(name = "wallet_id")
@@ -35,11 +41,26 @@ public class CryptoCurrency {
    *
    * @param price the price
    */
-  public CryptoCurrency(int price) {
+  public CryptoCurrency(String name, int price, String imageUrl, String description) {
 		this.price = price;
-
+    this.name = name;
+    this.imageUrl = imageUrl;
+    this.description = description;
 	}
 
+  public String getID() {
+    return this.id;
+  }
 
+  public String getName() {
+    return this.name;
+  }
+
+  public String getImageUrl() {
+    return this.imageUrl;
+  }
+  public String getDescription() {
+    return this.description;
+  }
 
 }
