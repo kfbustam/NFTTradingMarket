@@ -155,4 +155,8 @@ public class Service {
         Offer offer = new Offer(user, price, nft);
         offerRepository.saveAndFlush(offer);
     }
+
+    public Collection<Listing> getAllListings() {
+        return listingRepository.findAll();
+    }
 }

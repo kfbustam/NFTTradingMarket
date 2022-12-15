@@ -266,7 +266,7 @@ public class NFTTradingMarketRESTController {
 	 * Get wallets
 	 *
 	 */
-	@GetMapping(value = "/wallets", produces = "application/json")
+	@PostMapping(value = "/wallets", produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<String> wallets(
 			@RequestParam(name="token", required=true) String token
@@ -325,7 +325,7 @@ public class NFTTradingMarketRESTController {
 	 * Get wallet
 	 *
 	 */
-	@GetMapping("/wallet/{id}")
+	@PostMapping("/wallet/{id}")
 	@ResponseBody
 	public ResponseEntity<String> wallet(
 			@RequestParam(name="token", required=true) String token,
@@ -584,6 +584,48 @@ public class NFTTradingMarketRESTController {
 			
 			JSONObject json = new JSONObject()
 						.put("nftID", nft.getId());
+
+			ResponseEntity<String> res = new ResponseEntity<String>(
+				json.toString(),
+					responseHeaders,
+					200
+			);
+
+			return res;
+		} catch (Exception ex) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			System.out.println(sw.toString());
+			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 500 \",\"msg\": " + ex.getMessage() + "}}", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PostMapping("/nft/listings")
+	@ResponseBody
+	public ResponseEntity<String> listings(
+		@RequestParam(name="token", required=true) String token
+	) {
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		try {
+
+
+			Optional<SessionToken> optionalSession = service.getSessionById(token);
+
+			if (optionalSession.isEmpty()) {
+				optionalSession = service.getSessionByToken(token);
+			}
+
+			if (optionalSession.isEmpty()) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
+			}
+
+			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
+
+			ArrayList<Listing> listings = new ArrayList<Listing>(service.getAllListings());
+			
+			JSONArray json = new JSONArray(listings);
 
 			ResponseEntity<String> res = new ResponseEntity<String>(
 				json.toString(),
