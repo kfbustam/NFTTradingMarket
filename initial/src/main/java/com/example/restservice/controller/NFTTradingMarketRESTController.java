@@ -1,5 +1,6 @@
-package com.example.restservice;
+package com.example.restservice.controller;
 
+import com.example.restservice.*;
 import com.example.restservice.crypto.CryptoType;
 import com.example.restservice.nft.NFT;
 import com.example.restservice.nft.NftService;
