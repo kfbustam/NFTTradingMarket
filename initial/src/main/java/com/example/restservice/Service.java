@@ -15,6 +15,12 @@ import java.util.Optional;
 @Transactional
 public class Service {
     @Autowired
+    private OfferRepository offerRepository;
+
+    @Autowired
+    private ListingRepository listingRepository;
+
+    @Autowired
     private NFTRepository nftRepository;
 
     @Autowired
@@ -61,6 +67,10 @@ public class Service {
     public void moveNFT(Wallet toWallet, NFT nft) {
         nft.setWallet(toWallet);
         nftRepository.save(nft);
+    }
+
+    public void deleteListingForNFT(NFT nft) {
+        listingRepository.deleteListingByNFTID(nft.getId());
     }
 
     public User updateUser(User user) {

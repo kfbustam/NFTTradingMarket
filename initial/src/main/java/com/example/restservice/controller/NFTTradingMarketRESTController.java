@@ -525,6 +525,7 @@ public class NFTTradingMarketRESTController {
 				service.updateETHTotalInWallet(buyerWallet, totalPriceOfCurrencyInBuyersWallet-nft.getPrice());
 				service.updateBTCTotalInWallet(sellerWallet, sellersCryptoTotals.get("eth")+nft.getPrice());
 			}
+			service.deleteListingForNFT(nft);
 
 			service.moveNFT(buyerWallet, nft);
 			
@@ -532,6 +533,60 @@ public class NFTTradingMarketRESTController {
 						.put("nftID", nft.getId())
 						.put("cryptoType", nft.getNftType())
 						.put("newBuyersTotals", buyerWallet.getCryptoCurrencyTotals());
+
+			ResponseEntity<String> res = new ResponseEntity<String>(
+				json.toString(),
+					responseHeaders,
+					200
+			);
+
+			return res;
+		} catch (Exception ex) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			System.out.println(sw.toString());
+			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 500 \",\"msg\": " + ex.getMessage() + "}}", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@PostMapping("/nft/auction/offer")
+	@ResponseBody
+	public ResponseEntity<String> auctionOfferNFT(
+		@RequestParam(name="token", required=true) String token,
+		@RequestParam(name = "nftID", required = true) @NotEmpty String nftID
+	) {
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		try {
+
+
+			Optional<SessionToken> optionalSession = service.getSessionById(token);
+
+			if (optionalSession.isEmpty()) {
+				optionalSession = service.getSessionByToken(token);
+			}
+
+
+			if (optionalSession.isEmpty()) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
+			}
+
+			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
+			NFT nft = nftService.getNFT(nftID).orElseThrow();
+			
+			ArrayList<Wallet> userWallets = service.getUserWallet(buyer);
+
+			if (userWallets.size() > 1) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 500 \",\"msg\": User should not have multiple wallets!}}", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
+		// Create Offer Object for listing found by NFT ID
+
+			
+			JSONObject json = new JSONObject()
+						.put("nftID", nft.getId())
+						.put("cryptoType", nft.getNftType());
 
 			ResponseEntity<String> res = new ResponseEntity<String>(
 				json.toString(),
