@@ -14,6 +14,7 @@ import javax.validation.constraints.Pattern;
  * The type User.
  */
 @Entity
+@Table(name="user")
 public class User {
 
 	@Id @GeneratedValue(generator="system-uuid")

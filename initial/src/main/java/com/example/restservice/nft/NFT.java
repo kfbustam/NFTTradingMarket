@@ -1,39 +1,20 @@
-package com.example.restservice;
+package com.example.restservice.nft;
 
-import com.example.restservice.nft.NftType;
+import com.example.restservice.CryptographicAsset;
+import com.example.restservice.Wallet;
+import com.example.restservice.crypto.CryptoType;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Embedded;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.example.restservice.NFT;
-import com.example.restservice.CryptoCurrency;
+import javax.persistence.*;
+
 import java.util.Date;
-import java.util.List;
-import javax.persistence.EmbeddedId;
 
 /**
  * The type Flight.
  */
 @Entity
-public class NFT implements CryptographicAsset{
-	//Token ID
-	//Smart Contract Address
-	//Name
-	//Type
-	//Description
-	//Image URL
-	//Asset URL
-	//LastRecordedTime
+@Table(name="nft")
+public class NFT implements CryptographicAsset {
 	@Id @GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="id", strategy = "uuid")
 	private String id; // primary key
@@ -52,7 +33,7 @@ public class NFT implements CryptographicAsset{
 
 	private String description;
 
-	private NftType nftType;
+	private CryptoType nftType;
 
 	private double price;
 
@@ -60,22 +41,11 @@ public class NFT implements CryptographicAsset{
 	@JoinColumn(name = "wallet_id")
 	private Wallet wallet;     // Full form only
 
-	/**
-	* Instantiates a new Flight.
-	*/
   	public NFT() {}
 
 
   	public NFT(int price) {
 		this.price = price;
-	}
-
-	public String getID() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getTokenId() {
@@ -100,6 +70,11 @@ public class NFT implements CryptographicAsset{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public String getId() {
+		return id;
 	}
 
 	public String getImageUrl() {
@@ -134,11 +109,11 @@ public class NFT implements CryptographicAsset{
 		this.description = description;
 	}
 
-	public NftType getNftType() {
+	public CryptoType getNftType() {
 		return nftType;
 	}
 
-	public void setNftType(NftType nftType) {
+	public void setNftType(CryptoType nftType) {
 		this.nftType = nftType;
 	}
 
