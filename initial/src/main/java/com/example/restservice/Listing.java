@@ -19,7 +19,7 @@ import javax.persistence.*;
 @Table(name="listing")
 public class Listing {
 	@Id @GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="id", strategy = "uuid")
+	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String id; // primary key
 
 	@ManyToOne

@@ -17,7 +17,7 @@ import java.util.Date;
 @Table(name="offer")
 public class Offer {
 	@Id @GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="id", strategy = "uuid")
+	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String id; // primary key
 
 	@OneToOne

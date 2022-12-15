@@ -48,10 +48,10 @@ public class Service {
         return verificationTokenRepository.findByToken(verificationToken);
     }
 
-    public User createUser(String email, String password, String firstname, String lastname, String nickname)
+    public User createUser(String email, String password, String firstname, String lastname, String nickname, NftUserType type)
             throws Exception {
         try {
-            User newUser = new User(email, password, firstname, lastname, nickname);
+            User newUser = new User(email, password, firstname, lastname, nickname, type);
             User userResponse = userRepository.saveAndFlush(newUser);
             return userResponse;
         } catch (Exception e) {

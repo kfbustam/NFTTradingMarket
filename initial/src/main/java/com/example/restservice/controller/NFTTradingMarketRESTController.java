@@ -138,8 +138,10 @@ public class NFTTradingMarketRESTController {
             @RequestParam(name = "password", required = true) String password,
             @RequestParam(name = "firstname", required = true) String firstname,
             @RequestParam(name = "lastname", required = true) String lastname,
-            @RequestParam(name = "nickname", required = true) String nickname
-    ) {
+            @RequestParam(name = "nickname", required = true) String nickname,
+			@RequestParam(name = "type", required = true) NftUserType type
+
+	) {
         HttpHeaders responseHeaders = new HttpHeaders();
 
         try {
@@ -149,7 +151,7 @@ public class NFTTradingMarketRESTController {
                 return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Another user with the same email already exists.\"}}", HttpStatus.BAD_REQUEST);
             }
 
-            User user = service.createUser(email, password, firstname, lastname, nickname);
+            User user = service.createUser(email, password, firstname, lastname, nickname, type);
             String token = UUID.randomUUID().toString();
             service.createVerificationToken(user, token);
             String recipientAddress = user.getEmail();
