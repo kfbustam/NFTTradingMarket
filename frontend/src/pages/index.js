@@ -30,6 +30,8 @@ import NoResult from "./NoResult";
 import FAQ from "./FAQ";
 import Contact01 from "./Contact01";
 import Contact02 from "./Contact02";
+import Deposits from "./Deposits";
+import Withdrawal from "./Withdrawal";
 
 
 const routes = [
@@ -66,6 +68,8 @@ const routes = [
   { path: '/faq', component: <FAQ />},
   { path: '/contact-01', component: <Contact01 />},
   { path: '/contact-02', component: <Contact02 />},
+  { path: '/deposits', component: <Deposits />},
+  { path: '/withdrawal', component: <Withdrawal />}
 ]
 
 export default routes;
