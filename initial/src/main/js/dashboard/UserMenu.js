@@ -1,19 +1,28 @@
 import React, { useState } from 'react';
-import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import { useGoogleLogout } from 'react-google-login';
 
-export default function AccountMenu({anchorEl, handleClose, isOpen, profileData}) {
+const CLIENT_ID = "104101427642-9kkv6e3v2hk1rd01k96nqk1pmgu81vpe.apps.googleusercontent.com"
+
+export default function UserMenu({anchorEl, handleClose, isOpen, profileData, setProfileData, setIsSigningUp}) {
   const {name, imageUrl, givenName, familyName, email} = profileData;
+  const onLogoutSuccess = (res) => {
+    console.log("logout success")
+    setProfileData(null)
+    setIsSigningUp(false)
+  }
+  const onLogoutFailure = (err) => {
+    console.log("logout failure")
+    console.err(err)
+  }
+  const { signOut, loaded } = useGoogleLogout({clientId: CLIENT_ID, onLogoutSuccess: onLogoutSuccess, onFailure: onLogoutFailure})
   return (
     <Menu
     anchorEl={anchorEl}
@@ -69,7 +78,7 @@ export default function AccountMenu({anchorEl, handleClose, isOpen, profileData}
       </ListItemIcon>
       Settings
     </MenuItem>
-    <MenuItem>
+    <MenuItem onClick={() => signOut()}>
       <ListItemIcon>
         <Logout fontSize="small" />
       </ListItemIcon>
