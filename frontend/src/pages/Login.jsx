@@ -4,23 +4,34 @@ import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import { gapi } from 'gapi-script';
 import { GoogleLogin } from 'react-google-login';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CLIENT_ID = "104101427642-9kkv6e3v2hk1rd01k96nqk1pmgu81vpe.apps.googleusercontent.com"
 const SIGN_IN_URL = "http://localhost:8080/signin"
 
-const Login = () => {
+
+const Login = ({ fromSignUp=false }) => {
     const [profileData, setProfileData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState()
+    const [email, setEmail] = React.useState("")
+    const [password, setPassword] = React.useState("")
   
     useEffect(() => {
-      const initClient = () => {
+        if (fromSignUp) {
+            toast.info("Verify account before Sign In.", {
+                toastId: 1
+            })
+        }
+
+        const initClient = () => {
             gapi.client.init({
-            clientId: CLIENT_ID,
-            scope: ''
-          });
-       };
-       gapi.load('client:auth2', initClient);
+                clientId: CLIENT_ID,
+                scope: ''
+            });
+        };
+        gapi.load('client:auth2', initClient);
     });
 
     useEffect(() => {
@@ -30,18 +41,19 @@ const Login = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
+        // const data = new FormData(event.currentTarget);
     
-        fetch(SIGN_IN_URL, {
+        fetch(SIGN_IN_URL + "?email=" + email + "&password=" + password, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             method: 'POST',
             body: JSON.stringify({
-                email: data.get('email'),
-                password: data.get('password'),
-            })
+                email: email,
+                password: password,
+            }),
+            mode: 'cors'
         })
         .then(response => {
             if (response.ok) {
@@ -74,6 +86,7 @@ const Login = () => {
 
     return (
         <div>
+            <ToastContainer theme="dark" position="top-center" />
             <Header />
             <section className="flat-title-page inner">
                 <div className="overlay"></div>
@@ -136,9 +149,9 @@ const Login = () => {
                                 </div>
 
                                 <div className="form-inner">
-                                    <form action="#" id="contactform">
-                                        <input id="name" name="name" tabIndex="1" aria-required="true" required type="text" placeholder="Your Full Name" />
-                                        <input id="email" name="email" tabIndex="2"  aria-required="true" type="email" placeholder="Your Email Address" required />
+                                    <form action="#" id="contactform" onSubmit={handleSubmit}>
+                                        <input id="email" name="email" tabIndex="1"  aria-required="true" type="email" placeholder="Email Address" required value={email} onChange={(event) => {setEmail(event.target.value)}} />
+                                        <input id="password" name="password" tabIndex="2" aria-required="true" required type="password" placeholder="Password" value={password} onChange={(event) => {setPassword(event.target.value)}} />
                                         <div className="row-form style-1">
                                             <label>Remember me
                                                 <input type="checkbox" />

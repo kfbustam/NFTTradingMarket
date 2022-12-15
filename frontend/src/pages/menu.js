@@ -7,7 +7,7 @@ const menus = [
     {
         id: 2,
         name: 'Marketplace',
-        links: '/explore-03',
+        links: '/explore-02',
     },
     {
         id: 4,

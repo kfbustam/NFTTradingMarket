@@ -4,30 +4,40 @@ import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import TodayPicks from '../components/layouts/explore-02/TodayPicks'
 import todayPickData from '../assets/fake-data/data-today-pick';
+import PathBanner from '../components/header/PathBanner';
+
+const GET_ALL_NFTS = "http://localhost:8080/nft"
 
 const Explore02 = () => {
+    const [assetCollection, setAssetCollection] = React.useState([]);
+
+    React.useEffect(() => {
+        fetch(
+            GET_ALL_NFTS,
+            {
+                method: "GET",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors'
+            }
+        ).then( response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw response
+        })
+        .then( collection => {
+            console.log("remote collection", collection);
+        })
+    }, [])
+
+
     return (
         <div className='explore'>
             <Header />
-            <section className="flat-title-page inner">
-                <div className="overlay"></div>
-                <div className="themesflat-container">
-                    <div className="row">
-                        <div className="col-md-12">
-                            <div className="page-title-heading mg-bt-12">
-                                <h1 className="heading text-center">Explore 2</h1>
-                            </div>
-                            <div className="breadcrumbs style2">
-                                <ul>
-                                    <li><Link to="/">Home</Link></li>
-                                    <li><Link to="#">Explore</Link></li>
-                                    <li>Explore 2</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>                    
-            </section>
+            <PathBanner heading="Marketplace"/>
             <TodayPicks data={todayPickData} />
             <Footer />
         </div>
