@@ -1,0 +1,9 @@
+.vscode
+initial/node_modules
+initial/yarn.lock
+frontend/yarn.lock
+initial/package-lock.json
+initial/target
+reactjs-mock/
+initial/node/
+node_modules/

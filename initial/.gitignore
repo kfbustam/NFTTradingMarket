@@ -1,0 +1,6 @@
+/target
+/target/
+/.vscode
+/.vscode/settings.json
+/.idea
+/.idea/*
