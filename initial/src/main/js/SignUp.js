@@ -45,36 +45,38 @@ export default function SignUp({setIsSigningUp}) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    fetch(SIGN_UP_URL, {
+    fetch(
+      SIGN_UP_URL 
+      + "?email="
+      + data.get('email') 
+      + "&password=" 
+      + data.get('password') 
+      + "&firstname=" 
+      + data.get('firstName') 
+      + "&lastname=" 
+      + data.get('lastName') 
+      + "&nickname=" 
+      + data.get('nickname'),
+    {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
       method: "POST",
-      body: JSON.stringify({
-        email: data.get('email'),
-        password: data.get('password'),
-        firstname: data.get('firstname'),
-        lastname: data.get('lastname'),
-        nickname: data.get('nickname'),
-      })
     })
     .then(response => {
       if (response.ok) {
+        setIsSigningUp(false)
         return response.json()
       }
       throw response
     })
     .then(data => {
-      setProfileData(data)
     })
     .catch(error => {
       console.error(error)
-      setProfileData(null)
       setError(error)
-    }).finally(() => {
-      setLoading(false)
-    });
+    }).finally(() => {});
   };
 
   return (

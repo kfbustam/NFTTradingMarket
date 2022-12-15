@@ -23,10 +23,10 @@ public class Wallet {
 	private String destination;  
 	private int price; // sum of each flight’s price.   // Full form only
 	
-	@OneToMany(targetEntity=NFT.class)
+	@OneToMany(targetEntity=NFT.class, mappedBy="wallet")
 	private List<NFT> nfts; 
 
-	@OneToMany(targetEntity=CryptoCurrency.class)
+	@OneToMany(targetEntity=CryptoCurrency.class, mappedBy="wallet")
 	private List<CryptoCurrency> cryptoCurrencies;  
 
     /**
