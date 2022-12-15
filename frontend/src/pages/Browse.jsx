@@ -8,8 +8,8 @@ import PathBanner from '../components/header/PathBanner';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const GET_ALL_NFTS = "https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft"
-const LISTINGS_URL = "https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/listings"
+const GET_ALL_NFTS = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft"
+const LISTINGS_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/listings"
 
 const Browse = () => {
     const [assetCollection, setAssetCollection] = React.useState([]);

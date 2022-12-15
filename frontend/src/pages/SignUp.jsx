@@ -8,8 +8,8 @@ import { GoogleLogin } from 'react-google-login';
 import { gapi } from 'gapi-script';
 
 const CLIENT_ID = "104101427642-9kkv6e3v2hk1rd01k96nqk1pmgu81vpe.apps.googleusercontent.com"
-const SIGN_IN_URL = "https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/signin"
-const SIGN_UP_URL = "https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/signup"
+const SIGN_IN_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/signin"
+const SIGN_UP_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/signup"
 
 const SignUp = () => {
     const [errorText, setErrorText] = React.useState(null)
@@ -22,7 +22,7 @@ const SignUp = () => {
     const [profileData, setProfileData] = useState(null)
 
     const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-    const SIGN_UP_URL = "https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/signup"
+    const SIGN_UP_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/signup"
     let navigate = useNavigate();
 
 
