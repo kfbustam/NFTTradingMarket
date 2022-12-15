@@ -25,8 +25,10 @@ const Login = ({ fromSignUp = false }) => {
         if (profileData !== null) {
             localStorage.setItem("profileData", profileData)
             window.sessionStorage.setItem("profileData", profileData);
-            toast.success("Login Successful!")
-            navigate("/wallet-connect");
+            toast.success("Logging you in!", {
+                autoClose: 1500,
+                onClose: () => navigate("/wallet-connect")
+            })
         }
     }, [profileData])
 
@@ -96,10 +98,7 @@ const Login = ({ fromSignUp = false }) => {
         localStorage.setItem("token", response.googleId)
 
         console.log(response);
-        setProfileData({
-            email: response.profileObj.email,
-            ...response
-        })
+        
         fetch(
             SIGN_UP_URL
             + "?email="
@@ -126,7 +125,6 @@ const Login = ({ fromSignUp = false }) => {
                 mode: 'cors'
             })
             .then(response => {
-
                 if (response.ok) {
                     return response.json()
                 }
@@ -138,9 +136,45 @@ const Login = ({ fromSignUp = false }) => {
             .catch(error => {
                 console.error(error)
             }).finally(() => { });
+
+            // check if email is verified for social login
+            fetch(SIGN_IN_URL + "?email=" + response.profileObj.email + "&password=token", {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: JSON.stringify({
+                    email: response.profileObj.email,
+                    password: "token",
+                }),
+                mode: 'cors'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json()
+                    } else {
+                        toast.error("Please verify your email.");
+                    }
+                    throw response
+                })
+                .then(data => {
+                    setProfileData(data)
+                    localStorage.setItem("token", data.token)
+                })
+                .catch(error => {
+                    console.error(error)
+                    setProfileData(null)
+                    setError(error)
+                }).finally(() => {
+                    setLoading(false)
+                });
     };
 
     const responseGoogleFailure = (response) => {
+        toast.error("Login Failed! Please try again.", {
+            autoClose: 1000
+        })
         console.log("Failure");
         console.log(response);
     };

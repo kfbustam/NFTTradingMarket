@@ -59,7 +59,7 @@ const CreateItem = () => {
         })
         .then(jsonData => {
             
-            navigate("/my-listings");
+            navigate("/my-nfts");
 
             console.log("Upload Successful", jsonData)
         }).catch(error => {

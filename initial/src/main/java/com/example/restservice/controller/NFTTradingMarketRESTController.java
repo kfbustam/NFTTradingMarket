@@ -24,11 +24,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,7 +150,7 @@ public class NFTTradingMarketRESTController {
         try {
             Optional<User> optionalUser = service.findUserByEmail(email);
 
-            if (optionalUser.isPresent()) {
+            if (optionalUser.isPresent() && type == NftUserType.LOCAL) {
                 return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Another user with the same email already exists.\"}}", HttpStatus.BAD_REQUEST);
             }
 
@@ -166,7 +162,42 @@ public class NFTTradingMarketRESTController {
 				password = "token";
 			}
 
-            User user = service.createUser(email, password, firstname, lastname, nickname, type);
+			// idempotent scenario for social login
+			if (optionalUser.isPresent() && type == NftUserType.GOOGLE) {
+				JSONObject json = new JSONObject()
+						.put("email", optionalUser.get().getEmail())
+						.put("firstname", optionalUser.get().getFirstName())
+						.put("lastname", optionalUser.get().getLastName())
+						.put("nickname", optionalUser.get().getNickName());
+
+				if(!optionalUser.get().isVerified()) {
+					ResponseEntity<String> res = new ResponseEntity<String>(
+							json.toString(),
+							responseHeaders,
+							201
+					);
+					return res;
+				}
+				service.createSessionToken(optionalUser.get(), socialToken);
+
+				ResponseEntity<String> res = new ResponseEntity<String>(
+						json.toString(),
+						responseHeaders,
+						200
+				);
+				return res;
+			}
+
+			// add a random suffix to social login nickname
+			String generatedNickname = nickname;
+
+			if (NftUserType.GOOGLE == type) {
+				Random r = new Random( System.currentTimeMillis() );
+				generatedNickname = generatedNickname.replaceAll("\\s+","")
+						+ (10000 + r.nextInt(20000));
+			}
+
+			User user = service.createUser(email, password, firstname, lastname, generatedNickname, type);
             String token = UUID.randomUUID().toString();
             service.createVerificationToken(user, token);
             String recipientAddress = user.getEmail();
@@ -177,16 +208,19 @@ public class NFTTradingMarketRESTController {
             emailMessage.setSubject(subject);
             emailMessage.setText("\nPlease go to the following link to verify your account: \n\n" + confirmationUrl);
             mailSender.send(emailMessage);
+
+
+
             JSONObject json = new JSONObject()
                     .put("email", user.getEmail())
                     .put("firstname", user.getFirstName())
                     .put("lastname", user.getLastName())
-                    .put("nickname", user.getNickName());
+                    .put("nickname", generatedNickname);
 
             ResponseEntity<String> res = new ResponseEntity<String>(
                     json.toString(),
                     responseHeaders,
-                    200
+                    201
             );
 
 			service.createSessionToken(user, socialToken);
@@ -481,6 +515,64 @@ public class NFTTradingMarketRESTController {
         }
     }
 
+	/*
+		GET User's Own NFT listings by Token
+	 */
+	@PostMapping("/nft/listings")
+	@ResponseBody
+	public ResponseEntity<String> listings(
+			@RequestParam(name="token", required=true) String token
+	) {
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		try {
+
+
+			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
+
+			if (optionalSession.isEmpty()) {
+				optionalSession = service.getSessionByToken(token);
+			}
+
+			if (optionalSession.isEmpty()) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
+			}
+
+			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
+
+			List<NFT> listings = service.getAllListingsAsNFTs().stream().filter(x -> x.getWallet().getUser().getID().equals(buyer.getID())).collect(Collectors.toList());
+
+			ArrayList<JSONObject> json = new ArrayList<>();
+			listings.forEach(listing -> {
+				json.add(
+						new JSONObject()
+								.put("price", listing.getPrice())
+								.put("description", listing.getDescription())
+								.put("assetURL", listing.getAssetUrl())
+								.put("imageURL", listing.getImageUrl())
+								.put("name", listing.getName())
+								.put("type", listing.getNftType())
+								.put("lastRecordedTime", listing.getLastRecordedTime())
+								.put("address", listing.getSmartContractAddress())
+				);
+			});
+
+			ResponseEntity<String> res = new ResponseEntity<String>(
+					new JSONArray(json).toString(),
+					responseHeaders,
+					200
+			);
+
+			return res;
+		} catch (Exception ex) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			System.out.println(sw.toString());
+			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 500 \",\"msg\": " + ex.getMessage() + "}}", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@GetMapping("/nft")
 	@ResponseBody
 	public ResponseEntity<List<NFT>> nfts() {
@@ -488,7 +580,6 @@ public class NFTTradingMarketRESTController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 
 		try {
-
 			List<NFT> allNfts = nftService.getAllNfts();
 
 			ResponseEntity<List<NFT>> res = new ResponseEntity<List<NFT>>(
@@ -496,7 +587,40 @@ public class NFTTradingMarketRESTController {
 					responseHeaders,
 					200
 			);
+			return res;
+		} catch (Exception ex) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			System.out.println(sw.toString());
+			return new ResponseEntity<List<NFT>>(List.of(), HttpStatus.BAD_REQUEST);
+		}
+	}
 
+	@GetMapping("/nft/{token}")
+	@ResponseBody
+	public ResponseEntity<List<NFT>> getUserNfts(
+			@RequestParam(name="token", required=true) String token
+
+	) {
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+		Optional<SessionToken> optionalSession = service.getSessionByToken(token);
+
+		if (optionalSession.isEmpty()) {
+			return new ResponseEntity<List<NFT>>(List.of(), HttpStatus.BAD_REQUEST);
+		}
+
+		User user = service.getSessionByToken(token).orElseThrow().getUser();
+
+		try {
+			List<NFT> allNfts = nftService.getAllNftsByUser(user);
+
+			ResponseEntity<List<NFT>> res = new ResponseEntity<List<NFT>>(
+					allNfts,
+					responseHeaders,
+					200
+			);
 			return res;
 		} catch (Exception ex) {
 			StringWriter sw = new StringWriter();

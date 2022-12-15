@@ -26,6 +26,7 @@ import Deposits from "./Deposits";
 import Withdrawal from "./Withdrawal";
 import SystemDashboard from "./SystemDashboard";
 import ListItem from "./ListItem";
+import MyNfts from "./MyNfts";
 
 
 const routes = [
@@ -38,6 +39,7 @@ const routes = [
   { path: '/item-details-02', component: <ItemDetails02 />},
   { path: '/my-listings', component: <Listings />},
   { path: '/transactions', component: <Activity02 />},
+  { path: '/my-nfts', component: <MyNfts />},
   { path: '/blog', component: <Blog />},
   { path: '/blog-details', component: <BlogDetails />},
   { path: '/help-center', component: <HelpCenter />},

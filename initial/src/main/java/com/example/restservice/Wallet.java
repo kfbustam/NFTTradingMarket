@@ -51,6 +51,7 @@ public class Wallet {
 	public Wallet(User user, CryptoType type) {
 		this.user = user;
 		this.type = type;
+		this.cryptoBalance = BigDecimal.valueOf(0.00);
 	}
 
 	public String getId() {

@@ -48,6 +48,20 @@ public class NftService {
         return nftRepository.findAll();
     }
 
+    public List<NFT> getAllNftsByUser(User user) {
+        List<NFT> nftList = new ArrayList<>();
+        List<Wallet> wallets = walletRepository.findUserWallet(user.getID())
+                .stream().collect(Collectors.toList());
+
+        for(Wallet wallet : wallets) {
+            List<NFT> nftsInWallet = nftRepository.findByWalletID(wallet.getId())
+                    .stream().collect(Collectors.toList());
+            nftList.addAll(nftsInWallet);
+        }
+
+        return nftList;
+    }
+
     public Optional<NFT> getNFT(String id) {
         return nftRepository.findById(id);
     }

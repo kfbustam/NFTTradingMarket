@@ -91,12 +91,18 @@ public class Service {
     }
 
     public SessionToken createSessionToken(User user, String token) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.add(Calendar.DATE, 7); //minus number would decrement the days
-        SessionToken sessionToken = new SessionToken(user, token, cal.getTime());
-        sessionRepository.saveAndFlush(sessionToken);
-        return sessionToken;
+        Optional<SessionToken> optionalSession = getSessionByToken(token);
+
+        if(!optionalSession.isPresent()) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.DATE, 7); //minus number would decrement the days
+            SessionToken sessionToken = new SessionToken(user, token, cal.getTime());
+            sessionRepository.saveAndFlush(sessionToken);
+            return sessionToken;
+        } else {
+            return optionalSession.get();
+        }
     }
 
     public Optional<Wallet> getUserWallet(Wallet wallet) {

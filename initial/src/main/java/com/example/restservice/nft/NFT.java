@@ -42,6 +42,11 @@ public class NFT {
 
 	private double price;
 
+	@ManyToOne
+	@JoinColumn(name = "wallet_id")
+	@JsonIgnore
+	private Wallet wallet;     // Full form only
+
 	@OneToMany
 	private List<Offer> offers;     // Full form only
 
@@ -78,11 +83,6 @@ public class NFT {
 	public void setCategory(NftCategory category) {
 		this.category = category;
 	}
-
-	@ManyToOne
-	@JoinColumn(name = "wallet_id")
-	@JsonIgnore
-	private Wallet wallet;     // Full form only
 
   	public NFT() {}
 

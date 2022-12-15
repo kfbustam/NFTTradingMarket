@@ -39,16 +39,16 @@ const WalletConnect = () => {
 
     const getWalletLink = (type) => {
         if (type === "ETHEREUM") {
-            return <Link to="/create-item" >Ethereum Wallet</Link>
+            return <Link to="/my-nfts" >Ethereum Wallet</Link>
         }
         if (type === "BITCOIN") {
-            return <Link to="/create-item" >Bitcoin Wallet</Link>
+            return <Link to="/my-nfts" >Bitcoin Wallet</Link>
         }
         if (type === "CREATE") {
             return <Link to="/create-item" >Create NFTs</Link>
         }
         if (type === "COLLECTION") {
-            return <Link to="/create-item" >My NFT Collection</Link>
+            return <Link to="/my-nfts" >My NFT Collection</Link>
         }
         else {
             return <Link to="/login">Default</Link>

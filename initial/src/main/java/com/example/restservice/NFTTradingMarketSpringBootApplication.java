@@ -16,7 +16,6 @@ public class NFTTradingMarketSpringBootApplication extends SpringBootServletInit
 		return application.sources(NFTTradingMarketSpringBootApplication.class);
 	}
 
-
 	/**
 	 * The entry point of application.
 	 *

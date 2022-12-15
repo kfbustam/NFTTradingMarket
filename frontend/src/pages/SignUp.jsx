@@ -1,9 +1,15 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GoogleLogin } from 'react-google-login';
+import { gapi } from 'gapi-script';
+
+const CLIENT_ID = "104101427642-9kkv6e3v2hk1rd01k96nqk1pmgu81vpe.apps.googleusercontent.com"
+const SIGN_IN_URL = "http://localhost:8080/signin"
+const SIGN_UP_URL = "http://localhost:8080/signup"
 
 const SignUp = () => {
     const [errorText, setErrorText] = React.useState(null)
@@ -13,16 +19,106 @@ const SignUp = () => {
     const [firstName, setFirstName] = React.useState("")
     const [lastName, setLastName] = React.useState("")
     const [nickName, setNickName] = React.useState("")
-
+    const [profileData, setProfileData] = useState(null)
 
     const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
     const SIGN_UP_URL = "http://localhost:8080/signup"
     let navigate = useNavigate();
 
+
+    useEffect(() => {
+
+        const initClient = () => {
+            gapi.client.init({
+                clientId: CLIENT_ID,
+                scope: ''
+            });
+        };
+        gapi.load('client:auth2', initClient);
+    });
+
+    React.useEffect(() => {
+        // onSuccess -> Go to Sign in page
+        if (profileData !== null) {
+            localStorage.setItem("profileData", profileData)
+            window.sessionStorage.setItem("profileData", profileData);
+        }
+    }, [profileData])
+
+    const responseGoogleSuccess = (response) => {
+        toast.info("Processing your request...", {
+            id: 1,
+            autoClose: 500
+        })
+        console.log("Successful");
+        localStorage.setItem("token", response.googleId)
+
+        console.log(response);
+        setProfileData({
+            email: response.profileObj.email,
+            ...response
+        })
+        fetch(
+            SIGN_UP_URL
+            + "?email="
+            + response.profileObj.email
+            + "&password="
+            + ""
+            + "&firstname="
+            + response.profileObj.givenName
+            + "&type="
+            + "GOOGLE"
+            + "&lastname="
+            + response.profileObj.familyName
+            + "&nickname="
+            + response.profileObj.name
+            + "&social_token="
+            + response.googleId //use google id as token for safety as access tokens have higher refresh rate
+            ,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: "POST",
+                mode: 'cors'
+            })
+            .then(response => {
+                if (response.ok) {
+                    if (response.status === 200) {
+                        toast.success("Logging you in!", {
+                            autoClose: 1000,
+                            onClose: () => navigate("/wallet-connect")
+                        })
+
+                        
+                    } else {
+                        toast.info("New Account Created. Please verify email!", {
+                            autoClose: 1000,
+                            onClose: () => navigate("/login")
+                        })
+                    }
+                    return response.json();
+                }
+                toast.error("Something went wrong. Please try again.", {id: 1});
+                throw response
+            })
+            .then(data => {
+                console.log("sign up response", data);
+            })
+            .catch(error => {
+                console.error(error)
+            }).finally(() => { });
+    };
+
+    const responseGoogleFailure = (response) => {
+        console.log("Failure");
+        console.log(response);
+    };
+
     React.useEffect(() => {
         // onSuccess -> Go to Sign in page
         if (signupResponse !== null && signupResponse.email === email) {
-            toast.success("Sign Up Successful!")
             navigate("/login");
         }
     }, [signupResponse])
@@ -35,49 +131,58 @@ const SignUp = () => {
     }, [errorText]);
 
     const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        fetch(
-            SIGN_UP_URL
-            + "?email="
-            + email
-            + "&password="
-            + password
-            + "&firstname="
-            + firstName
-            + "&type="
-            + "LOCAL"
-            + "&lastname="
-            + lastName
-            + "&nickname="
-            + nickName,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                method: "POST",
-                mode: 'cors'
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                throw response
-            })
-            .then(data => {
-                setSignupResponse(data)
-                console.log("sign up response", data);
-            })
-            .catch(error => {
-                console.error(error)
-                setErrorText(error)
-            }).finally(() => { });
+
+        if (/^[a-zA-Z0-9]*$/.test(nickName) == false) {
+            toast.error("Only Alpha-Numeric characters allowed in nickname.");
+            console.log('Invalid nickname')
+        } 
+
+            toast.info("Processing...");
+
+            event.preventDefault();
+            const data = new FormData(event.currentTarget);
+            fetch(
+                SIGN_UP_URL
+                + "?email="
+                + email
+                + "&password="
+                + password
+                + "&firstname="
+                + firstName
+                + "&type="
+                + "LOCAL"
+                + "&lastname="
+                + lastName
+                + "&nickname="
+                + nickName,
+                {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "POST",
+                    mode: 'cors'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        toast.success("Sign Up Successful! Please verify your email.")
+                        return response.json()
+                    }
+                    toast.error("Something went wrong. Please try again.");
+                    throw response
+                })
+                .then(data => {
+                    setSignupResponse(data)
+                    console.log("sign up response", data);
+                })
+                .catch(error => {
+                    console.error(error)
+                    setErrorText(error)
+                }).finally(() => { });
     };
 
     return (
         <div>
-            <ToastContainer theme="dark" position="top-center" />
             <Header />
             <section className="flat-title-page inner">
                 <div className="overlay"></div>
@@ -98,6 +203,8 @@ const SignUp = () => {
                     </div>
                 </div>
             </section>
+            <ToastContainer theme="dark" position="top-center" />
+
             <section className="tf-login tf-section">
                 <div className="themesflat-container">
                     <div className="row">
@@ -112,10 +219,18 @@ const SignUp = () => {
                                 </div>
                                 <ul className='col-12'>
                                     <li className='col-12'>
-                                        <Link to="#" className="sc-button style-2 fl-button pri-3">
-                                            <i className="icon-fl-google-2"></i>
-                                            <span>Google</span>
-                                        </Link>
+                                    <div >
+                                    <GoogleLogin
+                                        theme="dark"
+                                        className="sc-button style-2 fl-button pri-3"
+                                        clientId={CLIENT_ID}
+                                        buttonText="Sign Up with Google"
+                                        onSuccess={responseGoogleSuccess}
+                                        onFailure={responseGoogleFailure}
+                                        cookiePolicy={'single_host_origin'}
+                                        isSignedIn={false}
+                                    />
+                                </div>
                                     </li>
                                 </ul>
                             </div>
