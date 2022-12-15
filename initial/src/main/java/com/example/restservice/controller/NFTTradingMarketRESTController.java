@@ -135,7 +135,7 @@ public class NFTTradingMarketRESTController {
     @ResponseBody
     public ResponseEntity<String> signUp(
             @RequestParam(name = "email", required = true) String email,
-            @RequestParam(name = "password", required = true) String password,
+            @RequestParam(name = "password", required = false) String password,
             @RequestParam(name = "firstname", required = true) String firstname,
             @RequestParam(name = "lastname", required = true) String lastname,
             @RequestParam(name = "nickname", required = true) String nickname,
@@ -150,6 +150,10 @@ public class NFTTradingMarketRESTController {
             if (optionalUser.isPresent()) {
                 return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Another user with the same email already exists.\"}}", HttpStatus.BAD_REQUEST);
             }
+
+							if (type == NftUserType.LOCAL && password == "") {
+								return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Missing password\"}}", HttpStatus.BAD_REQUEST);
+							}
 
             User user = service.createUser(email, password, firstname, lastname, nickname, type);
             String token = UUID.randomUUID().toString();
