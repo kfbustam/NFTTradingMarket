@@ -65,7 +65,7 @@ const Header = () => {
                                 <nav id="main-nav" className="main-nav" ref={menuLeft} >
                                     <ul id="menu-primary-menu" className="menu">
                                         {
-                                            menus.map((data,index) => (
+                                            loggedInMenu.map((data,index) => (
                                                 <li key={index} onClick={()=> handleOnClick(index)} className={`menu-item ${data.namesub ? 'menu-item-has-children' : '' } ${activeIndex === index ? 'active' : ''} ` }   >
                                                     <Link to={data.links}>{data.name}</Link>
                                                     {
