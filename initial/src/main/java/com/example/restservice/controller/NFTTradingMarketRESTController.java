@@ -5,6 +5,7 @@ import com.example.restservice.crypto.CryptoType;
 import com.example.restservice.nft.NFT;
 import com.example.restservice.nft.NftService;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,8 @@ import org.springframework.context.MessageSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.http.HttpStatus;
 
+import javax.activation.FileTypeMap;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.StringWriter;
@@ -62,6 +66,15 @@ public class NFTTradingMarketRESTController {
 
     @Autowired
     private JavaMailSender mailSender;
+
+	@GetMapping("images")
+	public ResponseEntity<byte[]> getImage(
+			@RequestParam(name="image_name", required=true) @NotNull String image_name
+	) throws IOException {
+		File img = new File("tmp/" + image_name);
+		return ResponseEntity.ok().contentType(MediaType.valueOf(FileTypeMap.getDefaultFileTypeMap().getContentType(img)))
+				.body(Files.readAllBytes(img.toPath()));
+	}
 
 	/**
 	 * Sign in user.

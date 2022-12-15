@@ -57,7 +57,6 @@ public class NFTTradingMarketCryptoController {
     @Autowired
     private JavaMailSender mailSender;
 
-
     @PostMapping(value = "/wallet/{wallet_id}/withdraw", produces = "application/json")
     @ResponseBody
     public ResponseEntity<String> withdrawWallet(
