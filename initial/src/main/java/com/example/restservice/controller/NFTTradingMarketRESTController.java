@@ -50,6 +50,7 @@ public class NFTTradingMarketRESTController {
 	 * The App url.
 	 */
 	public String appURL = "http://Cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com";
+	public String frontendUrl = "https://surfacery.com";
 
     @Autowired
     private Service service;
@@ -262,7 +263,7 @@ public class NFTTradingMarketRESTController {
             Optional<VerificationToken> optionalVerificationToken = service.findByToken(token);
 
             if (optionalVerificationToken.isEmpty()) {
-                return new RedirectView(this.appURL + "?error=TokenNotFound");
+                return new RedirectView(this.frontendUrl + "?error=TokenNotFound");
             }
 
             VerificationToken tokenFound = optionalVerificationToken.orElseThrow();
@@ -271,14 +272,14 @@ public class NFTTradingMarketRESTController {
             user.setVerified();
             service.updateUser(user);
 
-            return new RedirectView(this.appURL + "?message=success");
+            return new RedirectView(this.frontendUrl + "?message=success");
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
             String stackTrace = sw.toString(); // stack trace as a string
             System.out.println(sw.toString());
-            return new RedirectView(this.appURL + "?error=" + ex.getMessage());
+            return new RedirectView(this.frontendUrl + "?error=" + ex.getMessage());
         }
     }
 
