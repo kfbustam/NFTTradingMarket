@@ -383,4 +383,30 @@ public class NFTTradingMarketRESTController {
             return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + ex.getMessage() + "}}", HttpStatus.BAD_REQUEST);
         }
     }
+
+	@GetMapping("/nft")
+	@ResponseBody
+	public ResponseEntity<List<NFT>> nfts() {
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+		try {
+
+			List<NFT> allNfts = nftService.getAllNfts();
+
+			ResponseEntity<List<NFT>> res = new ResponseEntity<List<NFT>>(
+					allNfts,
+					responseHeaders,
+					200
+			);
+
+			return res;
+		} catch (Exception ex) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			System.out.println(sw.toString());
+			return new ResponseEntity<List<NFT>>(List.of(), HttpStatus.BAD_REQUEST);
+		}
+	}
 }
