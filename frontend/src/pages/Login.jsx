@@ -17,7 +17,6 @@ const Login = ({ fromSignUp=false }) => {
     const [error, setError] = useState()
     const [email, setEmail] = React.useState("")
     const [password, setPassword] = React.useState("")
-    const { user } = useContext(UserContext);
 
     let navigate = useNavigate();
 
