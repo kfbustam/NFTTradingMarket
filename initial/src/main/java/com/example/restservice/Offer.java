@@ -25,7 +25,7 @@ public class Offer {
 	@JsonIgnore
 	private User user;
 
-	private double offerPrice;
+	private Double offerPrice;
 
 	@ManyToOne
 	@JoinColumn(name = "nft_id")
@@ -35,11 +35,13 @@ public class Offer {
   public Offer() {}
 
 
-  public Offer(int offerPrice) {
+  public Offer(User user, Double offerPrice, NFT nft) {
+		this.user = user;
 		this.offerPrice = offerPrice;
+		this.nft = nft;
 	}
 
-	public double getOfferPrice() {
+	public Double getOfferPrice() {
 		return this.offerPrice;
 	}
 }

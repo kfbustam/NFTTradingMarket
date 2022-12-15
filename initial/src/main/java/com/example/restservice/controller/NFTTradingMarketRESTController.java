@@ -220,7 +220,8 @@ public class NFTTradingMarketRESTController {
 	@PostMapping("/wallet")
 	@ResponseBody
 	public ResponseEntity<String> createWallet(
-			@RequestParam(name="token", required=true) String token
+			@RequestParam(name="token", required=true) String token,
+			@RequestParam(name="type", required=true) String type
 			) {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -235,8 +236,12 @@ public class NFTTradingMarketRESTController {
 
 			optionalSession.ifPresent(session -> {
 				User user = session.getUser();
-				service.createWallet(user);
-	});
+				if (type == "eth") {
+					service.createWallet(user, CryptoType.ETHEREUM);
+				} else if (type == "btc") {
+					service.createWallet(user, CryptoType.BITCOIN);
+				}
+			});
 			
 			JSONObject json = new JSONObject()
 				.put("type", type);
@@ -350,7 +355,6 @@ public class NFTTradingMarketRESTController {
 
 				optionalWallet.ifPresent((wallet) -> {
 					service.getNFTsInWallet(wallet).forEach(nft -> allNFTs.add(nft));
-					service.getCryptoCurrencies(wallet).forEach((key, value) -> allCryptoTotalHashMap.put(key, value));
 				});
 			});
 
@@ -489,7 +493,6 @@ public class NFTTradingMarketRESTController {
 				optionalSession = service.getSessionByToken(token);
 			}
 
-
 			if (optionalSession.isEmpty()) {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
 			}
@@ -497,42 +500,32 @@ public class NFTTradingMarketRESTController {
 			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
 			User seller = service.findUser(sellerID).orElseThrow();
 			NFT nft = nftService.getNFT(nftID).orElseThrow();
-			
-			ArrayList<Wallet> userWallets = service.getUserWallet(buyer);
-
-			if (userWallets.size() > 1) {
-				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 500 \",\"msg\": User should not have multiple wallets!}}", HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-
-			Wallet buyerWallet = service.getUserWallet(buyer).get(0);
-			Wallet sellerWallet = service.getUserWallet(seller).get(0);
-			double totalPriceOfCurrencyInBuyersWallet = 0.0;
-			HashMap<String, Double> sellersCryptoTotals = service.getCryptoCurrencies(sellerWallet);
-			HashMap<String, Double> buyersCryptoTotals = buyerWallet.getCryptoCurrencyTotals();
-
-			if (cryptoType == CryptoType.BITCOIN) {
-				totalPriceOfCurrencyInBuyersWallet = buyersCryptoTotals.get("btc");
-				if (totalPriceOfCurrencyInBuyersWallet < nft.getPrice()) {
-					return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"You do not have enough of this currency to proceed with this transaction.\"}}", HttpStatus.BAD_REQUEST);
-				}
-				service.updateBTCTotalInWallet(buyerWallet, totalPriceOfCurrencyInBuyersWallet-nft.getPrice());
-				service.updateBTCTotalInWallet(sellerWallet, sellersCryptoTotals.get("btc")+nft.getPrice());
+		
+			Wallet buyerWallet;
+			Wallet sellerWallet;
+			if (nft.getNftType() == CryptoType.BITCOIN) {			
+				buyerWallet = service.findUsersWalletByType(buyer, CryptoType.BITCOIN);
+				sellerWallet = service.findUsersWalletByType(seller, CryptoType.BITCOIN);
 			} else {
-				totalPriceOfCurrencyInBuyersWallet = buyersCryptoTotals.get("eth");
-				if (totalPriceOfCurrencyInBuyersWallet < nft.getPrice()) {
-					return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"You do not have enough of this currency to proceed with this transaction.\"}}", HttpStatus.BAD_REQUEST);
-				}
-				service.updateETHTotalInWallet(buyerWallet, totalPriceOfCurrencyInBuyersWallet-nft.getPrice());
-				service.updateBTCTotalInWallet(sellerWallet, sellersCryptoTotals.get("eth")+nft.getPrice());
+				buyerWallet = service.findUsersWalletByType(buyer, CryptoType.ETHEREUM);
+				sellerWallet = service.findUsersWalletByType(seller, CryptoType.ETHEREUM);
 			}
+
+			BigDecimal balance = buyerWallet.getCryptoBalance();
+
+			if (balance.longValue() < BigDecimal.valueOf(nft.getPrice()).longValue()) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"You do not have enough of this currency to proceed with this transaction.\"}}", HttpStatus.BAD_REQUEST);
+			}
+
+			service.updateUserWalletBalance(buyerWallet, balance.longValue()-BigDecimal.valueOf(nft.getPrice()).longValue());
+			service.updateUserWalletBalance(sellerWallet, balance.longValue()+BigDecimal.valueOf(nft.getPrice()).longValue());
 			service.deleteListingForNFT(nft);
 
 			service.moveNFT(buyerWallet, nft);
 			
 			JSONObject json = new JSONObject()
 						.put("nftID", nft.getId())
-						.put("cryptoType", nft.getNftType())
-						.put("newBuyersTotals", buyerWallet.getCryptoCurrencyTotals());
+						.put("cryptoType", nft.getNftType());
 
 			ResponseEntity<String> res = new ResponseEntity<String>(
 				json.toString(),
@@ -554,6 +547,7 @@ public class NFTTradingMarketRESTController {
 	@ResponseBody
 	public ResponseEntity<String> auctionOfferNFT(
 		@RequestParam(name="token", required=true) String token,
+		@RequestParam(name = "offerPrice", required = true) @NotEmpty Double offerPrice,
 		@RequestParam(name = "nftID", required = true) @NotEmpty String nftID
 	) {
 
@@ -575,18 +569,21 @@ public class NFTTradingMarketRESTController {
 			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
 			NFT nft = nftService.getNFT(nftID).orElseThrow();
 			
-			ArrayList<Wallet> userWallets = service.getUserWallet(buyer);
-
-			if (userWallets.size() > 1) {
-				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 500 \",\"msg\": User should not have multiple wallets!}}", HttpStatus.INTERNAL_SERVER_ERROR);
+			Wallet buyerWallet;
+			if (nft.getNftType() == CryptoType.BITCOIN) {			
+				buyerWallet = service.findUsersWalletByType(buyer, CryptoType.BITCOIN);
+			} else {
+				buyerWallet = service.findUsersWalletByType(buyer, CryptoType.ETHEREUM);
 			}
 
-		// Create Offer Object for listing found by NFT ID
+			if (buyerWallet.getCryptoBalance().longValue() < nft.getPrice()) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"You do not have enough of this currency to proceed with this transaction.\"}}", HttpStatus.BAD_REQUEST);
+			}
 
+			service.createOffer(buyer, offerPrice, nft);
 			
 			JSONObject json = new JSONObject()
-						.put("nftID", nft.getId())
-						.put("cryptoType", nft.getNftType());
+						.put("nftID", nft.getId());
 
 			ResponseEntity<String> res = new ResponseEntity<String>(
 				json.toString(),

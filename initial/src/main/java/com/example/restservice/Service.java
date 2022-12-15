@@ -1,5 +1,6 @@
 package com.example.restservice;
 
+import com.example.restservice.crypto.CryptoType;
 import com.example.restservice.nft.NFT;
 import com.example.restservice.nft.NFTRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +59,8 @@ public class Service {
         }
     }
 
-    public Wallet createWallet(User user) {
-        Wallet newWallet = new Wallet(user);
+    public Wallet createWallet(User user, CryptoType type) {
+        Wallet newWallet = new Wallet(user, type);
         Wallet walletCreated = walletRepository.saveAndFlush(newWallet);
         return walletCreated;
     }
@@ -71,6 +72,11 @@ public class Service {
 
     public void deleteListingForNFT(NFT nft) {
         listingRepository.deleteListingByNFTID(nft.getId());
+    }
+
+    public ArrayList<Wallet> getUserWallets(User user) {
+        Collection<Wallet> usersWallets = walletRepository.findUserWallet(user.getID());
+        return new ArrayList<>(usersWallets);
     }
 
     public User updateUser(User user) {
@@ -86,9 +92,17 @@ public class Service {
         verificationTokenRepository.save(myToken);
     }
 
-    public ArrayList<Wallet> getUserWallet(User user) {
-        Collection<Wallet> usersWallets = walletRepository.findUserWallet(user.getID());
-        return new ArrayList<>(usersWallets);
+    public Optional<Wallet> getUserWallet(Wallet wallet) {
+        Optional<Wallet> userWallet = walletRepository.findById(wallet.getId());
+        return userWallet;
+    }
+
+    public Wallet findUsersWalletByType(User user, CryptoType type) throws Exception {
+        ArrayList<Wallet> userWallet = new ArrayList<Wallet>(walletRepository.findUserWalletByType(user.getID(), type));
+        if (userWallet.size() > 1) {
+            throw new Exception("Should not have more than one wallet for a specific type");
+        }
+        return userWallet.get(0);
     }
 
     public Collection<NFT> getNFTsInWallet(Wallet wallet) {
@@ -130,5 +144,15 @@ public class Service {
         wallet.setCryptoBalance(wallet.getCryptoBalance().add(amount));
         walletRepository.save(wallet);
         return wallet;
+    }
+
+    public void updateUserWalletBalance(Wallet wallet, Long newBalance) {
+        wallet.setCryptoBalance(new BigDecimal(newBalance));
+        walletRepository.saveAndFlush(wallet);
+    }
+
+    public void createOffer(User user, Double price, NFT nft) {
+        Offer offer = new Offer(user, price, nft);
+        offerRepository.saveAndFlush(offer);
     }
 }

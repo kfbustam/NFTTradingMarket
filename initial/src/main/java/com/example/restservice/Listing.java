@@ -29,7 +29,7 @@ public class Listing {
 
 	private double listingPrice;
 
-	@JsonFormat(pattern="hh-ss")
+	@JsonFormat(pattern="HH:mm:ss")
 	@Nullable
 	private Date expirationTime;
 
