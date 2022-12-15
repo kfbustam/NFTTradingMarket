@@ -1,7 +1,6 @@
-package com.example.restservice;
+package com.example.restservice.nft;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.restservice.NFT;
 
 /**
  * The interface Flight repository.
