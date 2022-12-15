@@ -1,6 +1,5 @@
 package com.example.restservice;
 
-import com.example.restservice.crypto.CryptoType;
 import com.example.restservice.nft.NFT;
 import com.example.restservice.nft.NFTRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Optional;
 
 @org.springframework.stereotype.Service
@@ -53,12 +52,16 @@ public class Service {
         }
     }
 
-    public Wallet createWallet(User user, CryptoType type) {
-        Wallet newWallet = new Wallet(user, type);
+    public Wallet createWallet(User user) {
+        Wallet newWallet = new Wallet(user);
         Wallet walletCreated = walletRepository.saveAndFlush(newWallet);
         return walletCreated;
     }
 
+    public void moveNFT(Wallet toWallet, NFT nft) {
+        nft.setWallet(toWallet);
+        nftRepository.save(nft);
+    }
 
     public User updateUser(User user) {
         return userRepository.saveAndFlush(user);
@@ -73,14 +76,17 @@ public class Service {
         verificationTokenRepository.save(myToken);
     }
 
-    public ArrayList<Wallet> getUserWallets(User user) {
-        Collection<Wallet> usersWallets = walletRepository.findUserWallets(user.getID());
+    public ArrayList<Wallet> getUserWallet(User user) {
+        Collection<Wallet> usersWallets = walletRepository.findUserWallet(user.getID());
         return new ArrayList<>(usersWallets);
     }
 
-    public List<CryptographicAsset> getWalletContents(Wallet wallet) {
-        Collection<NFT> nfts = nftRepository.findByWalletID(wallet.getId());
-        return new ArrayList<>(nfts);
+    public Collection<NFT> getNFTsInWallet(Wallet wallet) {
+        return nftRepository.findByWalletID(wallet.getId());
+    }
+
+    public double getNFTsTotalPrice(Wallet wallet) {
+        return nftRepository.findTotalPriceInWallet(wallet.getId());
     }
 
     public Optional<SessionToken> getSessionByToken(String token) {

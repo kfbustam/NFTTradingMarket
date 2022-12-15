@@ -8,6 +8,7 @@ import com.example.restservice.nft.NFT;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -48,9 +49,8 @@ public class Wallet {
 		  this.nfts = nfts;
 	  }
 
-	public Wallet(User user, CryptoType type) {
+	public Wallet(User user) {
 		this.user = user;
-		this.type = type;
 	}
 
 	public String getId() {
@@ -63,14 +63,6 @@ public class Wallet {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public CryptoType getType() {
-		return type;
-	}
-
-	public void setType(CryptoType type) {
-		this.type = type;
 	}
 
 	public List<NFT> getNfts() {

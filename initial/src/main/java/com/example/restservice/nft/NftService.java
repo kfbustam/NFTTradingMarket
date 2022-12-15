@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.file.Path;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @org.springframework.stereotype.Service
@@ -42,5 +43,9 @@ public class NftService {
 
     public List<NFT> getAllNfts() {
         return nftRepository.findAll();
+    }
+
+    public Optional<NFT> getNFT(String id) {
+        return nftRepository.findById(id);
     }
 }

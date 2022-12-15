@@ -1,6 +1,5 @@
 package com.example.restservice.nft;
 
-import com.example.restservice.CryptographicAsset;
 import com.example.restservice.Wallet;
 import com.example.restservice.crypto.CryptoType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,7 +14,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name="nft")
-public class NFT implements CryptographicAsset {
+public class NFT {
 	@Id @GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String id; // primary key
@@ -77,7 +76,6 @@ public class NFT implements CryptographicAsset {
 		this.name = name;
 	}
 
-	@Override
 	public String getId() {
 		return id;
 	}
