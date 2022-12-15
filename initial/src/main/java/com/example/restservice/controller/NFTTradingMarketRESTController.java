@@ -231,7 +231,7 @@ public class NFTTradingMarketRESTController {
 
 		try {
 
-			Optional<SessionToken> optionalSession = service.getSessionById(token);
+			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
 
 			if (optionalSession.isEmpty()) {
 				optionalSession = service.getSessionByToken(token);
@@ -279,7 +279,7 @@ public class NFTTradingMarketRESTController {
 
 		try {
 
-			Optional<SessionToken> optionalSession = service.getSessionById(token);
+			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
 
 			if (optionalSession.isEmpty()) {
 				optionalSession = service.getSessionByToken(token);
@@ -339,7 +339,7 @@ public class NFTTradingMarketRESTController {
 
 		try {
 
-			Optional<SessionToken> optionalSession = service.getSessionById(token);
+			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
 
 			if (optionalSession.isEmpty()) {
 				optionalSession = service.getSessionByToken(token);
