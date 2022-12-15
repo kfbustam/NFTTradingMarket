@@ -16,6 +16,7 @@ import org.springframework.context.MessageSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -261,7 +262,7 @@ public class NFTTradingMarketRESTController {
 	 * Get wallets
 	 *
 	 */
-	@GetMapping("/wallets")
+	@GetMapping(value = "/wallets", produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<String> wallets(
 			@RequestParam(name="token", required=true) String token
@@ -295,6 +296,8 @@ public class NFTTradingMarketRESTController {
 				listOfWallets.add(
 					new JSONObject()
 						.put("id", wallets.get(i).getId())
+							.put("type", wallets.get(i).getType())
+							.put("balance", String.valueOf(wallets.get(i).getCryptoBalance()))
 				);
 			}
 

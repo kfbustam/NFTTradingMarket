@@ -18,9 +18,9 @@ import javax.validation.constraints.Pattern;
 @Entity
 public class SessionToken {
 
-	@Id @GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="id", strategy = "uuid")
-	private String id; // primary key
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
 
   private String token;
 
@@ -41,11 +41,6 @@ public class SessionToken {
   /**
    * Instantiates a new Session.
    *
-   * @param email a valid email address
-   * @param password the users password
-   * @param firstname the users firstname
-   * @param lastname the users lastname
-   * @param nickname the users nickname
    * 
    */
   public SessionToken(User user, String token, int expirationDate) {
@@ -59,7 +54,7 @@ public class SessionToken {
    *
    * @return the id
    */
-  public String getID() {
+  public Long getID() {
     return this.id;
   }
 

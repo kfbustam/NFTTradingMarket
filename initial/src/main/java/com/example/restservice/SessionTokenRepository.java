@@ -10,7 +10,6 @@ public interface SessionTokenRepository extends JpaRepository<SessionToken, Stri
     /**
      * Find by token optional.
      *
-     * @param String the token
      * @return the optional
      */
     Optional<SessionToken> findById(String id);

@@ -15,10 +15,6 @@ import java.util.stream.Stream;
 @org.springframework.stereotype.Service
 @Transactional
 public class Service {
-
-    @Autowired
-    private CryptoCurrencyRepository cryptoCurrencyRepository;
-
     @Autowired
     private NFTRepository nftRepository;
 
@@ -79,9 +75,7 @@ public class Service {
 
     public List<CryptographicAsset> getWalletContents(Wallet wallet) {
         Collection<NFT> nfts = nftRepository.findByWalletID(wallet.getId());
-        Collection<CryptoCurrency> cryptos = cryptoCurrencyRepository.findByWalletID(wallet.getId());
-        List<CryptographicAsset> walletContents = Stream.concat(nfts.stream(), cryptos.stream()).collect(Collectors.toList());
-        return walletContents;
+        return new ArrayList<>(nfts);
     }
 
     public Optional<SessionToken> getSessionByToken(String token) {
