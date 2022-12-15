@@ -8,8 +8,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const CLIENT_ID = "104101427642-9kkv6e3v2hk1rd01k96nqk1pmgu81vpe.apps.googleusercontent.com"
-const SIGN_IN_URL = "http://localhost:8080/signin"
-const SIGN_UP_URL = "http://localhost:8080/signup"
+const SIGN_IN_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/signin"
+const SIGN_UP_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/signup"
 
 const Login = ({ fromSignUp = false }) => {
     const [profileData, setProfileData] = useState(null)

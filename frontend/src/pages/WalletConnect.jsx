@@ -7,7 +7,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import img3 from '../assets/images/icon/Favicon.png'
 import PathBanner from '../components/header/PathBanner';
 
-const GET_WALLET_API = "http://localhost:8080/wallets"
+const GET_WALLET_API = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/wallets"
 
 const WalletConnect = () => {
     const [data, setData] = useState([])

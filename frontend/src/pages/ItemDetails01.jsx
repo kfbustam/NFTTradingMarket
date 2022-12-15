@@ -21,11 +21,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
-const BID_HISTORY_URL = "http://localhost:8080/nft/auction/offers"
-const IMAGE_BASE_URL = "http://localhost:8080/images?image_name="
-const BUY_NOW_URL = "http://localhost:8080/nft/buy"
-const PLACE_BID_URL = "http://localhost:8080/nft/auction/offer"
-const CANCEL_BID_URL = "http://localhost:8080/nft/auction/offer/cancel"
+const BID_HISTORY_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft/auction/offers"
+const IMAGE_BASE_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/images?image_name="
+const BUY_NOW_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft/buy"
+const PLACE_BID_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft/auction/offer"
+const CANCEL_BID_URL = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft/auction/offer/cancel"
 
 const ItemDetails01 = () => {
     let navigate = useNavigate();

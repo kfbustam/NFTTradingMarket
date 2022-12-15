@@ -49,7 +49,7 @@ public class NFTTradingMarketRESTController {
 	/**
 	 * The App url.
 	 */
-	public String appURL = "http://localhost:3000";
+	public String appURL = "http://Cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com";
 
     @Autowired
     private Service service;
@@ -948,11 +948,11 @@ public class NFTTradingMarketRESTController {
 			ArrayList<JSONObject> json = new ArrayList<>();
 			listings.forEach(listing -> {
 				Double minimumPrice = service.getMinimumOfferPrice(listing.getId());
-				json.add(
+
+				var childJson =
 						new JSONObject()
 								.put("nftId", listing.getId())
 								.put("minimumPrice", minimumPrice)
-								.put("expirationTime", listing.getListing().getExpirationTime().getTime())
 								.put("price", listing.getListing().getListingPrice())
 								.put("description", listing.getDescription())
 								.put("assetURL", listing.getAssetUrl())
@@ -967,8 +967,12 @@ public class NFTTradingMarketRESTController {
 											.put("id", listing.getListing().getSeller().getID())
 								)
 								.put("lastRecordedTime", listing.getLastRecordedTime())
-								.put("smartContractAddress", listing.getSmartContractAddress())
-				);
+								.put("smartContractAddress", listing.getSmartContractAddress());
+				if(listing.getListing().getType().equals(SaleType.AUCTION)
+					&& listing.getListing().getExpirationTime() != null) {
+					childJson.put("expirationTime", listing.getListing().getExpirationTime().getTime());
+				}
+				json.add(childJson);
 			});
 
 			ResponseEntity<String> res = new ResponseEntity<String>(
