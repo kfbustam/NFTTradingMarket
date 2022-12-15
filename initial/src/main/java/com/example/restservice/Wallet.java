@@ -28,7 +28,7 @@ public class Wallet {
 	@Column(name = "type")
 	private CryptoType type;
 
-	@Column(name = "balance")
+	@Column(name="balance", columnDefinition="Decimal(10,2) default '0.00'")
 	private BigDecimal cryptoBalance;
 
 	@OneToMany(targetEntity= NFT.class, mappedBy="wallet")

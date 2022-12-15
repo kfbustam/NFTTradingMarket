@@ -6,13 +6,11 @@ import com.example.restservice.nft.NFTRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @org.springframework.stereotype.Service
 @Transactional
@@ -97,5 +95,24 @@ public class Service {
 
     public Optional<Wallet> getWalletByID(String id) {
         return walletRepository.findById(id);
+    }
+
+    public Wallet makeWithdrawal(Wallet wallet, BigDecimal amount) throws Exception {
+        if (wallet.getCryptoBalance().compareTo(amount) >= 0) {
+            // update new balance
+            wallet.setCryptoBalance(wallet.getCryptoBalance().subtract(amount));
+            walletRepository.save(wallet);
+        } else {
+            throw new Exception("Wallet balance is not sufficient for withdrawal.");
+        }
+        return wallet;
+    }
+
+    public Wallet makeDeposit(Wallet wallet, BigDecimal amount) throws Exception {
+        // update new balance
+        // todo any other validation needed
+        wallet.setCryptoBalance(wallet.getCryptoBalance().add(amount));
+        walletRepository.save(wallet);
+        return wallet;
     }
 }

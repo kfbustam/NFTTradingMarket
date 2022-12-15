@@ -163,6 +163,10 @@ public class NFTTradingMarketRESTController {
                     200
             );
 
+			service.createWallet(user, CryptoType.ETHEREUM);
+
+			service.createWallet(user, CryptoType.BITCOIN);
+
             return res;
         } catch (Exception ex) {
 			String message = ex.getMessage();

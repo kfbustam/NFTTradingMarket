@@ -23,6 +23,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -57,4 +58,89 @@ public class NFTTradingMarketCryptoController {
     private JavaMailSender mailSender;
 
 
+    @PostMapping(value = "/wallet/{wallet_id}/withdraw", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<String> withdrawWallet(
+            @PathVariable(name="wallet_id", required=true) String walletId,
+            @RequestParam(name="amount", required=true) @NotNull BigDecimal amount
+            ) {
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+
+        try {
+
+            // todo add authentication to this endpoint
+
+           Optional<Wallet> wallet = service.getWalletByID(walletId);
+
+           JSONObject walletObject = null;
+           if (wallet.isPresent()) {
+               Wallet updatedWallet = service.makeWithdrawal(wallet.get(), amount);
+               walletObject = new JSONObject()
+                       .put("id", updatedWallet.getId())
+                       .put("status", "withdrawal_success")
+                       .put("type", updatedWallet.getType())
+                       .put("new_balance", String.valueOf(updatedWallet.getCryptoBalance()));
+            } else {
+               return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": Wallet does not exist.}}", HttpStatus.BAD_REQUEST);
+           }
+
+            ResponseEntity<String> res = new ResponseEntity<String>(
+                   walletObject.toString(),
+                    responseHeaders,
+                    200
+            );
+
+            return res;
+        } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            System.out.println(sw.toString());
+            return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + ex.getMessage() +"}}", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(value = "/wallet/{wallet_id}/deposit", produces = "application/json")
+    @ResponseBody
+    public ResponseEntity<String> depositWallet(
+            @PathVariable(name="wallet_id", required=true) String walletId,
+            @RequestParam(name="amount", required=true) @NotNull BigDecimal amount
+    ) {
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+
+        try {
+
+            // todo add authentication to this endpoint
+
+            Optional<Wallet> wallet = service.getWalletByID(walletId);
+
+            JSONObject walletObject = null;
+            if (wallet.isPresent()) {
+                Wallet updatedWallet = service.makeDeposit(wallet.get(), amount);
+                walletObject = new JSONObject()
+                        .put("id", updatedWallet.getId())
+                        .put("status", "deposit_success")
+                        .put("type", updatedWallet.getType())
+                        .put("new_balance", String.valueOf(updatedWallet.getCryptoBalance()));
+            } else {
+                return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": Wallet does not exist.}}", HttpStatus.BAD_REQUEST);
+            }
+
+            ResponseEntity<String> res = new ResponseEntity<String>(
+                    walletObject.toString(),
+                    responseHeaders,
+                    200
+            );
+
+            return res;
+        } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            System.out.println(sw.toString());
+            return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + ex.getMessage() +"}}", HttpStatus.BAD_REQUEST);
+        }
+    }
 }
