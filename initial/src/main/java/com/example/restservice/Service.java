@@ -1,12 +1,10 @@
 package com.example.restservice;
 
+import com.example.restservice.crypto.CryptoType;
 import com.example.restservice.nft.NFT;
 import com.example.restservice.nft.NFTRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.example.restservice.nft.NftType;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -54,7 +52,7 @@ public class Service {
         return userResponse;
     }
 
-    public Wallet createWallet(User user, NftType type) {
+    public Wallet createWallet(User user, CryptoType type) {
         Wallet newWallet = new Wallet(user, type);
         Wallet walletCreated = walletRepository.saveAndFlush(newWallet);
         return walletCreated;
