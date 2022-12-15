@@ -1,4 +1,6 @@
 import LandingPage from './LandingPage';
+// import React from 'react';
+// import ReactDom from 'react-dom';
 import * as ReactDOMClient from 'react-dom/client';
 
 const React = require('react');
