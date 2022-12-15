@@ -10,9 +10,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
-const POST_CREATE_NFT = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/listing?token="
+const POST_CREATE_NFT = "https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/listing?token="
 
-const GET_TRANSACTIONS = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft?token="
+const GET_TRANSACTIONS = "https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft?token="
 
 
 const ListItem = () => {

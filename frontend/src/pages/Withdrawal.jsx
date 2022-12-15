@@ -5,8 +5,8 @@ import Footer from '../components/footer/Footer';
 import PathBanner from '../components/header/PathBanner';
 import { useNavigate } from 'react-router-dom';
 
-const GET_WALLET_API = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/wallets"
-const POST_DEPOSIT = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/wallet"
+const GET_WALLET_API = "https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/wallets"
+const POST_DEPOSIT = "https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/wallet"
 
 const Withdrawal = () => {
 

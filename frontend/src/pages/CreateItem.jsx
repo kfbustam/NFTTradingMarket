@@ -10,7 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
-const POST_CREATE_NFT = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft/create?token="
+const POST_CREATE_NFT = "https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/nft/create?token="
 const CreateItem = () => {
 
     const { register, handleSubmit } = useForm();

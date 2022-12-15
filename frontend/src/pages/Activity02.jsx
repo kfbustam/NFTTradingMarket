@@ -5,7 +5,7 @@ import Footer from '../components/footer/Footer';
 import img1 from '../alice_video.png'
 import { useNavigate } from 'react-router-dom';
 
-const GET_TRANSACTIONS = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/transactions?token="
+const GET_TRANSACTIONS = "https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/transactions?token="
 
 const Activity02 = () => {
     const [apiResponse, setApiResponse] = useState([])
@@ -173,7 +173,7 @@ const Activity02 = () => {
                                         <div key={index} className="sc-card-activity style-2">
                                             <div className="content">
                                                 <div className="media">
-                                                    <img src={"http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/images?image_name=" + item.nft.imageUrl} alt="" />
+                                                    <img src={"https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/images?image_name=" + item.nft.imageUrl} alt="" />
                                                 </div>
                                                 <div className="infor">
                                                     <h4><Link to="/item-details-01">{item.nft.name}</Link></h4>

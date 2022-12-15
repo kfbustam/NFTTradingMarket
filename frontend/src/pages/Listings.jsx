@@ -9,7 +9,7 @@ import img4 from '../assets/images/box-item/image-box-21.jpg'
 import img5 from '../assets/images/box-item/image-box-6.jpg'
 import { useNavigate } from 'react-router-dom';
 
-const GET_TRANSACTIONS = "http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/user_nft_listings?token="
+const GET_TRANSACTIONS = "https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/user_nft_listings?token="
 
 const Listings = () => {
     const [apiResponse, setApiResponse] = useState([])
@@ -113,7 +113,7 @@ const Listings = () => {
                                     <div className="sc-card-activity style1" key={index}>
                                         <div className="content">
                                             <div className="media">
-                                                <img src={'http://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/images?image_name='+item.imageURL} alt="Axies" />
+                                                <img src={'https://cmpe275nftapp-env.eba-3guv8rep.us-east-1.elasticbeanstalk.com/images?image_name='+item.imageURL} alt="Axies" />
                                             </div>
                                             <div className="infor">
                                                 <h3> <Link to="#">{item.name}</Link></h3>
