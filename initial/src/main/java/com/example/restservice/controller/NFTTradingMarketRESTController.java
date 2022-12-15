@@ -43,6 +43,7 @@ import java.io.PrintWriter;
  */
 @RestController
 @Validated
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class NFTTradingMarketRESTController {
 
 	/**
