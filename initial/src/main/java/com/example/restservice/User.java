@@ -17,8 +17,8 @@ import javax.validation.constraints.Pattern;
 @Table(name="user")
 public class User {
 
-	@Id @GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="id", strategy = "uuid")
+    @Id @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String id; // primary key
 
   @NotNull(message="{email.required}")
@@ -33,7 +33,6 @@ public class User {
 
   @Pattern(regexp = "[A-Za-z0-9!#$%&]+", message = "{invalid.password}")
   @NotEmpty
-  @Column(unique = true)
   private String password;
 
   @Pattern(regexp = "[A-Za-z0-9]+", message = "{invalid.firstname}")

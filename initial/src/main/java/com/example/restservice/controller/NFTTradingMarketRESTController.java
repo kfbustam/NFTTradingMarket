@@ -4,6 +4,7 @@ import com.example.restservice.*;
 import com.example.restservice.crypto.CryptoType;
 import com.example.restservice.nft.NFT;
 import com.example.restservice.nft.NftService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
@@ -163,11 +164,16 @@ public class NFTTradingMarketRESTController {
 
             return res;
         } catch (Exception ex) {
+			String message = ex.getMessage();
+
+			if (ex.getClass() == DataIntegrityViolationException.class) {
+				message = ex.getCause().getCause().getMessage();
+			}
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
             System.out.println(sw.toString());
-            return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + sw.toString() + "}}", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + message + "}}", HttpStatus.BAD_REQUEST);
         }
     }
 

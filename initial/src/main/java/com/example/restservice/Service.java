@@ -5,6 +5,8 @@ import com.example.restservice.nft.NFT;
 import com.example.restservice.nft.NFTRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,10 +44,15 @@ public class Service {
         return verificationTokenRepository.findByToken(verificationToken);
     }
 
-    public User createUser(String email, String password, String firstname, String lastname, String nickname) {
-        User newUser = new User(email, password, firstname, lastname, nickname);
-        User userResponse = userRepository.saveAndFlush(newUser);
-        return userResponse;
+    public User createUser(String email, String password, String firstname, String lastname, String nickname)
+            throws Exception {
+        try {
+            User newUser = new User(email, password, firstname, lastname, nickname);
+            User userResponse = userRepository.saveAndFlush(newUser);
+            return userResponse;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public Wallet createWallet(User user, CryptoType type) {
