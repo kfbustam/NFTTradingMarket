@@ -1,18 +1,14 @@
 package com.example.restservice;
 
-import com.example.restservice.NFT;
 
-import org.springframework.boot.SpringApplication;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import javax.persistence.*;
-import java.util.List;
-import com.example.restservice.*;
 
 /**
  * The type Passenger.
  */
 @Entity
+@Table(name="crypto_currency")
 public class CryptoCurrency implements CryptographicAsset{
 
 	@Id @GeneratedValue(generator="system-uuid")
@@ -48,7 +44,7 @@ public class CryptoCurrency implements CryptographicAsset{
     this.description = description;
 	}
 
-  public String getID() {
+  public String getId() {
     return this.id;
   }
 

@@ -10,6 +10,10 @@ export default function LandingPage() {
   const [profileData, setProfileData] = useState(null)
   const [isSigningUp, setIsSigningUp] = useState(false)
 
+  React.useEffect(() => {
+    console.log("profile data", profileData)
+  }, [profileData])
+
   return (
     <ThemeProvider theme={theme}>
       {

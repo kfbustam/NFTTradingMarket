@@ -16,6 +16,7 @@ import javax.validation.constraints.Pattern;
  * The type VerificationToken.
  */
 @Entity
+@Table(name="verification_token")
 public class VerificationToken {
     private static final int EXPIRATION = 60 * 24;
 

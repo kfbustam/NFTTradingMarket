@@ -1,14 +1,10 @@
 package com.example.restservice;
 
-import com.example.restservice.NFT;
+import com.example.restservice.crypto.CryptoType;
 
-import com.example.restservice.nft.NftType;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 
-import org.apache.commons.codec.digest.Crypt;
+import com.example.restservice.nft.NFT;
 import org.hibernate.annotations.GenericGenerator;
 import java.util.List;
 
@@ -16,82 +12,75 @@ import java.util.List;
  * The type Wallet.
  */
 @Entity
+@Table(name="wallet")
 public class Wallet {
 
 	@Id @GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="id", strategy = "uuid")
 	private String id; // primary key
 
-	private String origin;
-	private String destination;
-
 	@ManyToOne(targetEntity = User.class)
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	private NftType nftType;
+	@Column(name = "type")
+	private CryptoType type;
 
-	private String imageUrl;
-
-	private String description;
-	
-	@OneToMany(targetEntity=NFT.class, mappedBy="wallet")
-	private List<NFT> nfts;
+	@OneToMany(targetEntity= NFT.class, mappedBy="wallet")
+	private List<NFT> nfts; 
 
 	@OneToMany(targetEntity=CryptoCurrency.class, mappedBy="wallet")
-	private List<CryptoCurrency> cryptoCurrencies;  
+	private List<CryptoCurrency> cryptoCurrencies;
 
-    /**
-     * Instantiates a new Wallet.
-     */
-    public Wallet() {}
+	/**
+	 * Instantiates a new Wallet.
+	 */
+	public Wallet() {}
 
-	  /**
-     * Instantiates a new Wallet.
-     */
-    public Wallet(User user, NftType type) {
-			this.user = user;
-			this.nftType = type;
-		}
-
-		public String getID() {
-			return this.id;
-		}
-
-		public User getUser() {
-			return this.user;
-		}
-
-	  public String getName() {
-			if (this.nftType == NftType.BTC) {
-				return "Bitcoin Wallet";
-			} else if (this.nftType == NftType.ETH) {
-				return "Ethereum Wallet";
-			}
-			return "NFT Wallet";
-		}
-	
-		public String getImageUrl() {
-			return this.imageUrl;
-		}
-		public String getDescription() {
-			return this.description;
-		}
-
-		public List<CryptoCurrency> getCryptoCurrencies() {
-			return this.cryptoCurrencies;
-		}
-
-		public List<NFT> getNFTs() {
-			return this.nfts;
-		}
-
-    public void setNFTs(List<NFT> nfts) {
+	/**
+	 * Instantiates a new Wallet.
+	 *
+	 * @param cryptoCurrencies the cryptocurrencies
+	 * @param nfts             the nfts
+	 */
+	public Wallet(List<CryptoCurrency> cryptoCurrencies, List<NFT> nfts) {
 		  this.nfts = nfts;
+      this.cryptoCurrencies = cryptoCurrencies;
 	  }
 
-		public void setCryptocurrencies(List<CryptoCurrency> cryptoCurrencies) {
-			this.cryptoCurrencies = cryptoCurrencies;
-		}
+	public String getId() {
+		return id;
+	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public CryptoType getType() {
+		return type;
+	}
+
+	public void setType(CryptoType type) {
+		this.type = type;
+	}
+
+	public List<NFT> getNfts() {
+		return nfts;
+	}
+
+	public void setNfts(List<NFT> nfts) {
+		this.nfts = nfts;
+	}
+
+	public List<CryptoCurrency> getCryptoCurrencies() {
+		return cryptoCurrencies;
+	}
+
+	public void setCryptoCurrencies(List<CryptoCurrency> cryptoCurrencies) {
+		this.cryptoCurrencies = cryptoCurrencies;
+	}
 }
