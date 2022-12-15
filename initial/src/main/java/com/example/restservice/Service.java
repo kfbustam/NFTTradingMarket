@@ -3,6 +3,8 @@ package com.example.restservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.restservice.nft.NftType;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -49,6 +51,13 @@ public class Service {
         User userResponse = userRepository.saveAndFlush(newUser);
         return userResponse;
     }
+
+    public Wallet createWallet(User user, NftType type) {
+        Wallet newWallet = new Wallet(user, type);
+        Wallet walletCreated = walletRepository.saveAndFlush(newWallet);
+        return walletCreated;
+    }
+
 
     public User updateUser(User user) {
         return userRepository.saveAndFlush(user);

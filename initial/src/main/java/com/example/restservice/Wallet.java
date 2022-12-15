@@ -46,16 +46,13 @@ public class Wallet {
      */
     public Wallet() {}
 
-    /**
+	  /**
      * Instantiates a new Wallet.
-     *
-     * @param passenger the passenger
-     * @param flights   the flights
      */
-    public Wallet(List<CryptoCurrency> cryptoCurrencies, List<NFT> nfts) {
-		  this.nfts = nfts;
-      this.cryptoCurrencies = cryptoCurrencies;
-	  }
+    public Wallet(User user, NftType type) {
+			this.user = user;
+			this.nftType = type;
+		}
 
 		public String getID() {
 			return this.id;
@@ -88,4 +85,13 @@ public class Wallet {
 		public List<NFT> getNFTs() {
 			return this.nfts;
 		}
+
+    public void setNFTs(List<NFT> nfts) {
+		  this.nfts = nfts;
+	  }
+
+		public void setCryptocurrencies(List<CryptoCurrency> cryptoCurrencies) {
+			this.cryptoCurrencies = cryptoCurrencies;
+		}
+
 }

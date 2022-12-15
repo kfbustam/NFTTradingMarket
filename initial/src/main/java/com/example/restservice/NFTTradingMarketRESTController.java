@@ -198,6 +198,55 @@ public class NFTTradingMarketRESTController {
 	}
 
 	/**
+	 * Create wallet
+	 *
+	 */
+	@PostMapping("/wallet")
+	@ResponseBody
+	public ResponseEntity<String> createWallet(
+			@RequestParam(name="token", required=true) String token,
+			@RequestParam(name="type", required=true) String type
+			) {
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+		try {
+
+			Optional<SessionToken> optionalSession = service.getSessionById(token);
+
+			if (optionalSession.isEmpty()) {
+				optionalSession = service.getSessionByToken(token);
+			}
+
+			optionalSession.ifPresent(session -> {
+				User user = session.getUser();
+				if (type == "eth") {
+					service.createWallet(user, NftType.ETH);
+				} else if (type == "btc") {
+					service.createWallet(user, NftType.BTC);
+				}
+	});
+			
+			JSONObject json = new JSONObject()
+				.put("type", type);
+
+			ResponseEntity<String> res = new ResponseEntity<String>(
+					json.toString(),
+					responseHeaders,
+					200
+			);
+
+			return res;
+		} catch (Exception ex) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			System.out.println(sw.toString());
+			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + sw.toString() +"}}", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	/**
 	 * Get wallets
 	 *
 	 */
@@ -222,27 +271,27 @@ public class NFTTradingMarketRESTController {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
 			}
 
-			ArrayList<Wallet> walletContents = new ArrayList<Wallet>();
+			ArrayList<Wallet> wallets = new ArrayList<Wallet>();
 			optionalSession.ifPresent((session) -> {
 				List<Wallet> userWallet = service.getUserWallets(session.getUser());
 				for (int i=0; i<userWallet.size(); i++) {
-					walletContents.add(userWallet.get(i));
+					wallets.add(userWallet.get(i));
 				}
 			});
 
-			ArrayList<JSONObject> listOfWalletContents = new ArrayList<JSONObject>();
-			for (int i=0; i<walletContents.size(); i++) {
-				listOfWalletContents.add(
+			ArrayList<JSONObject> listOfWallets = new ArrayList<JSONObject>();
+			for (int i=0; i<wallets.size(); i++) {
+				listOfWallets.add(
 					new JSONObject()
-						.put("id", walletContents.get(i).getID())
-						.put("img", walletContents.get(i).getImageUrl())
-						.put("title", walletContents.get(i).getName())
-						.put("description", walletContents.get(i).getDescription())
+						.put("id", wallets.get(i).getID())
+						.put("img", wallets.get(i).getImageUrl())
+						.put("title", wallets.get(i).getName())
+						.put("description", wallets.get(i).getDescription())
 				);
 			}
 
 			ResponseEntity<String> res = new ResponseEntity<String>(
-					(new JSONArray(listOfWalletContents)).toString(),
+					(new JSONArray(listOfWallets)).toString(),
 					responseHeaders,
 					200
 			);
