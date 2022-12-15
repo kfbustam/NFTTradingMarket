@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.Path;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @org.springframework.stereotype.Service
@@ -29,12 +30,17 @@ public class NftService {
         nft.setTokenId(UUID.randomUUID().toString());
         nft.setSmartContractAddress(UUID.randomUUID().toString());
         nft.setName(name);
+        nft.setPrice(price);
         nft.setDescription(description);
         nft.setLastRecordedTime(new Date());
+        // todo add asset url
 
         nftRepository.save(nft);
 
         return nft;
     }
 
+    public List<NFT> getAllNfts() {
+        return nftRepository.findAll();
+    }
 }

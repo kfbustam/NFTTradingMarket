@@ -3,6 +3,7 @@ package com.example.restservice.nft;
 import com.example.restservice.CryptographicAsset;
 import com.example.restservice.Wallet;
 import com.example.restservice.crypto.CryptoType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -39,6 +40,7 @@ public class NFT implements CryptographicAsset {
 
 	@ManyToOne
 	@JoinColumn(name = "wallet_id")
+	@JsonIgnore
 	private Wallet wallet;     // Full form only
 
   	public NFT() {}
