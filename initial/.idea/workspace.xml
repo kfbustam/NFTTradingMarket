@@ -4,20 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0638eecb-3bc3-465b-a9fe-d12179f8a7cd" name="Changes" comment="add create NFT screen and components">
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/CryptoCurrency.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/restservice/CryptoCurrency.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/CryptoCurrencyRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/restservice/CryptoCurrencyRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/NFT.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/restservice/NFT.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/NFTRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/restservice/NFTRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/NFTTradingMarketRESTController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/restservice/NFTTradingMarketRESTController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/NFTTradingMarketSpringBootApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/restservice/NFTTradingMarketSpringBootApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/NFTTradingMarketSpringMVCController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/restservice/NFTTradingMarketSpringMVCController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/Service.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/restservice/Service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/restservice/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/restservice/UserRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/Wallet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/restservice/Wallet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/WalletRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/restservice/WalletRepository.class" afterDir="false" />
+    <list default="true" id="0638eecb-3bc3-465b-a9fe-d12179f8a7cd" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../rest-service-initial.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/js/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/js/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/js/LandingPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/js/LandingPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/static/built/bundle.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/built/bundle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../reactjs-mock/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../reactjs-mock/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../reactjs-mock/src/components/header/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../reactjs-mock/src/components/header/Header.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../reactjs-mock/src/pages/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../reactjs-mock/src/pages/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../reactjs-mock/src/pages/menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/../reactjs-mock/src/pages/menu.js" afterDir="false" />
     </list>
     <list id="80d64845-33c4-4be6-a098-a93666fb1391" name="ignored classes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,6 +31,22 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="JpbToolWindowState">
+    <option name="myId2FirstActivated">
+      <map>
+        <entry key="com.haulmont.jpb.jpaInspector" value="true" />
+        <entry key="com.haulmont.jpb.jpaPalette" value="true" />
+        <entry key="com.haulmont.jpb.jpaStructure" value="true" />
+      </map>
+    </option>
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.haulmont.jpb.jpaInspector" value="false" />
+        <entry key="com.haulmont.jpb.jpaPalette" value="false" />
+        <entry key="com.haulmont.jpb.jpaStructure" value="true" />
+      </map>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -50,13 +65,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/dmodi/NFTTradingMarket/initial&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "C:/Users/dmodi/NFTTradingMarket/initial"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\dmodi\NFTTradingMarket\initial\src\main\js\nft" />

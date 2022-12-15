@@ -33,7 +33,8 @@ import Contact02 from "./Contact02";
 
 
 const routes = [
-  { path: '/', component: <Home01 />},
+  // { path: '/', component: <Home01 />},
+  { path: '/', component: <Home03 />},
   { path: '/home-02', component: <Home02 />},
   { path: '/home-03', component: <Home03 />},
   { path: '/home-04', component: <Home04 />},

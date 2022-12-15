@@ -1,6 +1,7 @@
 import React , { useRef , useState , useEffect } from 'react';
 import { Link , useLocation } from "react-router-dom";
 import menus from "../../pages/menu";
+import loggedInMenu from '../../pages/loggedInMenu';
 import DarkMode from './DarkMode';
 import logoheader from '../../assets/images/logo/logo.png'
 import logoheader2x from '../../assets/images/logo/logo@2x.png'
@@ -102,7 +103,7 @@ const Header = () => {
                                         </div>
                                     </div>
                                     <div className="sc-btn-top mg-r-12" id="site-header">
-                                        <Link to="/wallet-connect" className="sc-button header-slider style style-1 wallet fl-button pri-1"><span>Wallet connect
+                                        <Link to="/wallet-connect" className="sc-button header-slider style style-1 wallet fl-button pri-1"><span>Manage Wallet
                                         </span></Link>
                                     </div>
 

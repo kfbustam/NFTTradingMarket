@@ -8,6 +8,10 @@ const theme = createTheme();
 export default function LandingPage() {
   const [profileData, setProfileData] = useState(null)
 
+  React.useEffect(() => {
+    console.log("profile data", profileData)
+  }, [profileData])
+
   return (
     <ThemeProvider theme={theme}>
       {
