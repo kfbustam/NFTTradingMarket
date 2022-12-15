@@ -7,6 +7,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+
+import org.apache.commons.codec.digest.Crypt;
 import org.hibernate.annotations.GenericGenerator;
 import java.util.List;
 
@@ -29,10 +31,12 @@ public class Wallet {
 
 	private NftType nftType;
 
-	private int price; // sum of each flight’s price.   // Full form only
+	private String imageUrl;
+
+	private String description;
 	
 	@OneToMany(targetEntity=NFT.class, mappedBy="wallet")
-	private List<NFT> nfts; 
+	private List<NFT> nfts;
 
 	@OneToMany(targetEntity=CryptoCurrency.class, mappedBy="wallet")
 	private List<CryptoCurrency> cryptoCurrencies;  
@@ -53,4 +57,35 @@ public class Wallet {
       this.cryptoCurrencies = cryptoCurrencies;
 	  }
 
+		public String getID() {
+			return this.id;
+		}
+
+		public User getUser() {
+			return this.user;
+		}
+
+	  public String getName() {
+			if (this.nftType == NftType.BTC) {
+				return "Bitcoin Wallet";
+			} else if (this.nftType == NftType.ETH) {
+				return "Ethereum Wallet";
+			}
+			return "NFT Wallet";
+		}
+	
+		public String getImageUrl() {
+			return this.imageUrl;
+		}
+		public String getDescription() {
+			return this.description;
+		}
+
+		public List<CryptoCurrency> getCryptoCurrencies() {
+			return this.cryptoCurrencies;
+		}
+
+		public List<NFT> getNFTs() {
+			return this.nfts;
+		}
 }

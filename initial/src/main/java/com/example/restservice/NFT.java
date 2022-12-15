@@ -25,7 +25,7 @@ import javax.persistence.EmbeddedId;
  * The type Flight.
  */
 @Entity
-public class NFT {
+public class NFT implements CryptographicAsset{
 	//Token ID
 	//Smart Contract Address
 	//Name
@@ -70,7 +70,7 @@ public class NFT {
 		this.price = price;
 	}
 
-	public String getId() {
+	public String getID() {
 		return id;
 	}
 
