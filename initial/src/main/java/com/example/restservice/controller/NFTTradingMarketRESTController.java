@@ -155,6 +155,10 @@ public class NFTTradingMarketRESTController {
 								return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Missing password\"}}", HttpStatus.BAD_REQUEST);
 							}
 
+							if (password == "") {
+								password = "token";
+							}
+
             User user = service.createUser(email, password, firstname, lastname, nickname, type);
             String token = UUID.randomUUID().toString();
             service.createVerificationToken(user, token);
