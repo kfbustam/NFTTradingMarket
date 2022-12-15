@@ -2,6 +2,9 @@ package com.example.restservice;
 
 
 import org.hibernate.annotations.GenericGenerator;
+
+import java.util.List;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -48,6 +51,12 @@ public class User {
   @Column(unique = true)
 	private String nickname;
 
+	@OneToMany(targetEntity=Wallet.class, mappedBy="user")
+	private List<Wallet> Wallets;  
+
+  @OneToMany(targetEntity=SessionToken.class, mappedBy="user")
+	private List<SessionToken> sessions;
+
 	private Boolean isVerified;
 
   /**
@@ -73,6 +82,15 @@ public class User {
 		this.nickname = nickname;
     this.isVerified = false;
 	}
+
+  /**
+   * Gets user ID.
+   *
+   * @return the id
+   */
+  public String getID() {
+    return this.id;
+  }
 
   /**
    * Gets first name.

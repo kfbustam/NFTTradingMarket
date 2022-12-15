@@ -12,17 +12,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.context.MessageSource;
-
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.http.HttpStatus;
 
 import javax.validation.constraints.NotEmpty;
@@ -202,6 +207,131 @@ public class NFTTradingMarketRESTController {
         }
     }
 
+	/**
+	 * Get wallets
+	 *
+	 */
+	@GetMapping("/wallets")
+	@ResponseBody
+	public ResponseEntity<String> wallets(
+			@RequestParam(name="token", required=true) String token
+			) {
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+		try {
+
+			Optional<SessionToken> optionalSession = service.getSessionById(token);
+
+			if (optionalSession.isEmpty()) {
+				optionalSession = service.getSessionByToken(token);
+			}
+
+
+			if (optionalSession.isEmpty()) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
+			}
+
+			ArrayList<Wallet> walletContents = new ArrayList<Wallet>();
+			optionalSession.ifPresent((session) -> {
+				List<Wallet> userWallet = service.getUserWallets(session.getUser());
+				for (int i=0; i<userWallet.size(); i++) {
+					walletContents.add(userWallet.get(i));
+				}
+			});
+
+			ArrayList<JSONObject> listOfWalletContents = new ArrayList<JSONObject>();
+			for (int i=0; i<walletContents.size(); i++) {
+				listOfWalletContents.add(
+					new JSONObject()
+						.put("id", walletContents.get(i).getID())
+						.put("img", walletContents.get(i).getImageUrl())
+						.put("title", walletContents.get(i).getName())
+						.put("description", walletContents.get(i).getDescription())
+				);
+			}
+
+			ResponseEntity<String> res = new ResponseEntity<String>(
+					(new JSONArray(listOfWalletContents)).toString(),
+					responseHeaders,
+					200
+			);
+
+			return res;
+		} catch (Exception ex) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			System.out.println(sw.toString());
+			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + sw.toString() +"}}", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	/**
+	 * Get wallet
+	 *
+	 */
+	@GetMapping("/wallet/{id}")
+	@ResponseBody
+	public ResponseEntity<String> wallet(
+			@RequestParam(name="token", required=true) String token,
+			@RequestParam(name="id", required=true) String id
+			) {
+				
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+		try {
+
+			Optional<SessionToken> optionalSession = service.getSessionById(token);
+
+			if (optionalSession.isEmpty()) {
+				optionalSession = service.getSessionByToken(token);
+			}
+
+
+			if (optionalSession.isEmpty()) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
+			}
+
+			ArrayList<CryptographicAsset> walletContents = new ArrayList<CryptographicAsset>();
+			optionalSession.ifPresent((session) -> {
+
+				Optional<Wallet> optionalWallet = service.getWalletByID(id);
+
+				optionalWallet.ifPresent((wallet) -> {
+					List<CryptographicAsset> contentsFromWallet = service.getWalletContents(wallet);
+					for (int i=0; i<contentsFromWallet.size(); i++) {
+						walletContents.add(contentsFromWallet.get(i));
+					}
+				});
+			});
+
+			ArrayList<JSONObject> listOfWalletContents = new ArrayList<JSONObject>();
+			for (int i=0; i<walletContents.size(); i++) {
+				listOfWalletContents.add(
+					new JSONObject()
+						.put("id", walletContents.get(i).getID())
+						.put("img", walletContents.get(i).getImageUrl())
+						.put("title", walletContents.get(i).getName())
+						.put("description", walletContents.get(i).getDescription())
+				);
+			}
+
+			ResponseEntity<String> res = new ResponseEntity<String>(
+					(new JSONArray(listOfWalletContents)).toString(),
+					responseHeaders,
+					200
+			);
+
+			return res;
+		} catch (Exception ex) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			System.out.println(sw.toString());
+			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + sw.toString() +"}}", HttpStatus.BAD_REQUEST);
+		}
+	}
 
 	/**
 	 * Create nft response entity.

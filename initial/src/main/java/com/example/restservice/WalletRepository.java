@@ -1,13 +1,16 @@
 package com.example.restservice;
 
-import com.example.restservice.crypto.CryptoType;
-import org.springframework.data.jpa.repository.*;
+import java.util.Collection;
+import java.util.List;
 
-import java.util.Optional;
+import org.springframework.data.jpa.repository.*;
 
 /**
  * The interface Wallet repository.
  */
 public interface WalletRepository extends JpaRepository<Wallet, String> {
-    Optional<User> findByUserAndType(User user, CryptoType cryptoType);
+
+  @Query(value="SELECT * FROM wallet w WHERE w.user_id=?1", nativeQuery = true)
+  public Collection<Wallet> findUserWallets(String userID);
+  
 }

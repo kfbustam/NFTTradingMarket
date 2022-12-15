@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name="nft")
-public class NFT {
+public class NFT implements CryptographicAsset{
 	@Id @GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="id", strategy = "uuid")
 	private String id; // primary key
