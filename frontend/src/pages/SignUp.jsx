@@ -1,28 +1,37 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignUp = () => {
     const [errorText, setErrorText] = React.useState(null)
-    const [isSigningUp, setIsSigningUp] = React.useState(null)
+    const [signupResponse, setSignupResponse] = React.useState(null)
     const [email, setEmail] = React.useState("")
+    const [password, setPassword] = React.useState("")
     const [firstName, setFirstName] = React.useState("")
     const [lastName, setLastName] = React.useState("")
     const [nickName, setNickName] = React.useState("")
-    const [password, setPassword] = React.useState("")
+    
 
     const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
     const SIGN_UP_URL = "http://localhost:8080/signup"
+    let navigate = useNavigate();
 
     React.useEffect(() => {
-        // make changes with the response
-        window.sessionStorage.setItem("auth_token", "")
-    }, [isSigningUp]);
+        // onSuccess -> Go to Sign in page
+        if (signupResponse !== null && signupResponse.email === email) {
+            toast.success("Sign Up Successful!")
+            navigate("/login");
+        }
+    }, [signupResponse])
 
     React.useEffect(() => {
         // Render the error msg
-        if(errorText !== null) alert(errorText);
+        if(errorText !== null) {
+            toast.error("Something went wrong:")
+        }
     }, [errorText]);
 
     const handleSubmit = (event) => {
@@ -46,16 +55,16 @@ const SignUp = () => {
                     'Content-Type': 'application/json'
                 },
                 method: "POST",
+                mode: 'cors'
             })
             .then(response => {
                 if (response.ok) {
-                    
                     return response.json()
                 }
                 throw response
             })
             .then(data => {
-                setIsSigningUp(data)
+                setSignupResponse(data)
                 console.log("sign up response", data);
             })
             .catch(error => {
@@ -66,6 +75,7 @@ const SignUp = () => {
 
     return (
         <div>
+            <ToastContainer theme="dark" position="top-center" />
             <Header />
             <section className="flat-title-page inner">
                 <div className="overlay"></div>
@@ -115,11 +125,11 @@ const SignUp = () => {
 
                                 <div className="form-inner">
                                     <form action="#" id="contactform" onSubmit={handleSubmit}>
-                                        <input id="email" name="email" tabIndex="2" aria-required="true" type="email" placeholder="Your Email Address" required value={email} onChange={(event) => {setEmail(event.target.value)}} />
-                                        <input id="firstname" name="firstname" tabIndex="1" aria-required="true" required type="text" placeholder="Your First Name" value={firstName} onChange={(event) => {setFirstName(event.target.value)}} />
-                                        <input id="lastname" name="lastname" tabIndex="2" aria-required="true" required type="text" placeholder="Your Last Name" value={lastName} onChange={(event) => {setLastName(event.target.value)}}/>
-                                        <input id="nickname" name="nickname" tabIndex="3" aria-required="true" required type="text" placeholder="Your Nick Name" value={nickName} onChange={(event) => {setNickName(event.target.value)}} />
-                                        <input id="password" name="password" tabIndex="4" aria-required="true" type="password" placeholder="Set Your Password" required value={password} onChange={(event) => {setPassword(event.target.value)}} />
+                                        <input id="email" name="email" tabIndex="1" aria-required="true" type="email" placeholder="Your Email Address" required value={email} onChange={(event) => {setEmail(event.target.value)}} />
+                                        <input id="firstname" name="firstname" tabIndex="2" aria-required="true" required type="text" placeholder="Your First Name" value={firstName} onChange={(event) => {setFirstName(event.target.value)}} />
+                                        <input id="lastname" name="lastname" tabIndex="3" aria-required="true" required type="text" placeholder="Your Last Name" value={lastName} onChange={(event) => {setLastName(event.target.value)}}/>
+                                        <input id="nickname" name="nickname" tabIndex="4" aria-required="true" required type="text" placeholder="Your Nick Name" value={nickName} onChange={(event) => {setNickName(event.target.value)}} />
+                                        <input id="password" name="password" tabIndex="5" aria-required="true" type="password" placeholder="Set Your Password" required value={password} onChange={(event) => {setPassword(event.target.value)}} />
                                         <button className="submit">Sign Up</button>
                                     </form>
                                 </div>

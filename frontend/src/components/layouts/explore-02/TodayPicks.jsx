@@ -528,7 +528,8 @@ const TodayPicks = () => {
                 <div className="themesflat-container">
                     <div className="row">
                         <div className="col-md-12">
-                            <div className="seclect-box style3">
+                            {/* Filters */}
+                            {/* <div className="seclect-box style3">
                                 <div id="artworks" className="dropdown">
                                     <Link to="#" className="btn-selector nolink">All Artworks</Link>
                                     <ul>
@@ -547,16 +548,17 @@ const TodayPicks = () => {
                                         <li><span>Low rate</span></li>
                                     </ul>
                                 </div>    
-                            </div>
+                            </div> */}
                             <div className="flat-tabs explore-tab">
                                 <Tabs >
-                                    <TabList>
+                                    {/* Tab names list */}
+                                    {/* <TabList>
                                         {
                                             dataTab.map(data=> (
                                                 <Tab key={data.id} >{data.title}</Tab>
                                             ))
                                         }
-                                    </TabList>
+                                    </TabList> */}
                                     {
                                         dataPanel.map(data =>(
                                             <TabPanel key={data.id}>
