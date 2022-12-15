@@ -12,7 +12,7 @@ Term Project Group 2
 
 # Cloud Deployment
 
-Frontend Link - https://surfacery.com/
+Frontend Link - http://surfacery.com/
 
 Deployment is done to AWS. Please check project report for details.
 
