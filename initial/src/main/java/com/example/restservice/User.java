@@ -50,6 +50,10 @@ public class User {
   @Column(unique = true)
 	private String nickname;
 
+  @Enumerated(EnumType.STRING)
+  @Column(name="type", columnDefinition="VARCHAR(255) default 'LOCAL'")
+  private NftUserType type;
+
 	@OneToMany(targetEntity=Wallet.class, mappedBy="user")
 	private List<Wallet> Wallets;  
 
@@ -73,13 +77,14 @@ public class User {
    * @param nickname the users nickname
    * 
    */
-  public User(String email, String password, String firstname, String lastname, String nickname) {
+  public User(String email, String password, String firstname, String lastname, String nickname, NftUserType userType) {
 		this.email = email;
 		this.password = password;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.nickname = nickname;
-    this.isVerified = false;
+        this.type = userType;
+        this.isVerified = false;
 	}
 
   /**

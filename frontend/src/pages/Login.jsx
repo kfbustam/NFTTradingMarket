@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import { gapi } from 'gapi-script';
@@ -17,7 +17,24 @@ const Login = ({ fromSignUp=false }) => {
     const [error, setError] = useState()
     const [email, setEmail] = React.useState("")
     const [password, setPassword] = React.useState("")
-  
+
+    let navigate = useNavigate();
+
+    React.useEffect(() => {
+        // onSuccess -> Go to Sign in page
+        if (profileData !== null) {
+            toast.success("Login Successful!")
+            navigate("/wallet-connect");
+        }
+    }, [profileData])
+
+    React.useEffect(() => {
+        // Render the error msg
+        if(profileData !== null && error !== null) {
+            toast.error("Something went wrong: " + error)
+        }
+    }, [error]);
+
     useEffect(() => {
         if (fromSignUp) {
             toast.info("Verify account before Sign In.", {
@@ -42,7 +59,8 @@ const Login = ({ fromSignUp=false }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         // const data = new FormData(event.currentTarget);
-    
+        setLoading(true);
+
         fetch(SIGN_IN_URL + "?email=" + email + "&password=" + password, {
             headers: {
                 'Accept': 'application/json',
@@ -76,6 +94,9 @@ const Login = ({ fromSignUp=false }) => {
     const responseGoogleSuccess = (response) => {
 		console.log("Successful");
         console.log(response);
+        setProfileData({
+            email: response.profileObj.email
+        })
         setProfileData(response);
 	};
 
