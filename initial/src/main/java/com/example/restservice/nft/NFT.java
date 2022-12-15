@@ -17,12 +17,15 @@ import java.util.Date;
 @Table(name="nft")
 public class NFT implements CryptographicAsset {
 	@Id @GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="id", strategy = "uuid")
+	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String id; // primary key
 
 	private String tokenId;
 
 	private String smartContractAddress;
+
+
+	private String userId;
 
 	private String name;
 

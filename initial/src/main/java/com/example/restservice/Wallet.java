@@ -6,6 +6,8 @@ import javax.persistence.*;
 
 import com.example.restservice.nft.NFT;
 import org.hibernate.annotations.GenericGenerator;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -16,7 +18,7 @@ import java.util.List;
 public class Wallet {
 
 	@Id @GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="id", strategy = "uuid")
+	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String id; // primary key
 
 	@ManyToOne(targetEntity = User.class)
@@ -26,11 +28,11 @@ public class Wallet {
 	@Column(name = "type")
 	private CryptoType type;
 
-	@OneToMany(targetEntity= NFT.class, mappedBy="wallet")
-	private List<NFT> nfts; 
+	@Column(name = "balance")
+	private BigDecimal cryptoBalance;
 
-	@OneToMany(targetEntity=CryptoCurrency.class, mappedBy="wallet")
-	private List<CryptoCurrency> cryptoCurrencies;
+	@OneToMany(targetEntity= NFT.class, mappedBy="wallet")
+	private List<NFT> nfts;
 
 	/**
 	 * Instantiates a new Wallet.
@@ -40,12 +42,10 @@ public class Wallet {
 	/**
 	 * Instantiates a new Wallet.
 	 *
-	 * @param cryptoCurrencies the cryptocurrencies
 	 * @param nfts             the nfts
 	 */
-	public Wallet(List<CryptoCurrency> cryptoCurrencies, List<NFT> nfts) {
+	public Wallet(List<NFT> nfts) {
 		  this.nfts = nfts;
-      this.cryptoCurrencies = cryptoCurrencies;
 	  }
 
 	public Wallet(User user, CryptoType type) {
@@ -81,11 +81,11 @@ public class Wallet {
 		this.nfts = nfts;
 	}
 
-	public List<CryptoCurrency> getCryptoCurrencies() {
-		return cryptoCurrencies;
+	public BigDecimal getCryptoBalance() {
+		return cryptoBalance;
 	}
 
-	public void setCryptoCurrencies(List<CryptoCurrency> cryptoCurrencies) {
-		this.cryptoCurrencies = cryptoCurrencies;
+	public void setCryptoBalance(BigDecimal cryptoBalance) {
+		this.cryptoBalance = cryptoBalance;
 	}
 }

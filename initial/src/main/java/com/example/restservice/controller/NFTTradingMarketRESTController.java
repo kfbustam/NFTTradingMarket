@@ -1,8 +1,10 @@
-package com.example.restservice;
+package com.example.restservice.controller;
 
+import com.example.restservice.*;
 import com.example.restservice.crypto.CryptoType;
 import com.example.restservice.nft.NFT;
 import com.example.restservice.nft.NftService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import org.springframework.context.MessageSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -161,11 +164,16 @@ public class NFTTradingMarketRESTController {
 
             return res;
         } catch (Exception ex) {
+			String message = ex.getMessage();
+
+			if (ex.getClass() == DataIntegrityViolationException.class) {
+				message = ex.getCause().getCause().getMessage();
+			}
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
             System.out.println(sw.toString());
-            return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + sw.toString() + "}}", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + message + "}}", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -260,7 +268,7 @@ public class NFTTradingMarketRESTController {
 	 * Get wallets
 	 *
 	 */
-	@GetMapping("/wallets")
+	@GetMapping(value = "/wallets", produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<String> wallets(
 			@RequestParam(name="token", required=true) String token
@@ -294,6 +302,8 @@ public class NFTTradingMarketRESTController {
 				listOfWallets.add(
 					new JSONObject()
 						.put("id", wallets.get(i).getId())
+							.put("type", wallets.get(i).getType())
+							.put("balance", String.valueOf(wallets.get(i).getCryptoBalance()))
 				);
 			}
 
