@@ -103,6 +103,8 @@ const Login = ({ fromSignUp = false }) => {
             + ""
             + "&firstname="
             + response.profileObj.givenName
+            + "&type="
+            + "GOOGLE"
             + "&lastname="
             + response.profileObj.familyName
             + "&nickname="
