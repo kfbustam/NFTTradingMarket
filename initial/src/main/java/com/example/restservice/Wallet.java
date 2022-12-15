@@ -2,6 +2,7 @@ package com.example.restservice;
 
 import com.example.restservice.NFT;
 
+import com.example.restservice.nft.NftType;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import javax.persistence.*;
@@ -20,13 +21,20 @@ public class Wallet {
 	private String id; // primary key
 
 	private String origin;
-	private String destination;  
+	private String destination;
+
+	@ManyToOne(targetEntity = User.class)
+	@JoinColumn(name = "user_id")
+	private User user;
+
+	private NftType nftType;
+
 	private int price; // sum of each flight’s price.   // Full form only
 	
-	@OneToMany(targetEntity=NFT.class)
+	@OneToMany(targetEntity=NFT.class, mappedBy="wallet")
 	private List<NFT> nfts; 
 
-	@OneToMany(targetEntity=CryptoCurrency.class)
+	@OneToMany(targetEntity=CryptoCurrency.class, mappedBy="wallet")
 	private List<CryptoCurrency> cryptoCurrencies;  
 
     /**

@@ -4,6 +4,66 @@ import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 
 const SignUp = () => {
+    const [errorText, setErrorText] = React.useState(null)
+    const [isSigningUp, setIsSigningUp] = React.useState(null)
+    const [email, setEmail] = React.useState("")
+    const [firstName, setFirstName] = React.useState("")
+    const [lastName, setLastName] = React.useState("")
+    const [nickName, setNickName] = React.useState("")
+    const [password, setPassword] = React.useState("")
+
+    const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    const SIGN_UP_URL = "http://localhost:8080/signup"
+
+    React.useEffect(() => {
+        // make changes with the response
+        window.sessionStorage.setItem("auth_token", "")
+    }, [isSigningUp]);
+
+    React.useEffect(() => {
+        // Render the error msg
+        if(errorText !== null) alert(errorText);
+    }, [errorText]);
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        fetch(
+            SIGN_UP_URL
+            + "?email="
+            + email
+            + "&password="
+            + password
+            + "&firstname="
+            + firstName
+            + "&lastname="
+            + lastName
+            + "&nickname="
+            + nickName,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: "POST",
+            })
+            .then(response => {
+                if (response.ok) {
+                    
+                    return response.json()
+                }
+                throw response
+            })
+            .then(data => {
+                setIsSigningUp(data)
+                console.log("sign up response", data);
+            })
+            .catch(error => {
+                console.error(error)
+                setErrorText(error)
+            }).finally(() => { });
+    };
+
     return (
         <div>
             <Header />
@@ -24,7 +84,7 @@ const SignUp = () => {
                             </div>
                         </div>
                     </div>
-                </div>                    
+                </div>
             </section>
             <section className="tf-login tf-section">
                 <div className="themesflat-container">
@@ -36,19 +96,13 @@ const SignUp = () => {
 
                             <div className="flat-form box-login-social">
                                 <div className="box-title-login">
-                                    <h5>Login with social</h5>
+                                    <h5>Sign Up with Google</h5>
                                 </div>
-                                <ul>
-                                    <li>
+                                <ul className='col-12'>
+                                    <li className='col-12'>
                                         <Link to="#" className="sc-button style-2 fl-button pri-3">
                                             <i className="icon-fl-google-2"></i>
                                             <span>Google</span>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="#" className="sc-button style-2 fl-button pri-3">
-                                            <i className="icon-fl-facebook"></i>
-                                            <span>Facebook</span>
                                         </Link>
                                     </li>
                                 </ul>
@@ -56,23 +110,17 @@ const SignUp = () => {
 
                             <div className="flat-form box-login-email">
                                 <div className="box-title-login">
-                                    <h5>Or login with email</h5>
+                                    <h5>Or signup with email</h5>
                                 </div>
 
                                 <div className="form-inner">
-                                    <form action="#" id="contactform">
-                                        <input id="name" name="name" tabIndex="1" aria-required="true" required type="text" placeholder="Your Full Name" />
-                                        <input id="email" name="email" tabIndex="2"  aria-required="true" type="email" placeholder="Your Email Address" required />
-                                        <input id="pass" name="pass" tabIndex="3"  aria-required="true" type="text" placeholder="Set Your Password" required />
-                                        <div className="row-form style-1">
-                                            <label>Remember me
-                                                <input type="checkbox" />
-                                                <span className="btn-checkbox"></span>
-                                            </label>
-                                            <Link to="#" className="forgot-pass">Forgot Password ?</Link>
-                                        </div>
-
-                                        <button className="submit">Login</button>
+                                    <form action="#" id="contactform" onSubmit={handleSubmit}>
+                                        <input id="email" name="email" tabIndex="2" aria-required="true" type="email" placeholder="Your Email Address" required value={email} onChange={(event) => {setEmail(event.target.value)}} />
+                                        <input id="firstname" name="firstname" tabIndex="1" aria-required="true" required type="text" placeholder="Your First Name" value={firstName} onChange={(event) => {setFirstName(event.target.value)}} />
+                                        <input id="lastname" name="lastname" tabIndex="2" aria-required="true" required type="text" placeholder="Your Last Name" value={lastName} onChange={(event) => {setLastName(event.target.value)}}/>
+                                        <input id="nickname" name="nickname" tabIndex="3" aria-required="true" required type="text" placeholder="Your Nick Name" value={nickName} onChange={(event) => {setNickName(event.target.value)}} />
+                                        <input id="password" name="password" tabIndex="4" aria-required="true" type="password" placeholder="Set Your Password" required value={password} onChange={(event) => {setPassword(event.target.value)}} />
+                                        <button className="submit">Sign Up</button>
                                     </form>
                                 </div>
 

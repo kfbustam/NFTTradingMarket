@@ -5,18 +5,51 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0638eecb-3bc3-465b-a9fe-d12179f8a7cd" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../rest-service-initial.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_mail_jakarta_mail_1_6_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_sun_mail_javax_mail_1_6_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_activation_activation_1_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_mail_2_7_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_context_support_5_3_20.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/restservice/VerificationToken.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/restservice/VerificationTokenRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/restservice/nft/NftService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/restservice/nft/NftType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/js/SignUp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/js/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/js/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/restservice/NFT.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/restservice/NFT.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/restservice/NFTTradingMarketRESTController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/restservice/NFTTradingMarketRESTController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/restservice/Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/restservice/Service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/restservice/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/restservice/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/restservice/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/restservice/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/restservice/Wallet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/restservice/Wallet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/js/LandingPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/js/LandingPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/built/bundle.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/built/bundle.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../reactjs-mock/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../reactjs-mock/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../reactjs-mock/src/components/header/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../reactjs-mock/src/components/header/Header.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../reactjs-mock/src/pages/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../reactjs-mock/src/pages/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/js/SignIn.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/js/SignIn.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/js/dashboard/Dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/js/dashboard/Dashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/js/dashboard/UserMenu.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/js/dashboard/UserMenu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/CryptoCurrency.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/CryptoCurrencyRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/NFT.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/NFTRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/NFTTradingMarketRESTController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/NFTTradingMarketSpringBootApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/NFTTradingMarketSpringMVCController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/Service.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/UserRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/Wallet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/restservice/WalletRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/built/bundle.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/application.properties" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../reactjs-mock/src/pages/menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/../reactjs-mock/src/pages/menu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../rest-service-initial.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../rest-service-initial.iml" afterDir="false" />
     </list>
     <list id="80d64845-33c4-4be6-a098-a93666fb1391" name="ignored classes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -44,7 +77,7 @@
       <map>
         <entry key="com.haulmont.jpb.jpaInspector" value="false" />
         <entry key="com.haulmont.jpb.jpaPalette" value="false" />
-        <entry key="com.haulmont.jpb.jpaStructure" value="true" />
+        <entry key="com.haulmont.jpb.jpaStructure" value="false" />
       </map>
     </option>
   </component>
@@ -70,7 +103,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "last_opened_file_path": "C:/Users/dmodi/NFTTradingMarket/initial"
+    "last_opened_file_path": "C:/Users/dmodi/NFTTradingMarket/initial",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
   <component name="RecentsManager">

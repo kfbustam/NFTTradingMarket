@@ -2,4 +2,5 @@
 initial/node_modules
 initial/yarn.lock
 initial/package-lock.json
-initial/target/*
+initial/target
+reactjs-mock/
