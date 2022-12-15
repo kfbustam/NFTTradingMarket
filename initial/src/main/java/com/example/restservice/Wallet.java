@@ -23,6 +23,7 @@ public class Wallet {
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	@Column(name = "type")
 	private CryptoType type;
 
 	@OneToMany(targetEntity= NFT.class, mappedBy="wallet")
@@ -47,4 +48,39 @@ public class Wallet {
       this.cryptoCurrencies = cryptoCurrencies;
 	  }
 
+	public String getId() {
+		return id;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public CryptoType getType() {
+		return type;
+	}
+
+	public void setType(CryptoType type) {
+		this.type = type;
+	}
+
+	public List<NFT> getNfts() {
+		return nfts;
+	}
+
+	public void setNfts(List<NFT> nfts) {
+		this.nfts = nfts;
+	}
+
+	public List<CryptoCurrency> getCryptoCurrencies() {
+		return cryptoCurrencies;
+	}
+
+	public void setCryptoCurrencies(List<CryptoCurrency> cryptoCurrencies) {
+		this.cryptoCurrencies = cryptoCurrencies;
+	}
 }

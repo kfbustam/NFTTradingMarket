@@ -1,5 +1,7 @@
 package com.example.restservice;
 
+import com.example.restservice.nft.NFT;
+import com.example.restservice.nft.NFTRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,8 +71,8 @@ public class Service {
     }
 
     public List<CryptographicAsset> getWalletContents(Wallet wallet) {
-        Collection<NFT> nfts = nftRepository.findByWalletID(wallet.getID());
-        Collection<CryptoCurrency> cryptos = cryptoCurrencyRepository.findByWalletID(wallet.getID());
+        Collection<NFT> nfts = nftRepository.findByWalletID(wallet.getId());
+        Collection<CryptoCurrency> cryptos = cryptoCurrencyRepository.findByWalletID(wallet.getId());
         List<CryptographicAsset> walletContents = Stream.concat(nfts.stream(), cryptos.stream()).collect(Collectors.toList());
         return walletContents;
     }

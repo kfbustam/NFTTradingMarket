@@ -1,5 +1,6 @@
 package com.example.restservice.nft;
 
+import com.example.restservice.CryptographicAsset;
 import com.example.restservice.Wallet;
 import com.example.restservice.crypto.CryptoType;
 import org.hibernate.annotations.GenericGenerator;
@@ -13,7 +14,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name="nft")
-public class NFT implements CryptographicAsset{
+public class NFT implements CryptographicAsset {
 	@Id @GeneratedValue(generator="system-uuid")
 	@GenericGenerator(name="id", strategy = "uuid")
 	private String id; // primary key
@@ -69,6 +70,11 @@ public class NFT implements CryptographicAsset{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public String getId() {
+		return id;
 	}
 
 	public String getImageUrl() {

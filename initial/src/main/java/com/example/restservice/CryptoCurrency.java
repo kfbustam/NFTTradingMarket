@@ -44,7 +44,7 @@ public class CryptoCurrency implements CryptographicAsset{
     this.description = description;
 	}
 
-  public String getID() {
+  public String getId() {
     return this.id;
   }
 

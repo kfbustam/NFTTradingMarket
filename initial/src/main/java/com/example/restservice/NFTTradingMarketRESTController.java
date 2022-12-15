@@ -244,10 +244,7 @@ public class NFTTradingMarketRESTController {
 			for (int i=0; i<walletContents.size(); i++) {
 				listOfWalletContents.add(
 					new JSONObject()
-						.put("id", walletContents.get(i).getID())
-						.put("img", walletContents.get(i).getImageUrl())
-						.put("title", walletContents.get(i).getName())
-						.put("description", walletContents.get(i).getDescription())
+						.put("id", walletContents.get(i).getId())
 				);
 			}
 
@@ -310,7 +307,7 @@ public class NFTTradingMarketRESTController {
 			for (int i=0; i<walletContents.size(); i++) {
 				listOfWalletContents.add(
 					new JSONObject()
-						.put("id", walletContents.get(i).getID())
+						.put("id", walletContents.get(i).getId())
 						.put("img", walletContents.get(i).getImageUrl())
 						.put("title", walletContents.get(i).getName())
 						.put("description", walletContents.get(i).getDescription())
@@ -349,7 +346,8 @@ public class NFTTradingMarketRESTController {
             @RequestParam(name = "email", required = true) @NotEmpty String email,
             @RequestParam(name = "nft_image", required = true) @NotNull MultipartFile file,
             @RequestParam(name = "name", required = true) @NotEmpty String name,
-            @RequestParam(name = "description", required = true) @NotNull String description,
+			@RequestParam(name = "wallet_id", required = true) @NotEmpty String walletId,
+			@RequestParam(name = "description", required = true) @NotNull String description,
             @RequestParam(name = "price", required = true) @NotNull double price,
             CryptoType type) {
 
@@ -362,10 +360,11 @@ public class NFTTradingMarketRESTController {
             fileNames.append(file.getOriginalFilename());
             Files.write(fileNameAndPath, file.getBytes());
 
-            NFT nft = nftService.createNft(fileNameAndPath, type, name, description, price);
+            NFT nft = nftService.createNft(fileNameAndPath, type, walletId, name, description, price);
 
             JSONObject json = new JSONObject()
                     .put("name", nft.getName())
+					.put("wallet_id", nft.getWallet().getId())
                     .put("token_id", nft.getTokenId())
                     .put("smart_contract_id", nft.getSmartContractAddress());
 
@@ -381,7 +380,7 @@ public class NFTTradingMarketRESTController {
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
             System.out.println(sw.toString());
-            return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + sw.toString() + "}}", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": " + ex.getMessage() + "}}", HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -19,10 +19,11 @@ public class NftService {
     @Autowired
     private WalletRepository walletRepository;
 
-    public NFT createNft (Path fileNameAndPath, CryptoType type, String name, String description, double price) {
+    public NFT createNft (Path fileNameAndPath, CryptoType type, String walletId, String name, String description, double price) {
         //todo is any duplicate check required?
 
         NFT nft = new NFT();
+        nft.setWallet(walletRepository.findById(walletId).orElseThrow());
         nft.setImageUrl(fileNameAndPath.toString());
         nft.setNftType(type);
         nft.setTokenId(UUID.randomUUID().toString());
