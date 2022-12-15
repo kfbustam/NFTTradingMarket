@@ -9,7 +9,7 @@ import img4 from '../assets/images/box-item/image-box-21.jpg'
 import img5 from '../assets/images/box-item/image-box-6.jpg'
 import { useNavigate } from 'react-router-dom';
 
-const GET_TRANSACTIONS = "http://localhost:8080/nft/listings?token="
+const GET_TRANSACTIONS = "http://localhost:8080/user_nft_listings?token="
 
 const Listings = () => {
     const [apiResponse, setApiResponse] = useState([])
@@ -60,7 +60,7 @@ const Listings = () => {
         fetch(
             fetchUrl,
             {
-                method: "POST",
+                method: "GET",
                 header: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -90,13 +90,13 @@ const Listings = () => {
                     <div className="row">
                         <div className="col-md-12">
                             <div className="page-title-heading mg-bt-12">
-                                <h1 className="heading text-center">My Transactions</h1>
+                                <h1 className="heading text-center">My Listings</h1>
                             </div>
                             <div className="breadcrumbs style2">
                                 <ul>
                                     <li><Link to="/">Home</Link></li>
                                     <li><Link to="#">Pages</Link></li>
-                                    <li>My Transactions</li>
+                                    <li>My Listings</li>
                                 </ul>
                             </div>
                         </div>
@@ -119,7 +119,7 @@ const Listings = () => {
                                                 <h3> <Link to="#">{item.name}</Link></h3>
                                                 <p>{item.description}</p>
 
-                                                <div className="status">{item.price} <span className="author">{item.type}</span></div>
+                                                <div className="status"> {item.status} <span className="author">{item.price} {item.type}</span></div>
                                                 <div className="time">{item.lastRecordedTime}</div>
                                             </div>
                                         </div>

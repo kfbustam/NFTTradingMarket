@@ -7,6 +7,7 @@ import com.example.restservice.nft.NftCategory;
 import com.example.restservice.nft.NftService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -134,6 +135,7 @@ public class NFTTradingMarketRESTController {
 	 */
 	@PostMapping(value = "/signup", produces = "application/json")
     @ResponseBody
+	@Transactional
     public ResponseEntity<String> signUp(
             @RequestParam(name = "email", required = true) String email,
             @RequestParam(name = "password", required = false) String password,
@@ -406,11 +408,6 @@ public class NFTTradingMarketRESTController {
 			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
 
 			if (optionalSession.isEmpty()) {
-				optionalSession = service.getSessionByToken(token);
-			}
-
-
-			if (optionalSession.isEmpty()) {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
 			}
 
@@ -433,7 +430,6 @@ public class NFTTradingMarketRESTController {
 						.put("img", allNFTs.get(i).getImageUrl())
 						.put("title", allNFTs.get(i).getName())
 						.put("description", allNFTs.get(i).getDescription())
-						.put("price", allNFTs.get(i).getPrice())
 				);
 			}
 
@@ -464,7 +460,6 @@ public class NFTTradingMarketRESTController {
 	/**
 	 * Create nft response entity.
 	 *
-	 * @param email       the email
 	 * @param file        the file
 	 * @param name        the name
 	 * @param description the description
@@ -474,24 +469,37 @@ public class NFTTradingMarketRESTController {
 	@PostMapping(value = "/nft/create", produces = "application/json")
     @ResponseBody
     public ResponseEntity<String> createNft(
-            @RequestParam(name = "email", required = true) @NotEmpty String email,
 			@RequestPart("nft_image") MultipartFile file,
             @RequestParam(name = "name", required = true) @NotEmpty String name,
-			@RequestParam(name = "wallet_id", required = true) @NotEmpty String walletId,
 			@RequestParam(name = "description", required = true) @NotNull String description,
-            @RequestParam(name = "price", required = true) @NotNull double price,
-            CryptoType type) {
+			@RequestParam(name = "token", required = true) @NotNull String token,
+			CryptoType type) {
 
         HttpHeaders responseHeaders = new HttpHeaders();
 
         try {
-            // get user's wallet ID based on email and NFT Type
+			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
+			if (optionalSession.isEmpty()) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
+			}
+
+			ArrayList<Wallet> wallet = service.getUserWallets(optionalSession.get().getUser());
+			if (wallet.size() == 0) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"User does not have wallets.\"}}", HttpStatus.BAD_REQUEST);
+			}
+
+			String walletId = wallet.stream()
+					.filter(w -> type.equals(w.getType()))
+					.collect(Collectors.toList())
+					.get(0).getId();
+
+			// get user's wallet ID based on email and NFT Type
             StringBuilder fileNames = new StringBuilder();
             Path fileNameAndPath = Paths.get("tmp", file.getOriginalFilename());
             fileNames.append(file.getOriginalFilename());
             Files.write(fileNameAndPath, file.getBytes());
 
-            NFT nft = nftService.createNft(fileNameAndPath.getFileName(), type, walletId, name, description, price, NftCategory.Anime);
+            NFT nft = nftService.createNft(fileNameAndPath.getFileName(), type, walletId, name, description, NftCategory.Anime);
 
             JSONObject json = new JSONObject()
                     .put("name", nft.getName())
@@ -515,13 +523,59 @@ public class NFTTradingMarketRESTController {
         }
     }
 
+	@PostMapping(value = "/listing", produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<String> createListing(
+			@RequestParam(name = "token", required = true) @NotEmpty String token,
+			@RequestParam(name = "nftId", required = true) @NotEmpty String nftId,
+			@RequestParam(name = "price", required = true) @NotNull double price,
+			@RequestParam(name = "saleType", required = true) @NotNull SaleType type) {
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+		try {
+
+			if (price <= 0) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Price too low.\"}}", HttpStatus.BAD_REQUEST);
+			}
+			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
+
+			if (optionalSession.isEmpty()) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
+			}
+
+			Optional<NFT> optionalNFT = nftService.getNFT(nftId);
+
+			if (optionalNFT.isEmpty() || optionalNFT.get().getListing() != null) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"NFT cannot be sold..\"}}", HttpStatus.BAD_REQUEST);
+			}
+
+			service.createListing(optionalNFT.get(), optionalSession.get().getUser(), price, type);
+
+			ResponseEntity<String> res = new ResponseEntity<String>(
+					"{}",
+					responseHeaders,
+					200
+			);
+
+			return res;
+		} catch (Exception ex) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			System.out.println(sw.toString());
+			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 500 \",\"msg\": " + ex.getMessage() + "}}", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	/*
 		GET User's Own NFT listings by Token
 	 */
-	@PostMapping("/nft/listings")
+	@GetMapping("/user_nft_listings")
 	@ResponseBody
 	public ResponseEntity<String> listings(
-			@RequestParam(name="token", required=true) String token
+			@RequestParam(name="token", required=true) String token,
+			@RequestParam(name="type", required=false) String type
 	) {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -540,18 +594,22 @@ public class NFTTradingMarketRESTController {
 
 			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
 
-			List<NFT> listings = service.getAllListingsAsNFTs().stream().filter(x -> x.getWallet().getUser().getID().equals(buyer.getID())).collect(Collectors.toList());
+			List<NFT> listings = service.getAllListingsAsNFTs()
+					.stream()
+					.filter(x -> x.getWallet().getUser().getID().equals(buyer.getID()))
+					.collect(Collectors.toList());
 
 			ArrayList<JSONObject> json = new ArrayList<>();
 			listings.forEach(listing -> {
 				json.add(
 						new JSONObject()
-								.put("price", listing.getPrice())
+								.put("price", listing.getListing().getListingPrice())
 								.put("description", listing.getDescription())
 								.put("assetURL", listing.getAssetUrl())
 								.put("imageURL", listing.getImageUrl())
 								.put("name", listing.getName())
 								.put("type", listing.getNftType())
+								.put("status", listing.getListing().getStatus())
 								.put("lastRecordedTime", listing.getLastRecordedTime())
 								.put("address", listing.getSmartContractAddress())
 				);
@@ -633,6 +691,7 @@ public class NFTTradingMarketRESTController {
 
 	@PostMapping("/nft/buy")
 	@ResponseBody
+	@Transactional
 	public ResponseEntity<String> buyNFT(
 		@RequestParam(name="token", required=true) String token,
 		@RequestParam(name = "nftID", required = true) @NotEmpty String nftID,
@@ -657,6 +716,10 @@ public class NFTTradingMarketRESTController {
 
 			User seller = service.findUser(sellerID).orElseThrow();
 
+			if (buyer.getID().equals(seller.getID())) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Cannot buy own NFT.\"}}", HttpStatus.BAD_REQUEST);
+			}
+
 			Wallet buyerWallet;
 			Wallet sellerWallet;
 			if (nft.getNftType() == CryptoType.BITCOIN) {			
@@ -669,17 +732,18 @@ public class NFTTradingMarketRESTController {
 
 			BigDecimal balance = buyerWallet.getCryptoBalance();
 
-			if (balance.longValue() < BigDecimal.valueOf(nft.getPrice()).longValue()) {
+			assert nft.getListing() != null;
+			if (balance.longValue() < nft.getListing().getListingPrice().longValue()) {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"You do not have enough of this currency to proceed with this transaction.\"}}", HttpStatus.BAD_REQUEST);
 			}
 
-			service.updateUserWalletBalance(buyerWallet, balance.longValue()-BigDecimal.valueOf(nft.getPrice()).longValue());
+			service.updateUserWalletBalance(buyerWallet, balance.longValue()-nft.getListing().getListingPrice().longValue());
 
-			service.updateUserWalletBalance(sellerWallet, balance.longValue()+BigDecimal.valueOf(nft.getPrice()).longValue());
+			service.updateUserWalletBalance(sellerWallet, balance.longValue()+nft.getListing().getListingPrice().longValue());
 
 			service.deleteListingForNFT(nft);
 
-			service.createNftTrancsaction(buyer, seller, nft, nft.getNftType(),new Date(), BigDecimal.valueOf(nft.getPrice()),BigDecimal.valueOf(balance.longValue()-BigDecimal.valueOf(nft.getPrice()).longValue()));
+			service.createNftTrancsaction(buyer, seller, nft, nft.getNftType(),new Date(), nft.getListing().getListingPrice(),BigDecimal.valueOf(balance.longValue()-nft.getListing().getListingPrice().longValue()));
 
 			service.moveNFT(buyerWallet, nft);
 
@@ -755,7 +819,6 @@ public class NFTTradingMarketRESTController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		try {
 
-
 			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
 
 			if (optionalSession.isEmpty()) {
@@ -764,6 +827,10 @@ public class NFTTradingMarketRESTController {
 
 			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
 			NFT nft = nftService.getNFT(nftID).orElseThrow();
+
+			if (buyer.getID().equals(nft.getWallet().getUser().getID())) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Cannot buy own NFT.\"}}", HttpStatus.BAD_REQUEST);
+			}
 
 			if ((new Date()).compareTo(nft.getListing().getExpirationTime()) > 0) {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"This auction is done\"}}", HttpStatus.BAD_REQUEST);
@@ -784,7 +851,7 @@ public class NFTTradingMarketRESTController {
 				buyerWallet = service.findUsersWalletByType(buyer, CryptoType.ETHEREUM);
 			}
 
-			if (buyerWallet.getCryptoBalance().longValue() < nft.getPrice()) {
+			if (buyerWallet.getCryptoBalance().longValue() < nft.getListing().getListingPrice().longValue()) {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"You do not have enough of this currency to proceed with this transaction.\"}}", HttpStatus.BAD_REQUEST);
 			}
 
@@ -885,12 +952,13 @@ public class NFTTradingMarketRESTController {
 						new JSONObject()
 								.put("nftId", listing.getId())
 								.put("minimumPrice", minimumPrice)
-								.put("expirationTime", listing.getListing().getExpirationTime())
-								.put("price", listing.getPrice())
+								.put("expirationTime", listing.getListing().getExpirationTime().getTime())
+								.put("price", listing.getListing().getListingPrice())
 								.put("description", listing.getDescription())
 								.put("assetURL", listing.getAssetUrl())
 								.put("imageURL", listing.getImageUrl())
 								.put("name", listing.getName())
+								.put("tags", listing.getCategory().toString())
 								.put("nftType", listing.getNftType())
 								.put("saleType", listing.getListing().getType())
 								.put("seller", 

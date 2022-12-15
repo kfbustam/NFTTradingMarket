@@ -5,16 +5,8 @@ import logofooter from '../../assets/images/logo/logo2.png'
 const Footer = () => {
     const accountList = [
         {
-            title: "Authors",
-            link: "/authors-01"
-        },
-        {
-            title: "Collection",
+            title: "Wallets",
             link: "/wallet-connect"
-        },
-        {
-            title: "Author Profile",
-            link: "/edit-profile"
         },
         {
             title: "Create Item",
@@ -27,35 +19,15 @@ const Footer = () => {
             link: "/help-center"
         },
         {
-            title: "Live Auctions",
-            link: "/live-auctions"
-        },
-        {
-            title: "Item Details",
-            link: "/item-details-01"
-        },
-        {
-            title: "Activity",
-            link: "/activity-01"
-        },
+            title: "System Dashboard",
+            link: "/stats"
+        }
     ]
     const companyList = [
         {
-            title: "Explore",
-            link: "/explore-01"
-        },
-        {
             title: "Contact Us",
             link: "/contact-01"
-        },
-        {
-            title: "Our Blog",
-            link: "/blog"
-        },
-        {
-            title: "FAQ",
-            link: "/faq"
-        },
+        }
     ]
     const socialList = [
         {

@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import img1 from '../alice_video.png'
+import { useNavigate } from 'react-router-dom';
 
 const GET_TRANSACTIONS = "http://localhost:8080/transactions?token="
 
 const Activity02 = () => {
     const [apiResponse, setApiResponse] = useState([])
+    let navigate = useNavigate();
 
     const [dataFilter, setDataFilter] = useState(
         [
@@ -106,8 +108,15 @@ const Activity02 = () => {
     }, [])
 
     const getTransactionsForUser = () => {
-        let auth_token = "test123"
-        let fetchUrl = GET_TRANSACTIONS + auth_token
+        let token = "test123"
+
+        if (typeof(localStorage.getItem("token")) !== undefined && localStorage.getItem("token") !== null
+        && localStorage.getItem("token") !== 'undefined') {
+            token = localStorage.getItem("token")
+        } else {
+            localStorage.clear();
+            navigate("/login");
+        }        let fetchUrl = GET_TRANSACTIONS + token
         let debutUrl = "https://60261217186b4a001777fbd7.mockapi.io/api/ndkshr/transactions"
         fetch(
             fetchUrl,
@@ -168,11 +177,11 @@ const Activity02 = () => {
                                                 </div>
                                                 <div className="infor">
                                                     <h4><Link to="/item-details-01">{item.nft.name}</Link></h4>
-                                                    <div className="status">{item.seller.nickName} <span className="author">{item.buyer.nickName}</span></div>
-                                                    <div className="time">{item.status}</div>
+                                                    <div className="status"><span className="author"> Seller: {item.seller.nickName} </span> / <span className="author">  Buyer: {item.buyer.nickName}</span></div>
+                                                    <p>{item.status}</p>
                                                     <div className="time">
                                                         <h3>
-                                                        {item.type == "BITCOIN" ? "₿" : "Ξ" } {item.amount}/-
+                                                        {item.type} {item.amount}
                                                         </h3>
                                                     </div>
                                                     <div className="time">{item.date}</div>

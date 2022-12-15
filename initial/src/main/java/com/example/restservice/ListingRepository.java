@@ -10,10 +10,10 @@ import org.springframework.data.jpa.repository.Query;
  * The interface Flight repository.
  */
 public interface ListingRepository extends JpaRepository<Listing, String> {
-    @Query(value="SELECT * FROM listing l WHERE l.nft_id=?1", nativeQuery = true)
+    @Query(value="SELECT * FROM listing l WHERE l.nft_id=?1 and l.status='AVAILABLE'", nativeQuery = true)
     public Collection<Listing> findAllNFTListings(String nft_id);
 
     @Modifying
-    @Query(value="DELETE FROM listing l WHERE l.nft_id=?1", nativeQuery = true)
-    public void deleteListingByNFTID(String nft_id);
+    @Query(value="UPDATE listing n SET n.status='SOLD' WHERE nft_id=?1", nativeQuery = true)
+    public void updateSaleStatus(String nft_id);
 }

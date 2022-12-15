@@ -33,6 +33,11 @@ const loggedInMenu = [
                 id: 4,
                 sub: 'Withdraw Crypto',
                 links: '/withdrawal'
+            },
+            {
+                id: 5,
+                sub: 'List NFT for Sale',
+                links: '/list-item'
             }
         ],
     },

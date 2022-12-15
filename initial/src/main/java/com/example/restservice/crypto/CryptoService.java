@@ -21,7 +21,7 @@ public class CryptoService {
     @Autowired
     private WalletRepository walletRepository;
 
-    public NFT createNft (Path fileNameAndPath, CryptoType type, String walletId, String name, String description, double price) {
+    public NFT createNft (Path fileNameAndPath, CryptoType type, String walletId, String name, String description) {
         //todo is any duplicate check required?
 
         NFT nft = new NFT();
@@ -31,7 +31,6 @@ public class CryptoService {
         nft.setTokenId(UUID.randomUUID().toString());
         nft.setSmartContractAddress(UUID.randomUUID().toString());
         nft.setName(name);
-        nft.setPrice(price);
         nft.setDescription(description);
         nft.setLastRecordedTime(new Date());
         // todo add asset url

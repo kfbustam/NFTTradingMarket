@@ -25,7 +25,8 @@ public class Wallet {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@Column(name = "type")
+	@Column(name="type", columnDefinition="VARCHAR(255)")
+	@Enumerated(EnumType.STRING)
 	private CryptoType type;
 
 	@Column(name="balance", columnDefinition="Decimal(10,2) default '0.00'")

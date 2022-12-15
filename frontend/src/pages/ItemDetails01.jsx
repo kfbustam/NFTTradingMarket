@@ -19,6 +19,7 @@ import imgdetail1 from '../assets/images/box-item/images-item-details.jpg'
 import CardModal from '../components/layouts/CardModal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const BID_HISTORY_URL = "http://localhost:8080/nft/auction/offers"
 const IMAGE_BASE_URL = "http://localhost:8080/images?image_name="
@@ -27,6 +28,7 @@ const PLACE_BID_URL = "http://localhost:8080/nft/auction/offer"
 const CANCEL_BID_URL = "http://localhost:8080/nft/auction/offer/cancel"
 
 const ItemDetails01 = () => {
+    let navigate = useNavigate();
     const token = "test123";
     const location = useLocation()
     const [item] = useState(location.state != null ? location.state.item : null);
@@ -83,6 +85,16 @@ const ItemDetails01 = () => {
     )
 
     const cancelBid = (nftID) => {
+        let token = "test123"
+
+        if (typeof(localStorage.getItem("token")) !== undefined && localStorage.getItem("token") !== null
+        && localStorage.getItem("token") !== 'undefined') {
+            token = localStorage.getItem("token")
+        } else {
+            localStorage.clear();
+            navigate("/login");
+        }
+
         fetch(CANCEL_BID_URL + "?token=" + token + "&nftID=" + nftID, {
             headers: {
                 'Accept': 'application/json',
@@ -108,6 +120,16 @@ const ItemDetails01 = () => {
     }
 
     const buyItem = (nftID, sellerID) => {
+        let token = "test123"
+
+        if (typeof(localStorage.getItem("token")) !== undefined && localStorage.getItem("token") !== null
+        && localStorage.getItem("token") !== 'undefined') {
+            token = localStorage.getItem("token")
+        } else {
+            localStorage.clear();
+            navigate("/login");
+        }
+        
         fetch(BUY_NOW_URL + "?token=" + token + "&nftID=" + nftID + "&sellerID=" + sellerID, {
             headers: {
                 'Accept': 'application/json',
@@ -288,15 +310,15 @@ const ItemDetails01 = () => {
                                     </div>
                                     {
                                         (item.saleType === "BOTH" || item.saleType === "AUCTION") &&
-                                        <Link onClick={() => { setModalShow(true); }} className="sc-button loadmore style bag fl-button pri-3"><span>Place a bid</span></Link>
+                                        <Link to="#" onClick={() => { setModalShow(true); }} className="sc-button loadmore style bag fl-button pri-3"><span>Place a bid</span></Link>
                                     }
                                     {
                                         (item.saleType === "BOTH" || item.saleType === "AUCTION") &&
-                                        <Link onClick={() => cancelBid(item.nftId)} className="sc-button loadmore style bag fl-button pri-3"><span>Cancel bid</span></Link>
+                                        <Link to="#" onClick={() => cancelBid(item.nftId)} className="sc-button loadmore style bag fl-button pri-3"><span>Cancel bid</span></Link>
                                     }
                                     {
                                         (item.saleType === "BOTH" || item.saleType === "IMMEDIATE") &&
-                                        <Link onClick={() => { setModalShow(true); }} className="sc-button loadmore style bag fl-button pri-3"><span>Buy this now</span></Link>
+                                        <Link to="#" onClick={() => { setModalShow(true); }} className="sc-button loadmore style bag fl-button pri-3"><span>Buy this now</span></Link>
                                     }
                                     <div className="flat-tabs themesflat-tabs">
                                         <Tabs>

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 @Transactional
@@ -75,8 +76,8 @@ public class Service {
     }
 
     public void deleteListingForNFT(NFT nft) {
+        listingRepository.updateSaleStatus(nft.getId());
         nftRepository.removeListing(nft.getId());
-        listingRepository.deleteListingByNFTID(nft.getId());
     }
 
     public ArrayList<Wallet> getUserWallets(User user) {
@@ -118,11 +119,12 @@ public class Service {
     }
 
     public Wallet findUsersWalletByType(User user, CryptoType type) throws Exception {
-        ArrayList<Wallet> userWallet = new ArrayList<Wallet>(walletRepository.findUserWalletByType(user.getID(), type));
-        if (userWallet.size() > 1) {
-            throw new Exception("Should not have more than one wallet for a specific type");
-        }
-        return userWallet.get(0);
+        ArrayList<Wallet> userWallet = new ArrayList<Wallet>(walletRepository.findUserWallet(user.getID()));
+        Wallet walletByType = userWallet.stream()
+                .filter(x -> x.getType().equals(type))
+                .findFirst().get();
+
+        return walletByType;
     }
 
     public Collection<NFT> getNFTsInWallet(Wallet wallet) {
@@ -193,5 +195,25 @@ public class Service {
     public void createNftTrancsaction(User buyer, User seller, NFT nft, CryptoType type, Date date, BigDecimal amount, BigDecimal postPurchaseBalance) {
         NftTransaction newNftTransaction  = new NftTransaction(buyer,seller,nft,type,date,amount,postPurchaseBalance);
         nftTransactionRepository.saveAndFlush(newNftTransaction);
+    }
+
+    public Listing createListing(NFT nft, User seller, double price, SaleType type) {
+        Listing listing = new Listing(BigDecimal.valueOf(price));
+        listing.setStatus(SaleStatus.AVAILABLE);
+        listing.setNft(nft);
+        listing.setType(type);
+        listing.setSeller(seller);
+        if(SaleType.AUCTION.equals(type)) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.DATE, 7);
+            listing.setExpirationTime(cal.getTime());
+        }
+        listingRepository.save(listing);
+
+        nft.setListing(listing);
+        nftRepository.save(nft);
+
+        return listing;
     }
 }

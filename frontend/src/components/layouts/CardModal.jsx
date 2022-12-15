@@ -36,8 +36,8 @@ const CardModal = ({ item, show, onHide, setSuccessfulToastMessage, setErrorToas
                     <p> Total bid amount:</p>
                     <p className="text-right price color-popup"> 4 ETH </p>
                 </div>}
-                {item && item.saleType === "AUCTION" && <Link onClick={() => placeBid(item.nftId)} className="btn btn-primary" data-toggle="modal" data-target="#popup_bid_success" data-dismiss="modal" aria-label="Close"> Place a bid soon</Link>}
-                {item && item.saleType === "IMMEDIATE" && <Link onClick={() => buyItem(item.nftId, item.seller.id)} className="btn btn-primary" data-toggle="modal" data-target="#popup_bid_success" data-dismiss="modal" aria-label="Close"> Buy now</Link>}
+                {item && item.saleType === "AUCTION" && <Link to="#" onClick={() => placeBid(item.nftId)} className="btn btn-primary" data-toggle="modal" data-target="#popup_bid_success" data-dismiss="modal" aria-label="Close"> Place a bid soon</Link>}
+                {item && item.saleType === "IMMEDIATE" && <Link to="#" onClick={() => buyItem(item.nftId, item.seller.id)} className="btn btn-primary" data-toggle="modal" data-target="#popup_bid_success" data-dismiss="modal" aria-label="Close"> Buy now</Link>}
             </div>
         </Modal>
 

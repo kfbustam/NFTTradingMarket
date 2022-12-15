@@ -40,8 +40,6 @@ public class NFT {
 
 	private CryptoType nftType;
 
-	private double price;
-
 	@ManyToOne
 	@JoinColumn(name = "wallet_id")
 	@JsonIgnore
@@ -85,11 +83,6 @@ public class NFT {
 	}
 
   	public NFT() {}
-
-
-  	public NFT(int price) {
-		this.price = price;
-	}
 
 	public String getTokenId() {
 		return tokenId;
@@ -157,14 +150,6 @@ public class NFT {
 
 	public void setNftType(CryptoType nftType) {
 		this.nftType = nftType;
-	}
-
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
 	}
 
 	public Wallet getWallet() {

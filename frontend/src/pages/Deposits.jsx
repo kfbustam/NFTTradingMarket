@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import PathBanner from '../components/header/PathBanner';
+import { useNavigate } from 'react-router-dom';
 
 const GET_WALLET_API = "http://localhost:8080/wallets"
 const POST_DEPOSIT = "http://localhost:8080/wallet/"
@@ -11,16 +12,25 @@ const Deposits = () => {
     const [data, setData] = useState([])
     const [ethAmount, setEthAmount] = useState(0);
     const [btcAmount, setBtcAmount] = useState(0);
-    
-    const AUTH_TOKEN = "test123" // fetch token from local storage
+    let navigate = useNavigate();
 
     useEffect(() => {
         hitApi()
     }, [])
 
     const hitApi = () => {
+        let token = "test123"
+
+        if (typeof(localStorage.getItem("token")) !== undefined && localStorage.getItem("token") !== null
+        && localStorage.getItem("token") !== 'undefined') {
+            token = localStorage.getItem("token")
+        } else {
+            localStorage.clear();
+            navigate("/login");
+        }
+
         fetch(
-            GET_WALLET_API + "?token=" + AUTH_TOKEN ,
+            GET_WALLET_API + "?token=" + token ,
             {
                 method: "GET",
                 headers: {

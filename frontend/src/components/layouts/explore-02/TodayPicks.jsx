@@ -4,6 +4,7 @@ import 'react-tabs/style/react-tabs.css';
 import CardModal from '../CardModal';
 import { ToastContainer, toast } from 'react-toastify';
 import img1 from '../../../assets/images/avatar/avt-3.jpg'
+import Countdown from "react-countdown";
 
 import { Link, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,14 +14,24 @@ const BUY_NOW_URL = "http://localhost:8080/nft/buy"
 const PLACE_BID_URL = "http://localhost:8080/nft/auction/offer"
 
 const TodayPicks = ({ dataPanel }) => {
-    const token = "test123";
     const [itemShown, setItemShown] = useState();
     const [modalShow, setModalShow] = useState(false);
     const [successfulToastMessage, setSuccessfulToastMessage] = useState();
     const [errorToastMessage, setErrorToastMessage] = useState();
     const [currencyAmount, setCurrencyAmount] = useState(0);
+    let navigate = useNavigate();
 
     const buyItem = (nftID, sellerID) => {
+        let token = "test123"
+
+        if (typeof(localStorage.getItem("token")) !== undefined && localStorage.getItem("token") !== null
+        && localStorage.getItem("token") !== 'undefined') {
+            token = localStorage.getItem("token")
+        } else {
+            localStorage.clear();
+            navigate("/login");
+        }
+
         fetch(BUY_NOW_URL + "?token=" + token + "&nftID=" + nftID + "&sellerID=" + sellerID, {
             headers: {
                 'Accept': 'application/json',
@@ -30,6 +41,7 @@ const TodayPicks = ({ dataPanel }) => {
         })
             .then(response => {
                 if (response.ok) {
+                    setSuccessfulToastMessage("Purchase Successful.");
                     return response.json()
                 }
                 throw response
@@ -38,18 +50,27 @@ const TodayPicks = ({ dataPanel }) => {
             })
             .catch(error => {
                 setSuccessfulToastMessage(null);
-                setErrorToastMessage("Not enough balance.");
+                setErrorToastMessage("Validation failed.. Please try again.");
                 console.error(error)
             }).finally(() => {
                 setModalShow(false);
                 setItemShown(null);
                 setErrorToastMessage(null);
-                setSuccessfulToastMessage("Purchase Successful.");
             });
 
     }
 
     const placeBid = (nftID) => {
+        let token = "test123"
+
+        if (typeof(localStorage.getItem("token")) !== undefined && localStorage.getItem("token") !== null
+        && localStorage.getItem("token") !== 'undefined') {
+            token = localStorage.getItem("token")
+        } else {
+            localStorage.clear();
+            navigate("/login");
+        }
+
         fetch(PLACE_BID_URL + "?token=" + token + "&nftID=" + nftID + "&offerPrice=" + currencyAmount, {
             headers: {
                 'Accept': 'application/json',
@@ -108,9 +129,6 @@ const TodayPicks = ({ dataPanel }) => {
         setVisible((prevValue) => prevValue + 4);
     }
 
-    let navigate = useNavigate();
-
-
     useEffect(() => {
         if (successfulToastMessage != null) {
             toast.success(successfulToastMessage)
@@ -154,7 +172,7 @@ const TodayPicks = ({ dataPanel }) => {
                                     <TabList>
                                         {
                                             (dataPanel).map(data => (
-                                                <Tab key={data.id}>Tab {data.id}</Tab>
+                                                <Tab key={data.id}>All {data.id}</Tab>
                                             ))
                                         }
                                     </TabList>
@@ -163,7 +181,7 @@ const TodayPicks = ({ dataPanel }) => {
                                             <TabPanel key={data.id}>
                                                 {
 
-                                                    data.dataContent.slice(0, visible).map(item => (
+                                                    data.dataContent.map(item => (
                                                         <div key={item.id} className={`sc-card-product explode style2 mg-bt ${item.nftType} `}>
                                                             <div className="card-media">
                                                                 <Link to="/item-details-01" state={{ item: item }}><img src={IMAGE_BASE_URL + item.imageURL} alt="Axies" state={{ item }} /></Link>
@@ -182,40 +200,70 @@ const TodayPicks = ({ dataPanel }) => {
                                                                     <div className="avatar">
                                                                         <img src={item.imgAuthor ?? img1} alt="Axies" />
                                                                     </div>
+                                                             
                                                                     <div className="info">
                                                                         <span>Creator</span>
                                                                         <h6> <Link to="/authors-02">{item.seller.name}</Link> </h6>
                                                                     </div>
+                                                                    
                                                                 </div>
                                                                 <div className="tags">{item.tags ?? ["BTC"]}</div>
                                                             </div>
+                                                            <div className="info">
+                                                                        <span>&nbsp;</span>
+                                                                    </div>
+                                                            <div className="info">
+                                                                        <span>Description</span>
+                                                                        <h6>{item.description} </h6>
+                                                            </div>
+                                                            <div className="info">
+                                                                        <span>&nbsp;</span>
+                                                                    </div>
+                                                                    {
+                                                                        (item.saleType === "AUCTION")
+                                                                        &&
+                                                            <div className="info">
+                                                           
+                                                            <div className="featured-countdown">
+                                                                <span className="slogan"></span>
+                                                                <h6><Countdown date={item.expirationTime}>
+                                                                    <span>Auction Over!</span>
+                                                                </Countdown>
+                                                                </h6>
+                                                            </div>
+                                                            </div>
+                                                                    }
                                                             <div className="card-bottom style-explode">
                                                                 <div className="price">
                                                                     {
-                                                                        (item.saleType === "immediate" || item.saleType === "auction")
+                                                                        (item.saleType === "IMMEDIATE" || item.saleType === "AUCTION")
                                                                         &&
                                                                         <>
                                                                             <span>Current Price</span>
                                                                             <div className="price-details">
-                                                                                <h5>{item.price}</h5>
-                                                                                <span>= {item.smartContractAddress}</span>
+                                                                                <h5>{item.price} {item.nftType}</h5>
+                                                                                <span>Smart Contract ID: {item.smartContractAddress}</span>
                                                                             </div>
                                                                         </>
 
                                                                     }
                                                                     {
-                                                                        (item.saleType === "all" || item.saleType === "auction")
+                                                                        (item.saleType === "all" || item.saleType === "AUCTION")
                                                                         &&
                                                                         <>
                                                                             <span>Current Bid</span>
                                                                             <div className="price-details">
                                                                                 <h5>{item.price}</h5>
-                                                                                <span>= {item.smartContractAddress}</span>
+                                                                                <span>Smart Contract ID: {item.smartContractAddress}</span>
                                                                             </div>
                                                                         </>
                                                                     }
                                                                 </div>
+                                                                {
+                                                                        (item.saleType === "ALL" || item.saleType === "AUCTION")
+                                                                        &&
                                                                 <Link to="/activity-01" className="view-history reload">View History</Link>
+}
                                                             </div>
                                                         </div>
                                                     ))

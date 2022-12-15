@@ -28,6 +28,14 @@ public class Listing {
 	@JsonIgnore
 	private User seller;
 
+	public void setListingPrice(BigDecimal listingPrice) {
+		this.listingPrice = listingPrice;
+	}
+
+	public void setExpirationTime(@Nullable Date expirationTime) {
+		this.expirationTime = expirationTime;
+	}
+
 	@Column(name="listing_price", columnDefinition="Decimal(10,2) default '0.00'")
 	private BigDecimal listingPrice;
 
@@ -44,7 +52,27 @@ public class Listing {
 	@Column(name="sale_type", columnDefinition="VARCHAR(255) default 'IMMEDIATE'")
 	private SaleType type;
 
-  public Listing() {}
+	@Enumerated(EnumType.STRING)
+	@Column(name="status", columnDefinition="VARCHAR(255) default 'AVAILABLE'")
+	private SaleStatus status;
+
+	public SaleStatus getStatus() {
+		return status;
+	}
+
+	public NFT getNft() {
+		return nft;
+	}
+
+	public void setNft(NFT nft) {
+		this.nft = nft;
+	}
+
+	public void setStatus(SaleStatus status) {
+		this.status = status;
+	}
+
+	public Listing() {}
 
 
   public Listing(BigDecimal listingPrice) {

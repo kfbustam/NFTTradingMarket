@@ -1,5 +1,5 @@
 import React , {useEffect, useState} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import img1 from '../alice_video.png'
@@ -7,6 +7,8 @@ import img1 from '../alice_video.png'
 const GET_TRANSACTIONS = "http://localhost:8080/nft?token="
 
 const MyNfts = () => {
+    let navigate = useNavigate();
+
     const [apiResponse, setApiResponse] = useState([])
 
     const [dataFilter, setDataFilter] = useState(
@@ -106,9 +108,17 @@ const MyNfts = () => {
     }, [])
 
     const getTransactionsForUser = () => {
-        let auth_token = "test123"
-        let fetchUrl = GET_TRANSACTIONS + auth_token
-        let debutUrl = "https://60261217186b4a001777fbd7.mockapi.io/api/ndkshr/transactions"
+        let token = "test123"
+
+        if (typeof(localStorage.getItem("token")) !== undefined && localStorage.getItem("token") !== null
+        && localStorage.getItem("token") !== 'undefined') {
+            token = localStorage.getItem("token")
+        } else {
+            localStorage.clear();
+            navigate("/login");
+        }
+        
+        let fetchUrl = GET_TRANSACTIONS + token
         fetch(
             fetchUrl,
             {
@@ -161,21 +171,26 @@ const MyNfts = () => {
                             <div className="box-activity">
                                 {
                                     apiResponse.map((item,index) => (
-                                        <div key={index} className="sc-card-activity style-2">
+                                        <div key={index} className="sc-card-activity">
                                             <div className="content">
                                                 <div className="media">
                                                     <img src={"http://localhost:8080/images?image_name=" + item.imageUrl} alt="" />
                                                 </div>
                                                 <div className="infor">
                                                     <h4><Link to="/item-details-01">{item.name}</Link></h4>
-                                                    <div className="status"> <span className="author">{item.smartContractAddress}</span></div>
-                                                    <div className="time">{item.lastRecordedTime}</div>
+                                                    <p>{item.description}</p>
+                                                    <div className="status"> <span className="author">Smart Contract Address: {item.smartContractAddress}</span></div>
                                                     <div className="time">
-                                                        <h3>
-                                                        {item.type == "BITCOIN" ? "₿" : "E" } {item.type}
-                                                        </h3>
+                                                    <p><b>Last Recorded Time</b></p>
+                                                    {item.lastRecordedTime}
+                                                    
+                                                    <p><b>NFT ID</b></p>
+                                                    {item.tokenId}
+
+                                                    <p><b>Asset URL</b></p>
+                                                    <Link to="/item-details-01">Click Here</Link>
                                                     </div>
-                                                    <div className="time">{item.date}</div>
+                                        
                                                 </div>
                                             </div>
                                         </div>

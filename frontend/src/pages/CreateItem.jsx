@@ -10,7 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
-const POST_CREATE_NFT = "http://localhost:8080/nft/create"
+const POST_CREATE_NFT = "http://localhost:8080/nft/create?token="
 const CreateItem = () => {
 
     const { register, handleSubmit } = useForm();
@@ -27,18 +27,24 @@ const CreateItem = () => {
             toastId: 1
         })
 
-        let email = "nandugop@gmail.com"
-        let walletId = "8a8080e185157648018515acabea0005"
         var formData = new FormData();
         formData.append("nft_image", data.file[0]);
+        
+        let token = "test123"
+
+        if (typeof(localStorage.getItem("token")) !== undefined && localStorage.getItem("token") !== null
+        && localStorage.getItem("token") !== 'undefined') {
+            token = localStorage.getItem("token")
+        } else {
+            localStorage.clear();
+            navigate("/login");
+        }
+
         fetch(
-            POST_CREATE_NFT +
-             "?email=" + email +
+            POST_CREATE_NFT + token +
              "&name=" + title + 
-             "&wallet_id=" + walletId + 
              "&description=" + description + 
-             "&type=" + selectedCrypto + 
-             "&price=" + price,
+             "&type=" + selectedCrypto,
              {
                 method: "POST",
                 headers: {
@@ -115,15 +121,13 @@ const CreateItem = () => {
                                                     <div id="item-create" className="dropdown">
                                                         <Link to="#" className="btn-selector nolink">{selectedCrypto}</Link>
                                                         <ul >
-                                                            <li onCLick={(event) => {setSelectedCrypto("ETHEREUM")}}><span>ETHEREUM</span></li>
+                                                            <li onClick={(event) => {setSelectedCrypto("ETHEREUM")}}><span>ETHEREUM</span></li>
                                                             <li onClick={(event) => {setSelectedCrypto("BITCOIN")}}><span>BITCOIN</span></li>
                                                         </ul>
                                                     </div>
                                                 </div>
                                                 <br /><br /><br />
-                                                <h4 className="title-create-item">Price</h4>
-                                                <input type="text" placeholder="Enter price for item" value={price} onChange={(event) => {setPrice(event.target.value)}}/>
-
+                                     
                                                 <h4 className="title-create-item">Title</h4>
                                                 <input type="text" placeholder="Item Name" value={title} onChange={(event) => {setTitle(event.target.value)}}/>
 

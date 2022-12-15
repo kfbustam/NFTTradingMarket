@@ -23,7 +23,7 @@ public class NftService {
     @Autowired
     private WalletRepository walletRepository;
 
-    public NFT createNft (Path fileNameAndPath, CryptoType type, String walletId, String name, String description, double price, NftCategory category) {
+    public NFT createNft (Path fileNameAndPath, CryptoType type, String walletId, String name, String description, NftCategory category) {
         //todo is any duplicate check required?
 
         NFT nft = new NFT();
@@ -33,7 +33,7 @@ public class NftService {
         nft.setTokenId(UUID.randomUUID().toString());
         nft.setSmartContractAddress(UUID.randomUUID().toString());
         nft.setName(name);
-        nft.setPrice(price);
+        //nft.setPrice(price);
         nft.setCategory(category);
         nft.setDescription(description);
         nft.setLastRecordedTime(new Date());
@@ -72,6 +72,8 @@ public class NftService {
 
         buyerStream.addAll(sellerStream);
 
-        return buyerStream;
+        return buyerStream.stream()
+                .sorted(Comparator.comparing(NftTransaction::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
+                .collect(Collectors.toList());
     }
 }

@@ -10,7 +10,6 @@ public interface VerificationTokenRepository extends JpaRepository<VerificationT
     /**
      * Find by verification token optional.
      *
-     * @param String the verificationToken
      * @return the optional
      */
     Optional<VerificationToken> findByToken(String verificationToken);

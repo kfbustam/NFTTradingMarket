@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
@@ -10,34 +10,45 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
-const POST_LIST_NFT = "http://localhost:8080/nft/create"
+const POST_CREATE_NFT = "http://localhost:8080/listing?token="
+
+const GET_TRANSACTIONS = "http://localhost:8080/nft?token="
+
+
 const ListItem = () => {
+    const [apiResponse, setApiResponse] = useState([])
 
     const { register, handleSubmit } = useForm();
 
     const [price, setPrice] = React.useState(0);
-    const [selectedCrypto, setSelectedCrypto] = React.useState("ETHEREUM")
-    const [title, setTitle] = React.useState("")
-    const [description, setDescription] = React.useState("")
-    const [filePath, setFilePath] = React.useState()
+    const [saleType, setSaleType] = React.useState("IMMEDIATE")
+    const [selectedNft, setSelectedNft] = React.useState("")
+    const [selectedNftName, setSelectedNftName] = React.useState("Select")
+
     let navigate = useNavigate();
 
     const postItemApi = (data) => {
-        toast.info("Uploading your NFT...", {
+        toast.info("Listing your NFT...", {
             toastId: 1
         })
 
-        let email = "nandugop@gmail.com"
-        let walletId = "8a8080e185157648018515acabea0005"
+        let token = "test123"
+
+        if (typeof(localStorage.getItem("token")) !== undefined && localStorage.getItem("token") !== null
+        && localStorage.getItem("token") !== 'undefined') {
+            token = localStorage.getItem("token")
+        } else {
+            localStorage.clear();
+            navigate("/login");
+        }
+        
+        let fetchUrl = POST_CREATE_NFT + token
+
         var formData = new FormData();
-        formData.append("nft_image", data.file[0]);
         fetch(
-            POST_LIST_NFT +
-             "?email=" + email +
-             "&name=" + title + 
-             "&wallet_id=" + walletId + 
-             "&description=" + description + 
-             "&type=" + selectedCrypto + 
+             fetchUrl +
+             "&nftId=" + selectedNft + 
+             "&saleType=" + saleType + 
              "&price=" + price,
              {
                 method: "POST",
@@ -49,8 +60,9 @@ const ListItem = () => {
              }
         ).then(response => {
             if (response.ok) {
-                toast.success("NFT has been created successfully!", {
-                    toastId: 1
+                toast.success("NFT has been listed successfully!", {
+                   onClose: () => navigate("/my-listings"),
+                   autoClose: 1500
                 })
 
                 return response.json()
@@ -58,17 +70,54 @@ const ListItem = () => {
             throw response
         })
         .then(jsonData => {
-            
-            navigate("/my-listings");
-
             console.log("Upload Successful", jsonData)
         }).catch(error => {
-            toast.error("Please refresh as your file has changed while you were here!", {
+            toast.error("Please try again!", {
                 toastId: 2
             })
             console.log("error", error)
         })
     }
+
+    useEffect(() => {
+        getTransactionsForUser();
+    }, [])
+
+    const getTransactionsForUser = () => {
+        let token = "test123"
+
+        if (typeof(localStorage.getItem("token")) !== undefined && localStorage.getItem("token") !== null
+        && localStorage.getItem("token") !== 'undefined') {
+            token = localStorage.getItem("token")
+        } else {
+            localStorage.clear();
+            navigate("/login");
+        }
+        
+        let fetchUrl = GET_TRANSACTIONS + token
+        fetch(
+            fetchUrl,
+            {
+                method: "GET",
+                header: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }
+        ).then(response => {
+            if (response.ok) {
+                return response.json()
+            }
+            throw response
+        }).then(jsonData => {
+            jsonData = jsonData.filter(data => data.listing == null || (data.listing !== null && data.listing.status === "SOLD"));
+            setApiResponse(jsonData)
+            console.log("leng", apiResponse.length)
+            console.log("tranactions data", jsonData)
+        }).catch(error => {
+            console.log("transactions fetch failed", error)
+        })
+    } 
 
     return (
         <div className='create-item'>
@@ -79,13 +128,13 @@ const ListItem = () => {
                     <div className="row">
                         <div className="col-md-12">
                             <div className="page-title-heading mg-bt-12">
-                                <h1 className="heading text-center">List NFT for Sale</h1>
+                                <h1 className="heading text-center">List NFT</h1>
                             </div>
                             <div className="breadcrumbs style2">
                                 <ul>
                                     <li><Link to="/">Home</Link></li>
                                     <li><Link to="#">Pages</Link></li>
-                                    <li>List NFT for Sale</li>
+                                    <li>List Item</li>
                                 </ul>
                             </div>
                         </div>
@@ -100,44 +149,62 @@ const ListItem = () => {
                     <div className="column">
                          <div className="col-12">
                          </div>
-                         <div className="col-xl-9 col-lg-6 col-md-12 col-12">
+                         <div className="col-lg-6 col-md-12 col-12">
                              <div className="form-create-item">
                                 <div className="flat-tabs tab-create-item">
                                     <Tabs>
                                         <TabPanel>
                                             <form action="#" onSubmit={handleSubmit(postItemApi)}>
-                                                <h4 className="title-create-item">Upload file</h4>
-                                                <label className="uploadFile">
-                                                    <span className="filename">PNG, JPG Only</span>
-                                                    <input id="nft_selector" type="file" className="inputfile form-control" name="file" onChange={(event) => {setFilePath(event.target.file[0])}} {...register("file")} />
-                                                </label>
+                                                            
+                                                <h4 className="title-create-item">Listing Type</h4>
+
                                                 <div className="seclect-box">
                                                     <div id="item-create" className="dropdown">
-                                                        <Link to="#" className="btn-selector nolink">{selectedCrypto}</Link>
+                                                        <Link to="#" className="btn-selector nolink">{saleType}</Link>
                                                         <ul >
-                                                            <li onCLick={(event) => {setSelectedCrypto("ETHEREUM")}}><span>ETHEREUM</span></li>
-                                                            <li onClick={(event) => {setSelectedCrypto("BITCOIN")}}><span>BITCOIN</span></li>
+                                                            
+
+                                                            <li onClick={(event) => {setSaleType("IMMEDIATE")}}><span>IMMEDIATE</span></li>
+
+                                                            <li onClick={(event) => {setSaleType("AUCTION")}}><span>AUCTION</span></li>
                                                         </ul>
                                                     </div>
                                                 </div>
-                                                <br /><br /><br />
+                                                <br></br>
+                                                <br></br>
+                                                <br></br>
+                                                <br></br>
+                                                <h4 className="title-create-item">Select your NFT</h4>
+
+                                                <div className="seclect-box">
+                                                    <div id="item-create" className="dropdown">
+                                                        
+                                                        <Link to="#" className="btn-selector nolink">{selectedNftName}</Link>
+                                                        <ul >
+                                                            {
+                                                        apiResponse.map((item,index) => (
+
+                                                            <li onClick={(event) => {setSelectedNft(item.id); setSelectedNftName(item.name)}}><span>{item.name}</span></li>
+
+                                                            ))
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <br></br>
+                                                        <br></br>
+                                                        <br></br>
                                                 <h4 className="title-create-item">Price</h4>
                                                 <input type="text" placeholder="Enter price for item" value={price} onChange={(event) => {setPrice(event.target.value)}}/>
 
-                                                <h4 className="title-create-item">Title</h4>
-                                                <input type="text" placeholder="Item Name" value={title} onChange={(event) => {setTitle(event.target.value)}}/>
-
-                                                <h4 className="title-create-item">Description</h4>
-                                                <textarea placeholder="e.g. “This is very limited item”" value={description} onChange={(event) => {setDescription(event.target.value)}}></textarea>
-
-                                                <div className="row-form style-3">
+                                                <div className="row-form">
                                                     
-                                                    <div className="style-2">
-                                                        <div className="seclect-box">
-                                                            <div id="item-create" className="dropdown">
-                                                            <button className="submit">Add NFT</button>
-                                                            </div>
-                                                        </div>
+                                                    <div className="text-right">
+                                                        <br></br>
+                                                        <br></br>
+                                                        <br></br>
+                                                        
+                                                            <button className="submit">List NFT</button>
                                                     </div>
                                                 </div>
                                             </form>

@@ -11,10 +11,22 @@ const GET_WALLET_API = "http://localhost:8080/wallets"
 
 const WalletConnect = () => {
     const [data, setData] = useState([])
+    let navigate = useNavigate();
 
     useEffect(() => {
+
+        let token = "test123"
+
+        if (typeof(localStorage.getItem("token")) !== undefined && localStorage.getItem("token") !== null
+        && localStorage.getItem("token") !== 'undefined') {
+            token = localStorage.getItem("token")
+        } else {
+            localStorage.clear();
+            navigate("/login");
+        }
+
         fetch(
-            GET_WALLET_API + "?token=" + localStorage.getItem("token"),
+            GET_WALLET_API + "?token=" + token,
             {
                 method: "GET",
                 headers: {

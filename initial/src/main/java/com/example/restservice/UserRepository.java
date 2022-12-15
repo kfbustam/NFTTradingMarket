@@ -9,7 +9,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     /**
      * Find by email optional.
      *
-     * @param String the email
      * @return the optional
      */
     Optional<User> findByEmail(String email);
