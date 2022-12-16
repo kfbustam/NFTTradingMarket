@@ -12,13 +12,13 @@ const CreateItem = () => {
     const [selectedCrypto, setSelectedCrypto] = React.useState("ETH")
     const [title, setTitle] = React.useState("")
     const [description, setDescription] = React.useState("")
-    const [filePath, setFilePath] = React.useState("")
+    const [filePath, setFilePath] = React.useState()
 
     const postItemApi = () => {
-        let email = window.localStorage.getItem("email");
-        let walletId = window.localStorage.getItem("walletId")
-        const formData = new FormData();
-        // formData.append("nft_image", )
+        let email = "nandugop@gmail.com"
+        let walletId = "8a8080e185157648018515acabea0005"
+        var formData = new FormData();
+        formData.append("nft_image", filePath);
         fetch(
             POST_CREATE_NFT +
              "?email=" + email +
@@ -29,12 +29,22 @@ const CreateItem = () => {
              {
                 method: "POST",
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Accept': 'application/json'
                 },
+                body: formData,
                 mode: 'cors'
              }
-        )
+        ).then(response => {
+            if (response.ok) {
+                return response.json()
+            }
+            throw response
+        })
+        .then(jsonData => {
+            console.log("Upload Successful", jsonData)
+        }).catch(error => {
+            console.log("error", error)
+        })
     }
 
     return (
@@ -66,35 +76,33 @@ const CreateItem = () => {
                          </div>
                          <div className="col-xl-9 col-lg-6 col-md-12 col-12">
                              <div className="form-create-item">
-                                 <form action="#">
-                                    <h4 className="title-create-item">Upload file</h4>
-                                    <label className="uploadFile">
-                                        <span className="filename">PNG, JPG, GIF, WEBP</span>
-                                        <input type="file" className="inputfile form-control" name="file" />
-                                    </label>
-                                 </form>
                                 <div className="flat-tabs tab-create-item">
                                     <Tabs>
                                         <TabPanel>
-                                            <form action="#">
+                                            <form action="#" onSubmit={postItemApi}>
+                                                <h4 className="title-create-item">Upload file</h4>
+                                                <label className="uploadFile">
+                                                    <span className="filename">PNG, JPG, GIF, WEBP</span>
+                                                    <input id="nft_selector" type="file" className="inputfile form-control" name="file" onChange={(event) => {setFilePath(event.target.file[0])}} />
+                                                </label>
                                                 <div className="seclect-box">
                                                     <div id="item-create" className="dropdown">
-                                                        <Link to="#" className="btn-selector nolink">Select Crypto</Link>
+                                                        <Link to="#" className="btn-selector nolink">{selectedCrypto}</Link>
                                                         <ul >
-                                                            <li><span>ETH</span></li>
-                                                            <li><span>BTC</span></li>
+                                                            <li onCLick={(event) => {setSelectedCrypto("ETH")}}><span>ETH</span></li>
+                                                            <li onClick={(event) => {setSelectedCrypto("BTC")}}><span>BTC</span></li>
                                                         </ul>
                                                     </div>
                                                 </div>
                                                 <br /><br /><br />
                                                 <h4 className="title-create-item">Price</h4>
-                                                <input type="text" placeholder="Enter price for item" />
+                                                <input type="text" placeholder="Enter price for item" value={price} onChange={(event) => {setPrice(event.target.value)}}/>
 
                                                 <h4 className="title-create-item">Title</h4>
-                                                <input type="text" placeholder="Item Name" />
+                                                <input type="text" placeholder="Item Name" value={title} onChange={(event) => {setTitle(event.target.value)}}/>
 
                                                 <h4 className="title-create-item">Description</h4>
-                                                <textarea placeholder="e.g. “This is very limited item”"></textarea>
+                                                <textarea placeholder="e.g. “This is very limited item”" value={description} onChange={(event) => {setDescription(event.target.value)}}></textarea>
 
                                                 <div className="row-form style-3">
                                                     
