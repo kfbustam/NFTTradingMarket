@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
@@ -30,32 +30,12 @@ import img8 from '../../../assets/images/box-item/image-box-11.jpg'
 import imga8 from '../../../assets/images/avatar/avt-3.jpg'
 import imgCollection8 from '../../../assets/images/avatar/avt-18.jpg'
 
+const LISTINGS_URL = "http://localhost:8080/nft/listings"
+
 const TodayPicks = () => {
-    const [dataTab] = useState(
-        [
-            {
-                id: 1,
-                title: "All",
-            },
-            {
-                id: 2,
-                title: "Art",
-            },
-            {
-                id: 3,
-                title: "Music",
-            },
-            {
-                id: 4,
-                title: "Collectibles",
-            },
-            {
-                id: 5,
-                title: "Sports",
-            },
-        ]
-    )
-    const [dataPanel] = useState(
+    const token = "test123";
+
+    const [dataPanel, setDataPanel] = useState(
         [
             {
                 id: 1,
@@ -351,6 +331,29 @@ const TodayPicks = () => {
         ]
     )
 
+    useEffect(() => {
+        fetch(LISTINGS_URL + "?token=" + token, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw response
+            })
+            .then(data => {
+                setDataPanel(data)
+            })
+            .catch(error => {
+                console.error(error)
+            }).finally(() => {
+            });
+    }, []);
+
     const [visible, setVisible] = useState(8);
     const showMoreItems = () => {
         setVisible((prevValue) => prevValue + 4);
@@ -403,7 +406,7 @@ const TodayPicks = () => {
                                                     data.dataContent.slice(0, visible).map(item => (
                                                         <div key={item.id} className={`sc-card-product explode style2 mg-bt ${item.feature ? 'comingsoon' : ''} `}>
                                                             <div className="card-media">
-                                                                <Link to="/item-details-01"><img src={item.img} alt="Axies" /></Link>
+                                                                <Link to="/item-details-01"><img src={item.img} alt="Axies" state={{ item }} /></Link>
                                                                 <div className="button-place-bid">
                                                                     <button onClick={() => setModalShow(true)} className="sc-button style-place-bid style bag fl-button pri-3"><span>Place Bid</span></button>
                                                                 </div>
@@ -411,7 +414,7 @@ const TodayPicks = () => {
                                                                 <div className="coming-soon">{item.feature}</div>
                                                             </div>
                                                             <div className="card-title">
-                                                                <h5><Link to="/item-details-01">"{item.title}"</Link></h5>
+                                                                <h5><Link to="/item-details-01" state={{ item }}>"{item.title}"</Link></h5>
 
                                                             </div>
                                                             <div className="meta-info">

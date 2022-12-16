@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom'
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import { Link } from 'react-router-dom';
 import Countdown from "react-countdown";
-import { Tab, Tabs, TabList, TabPanel  } from 'react-tabs';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import liveAuctionData from '../assets/fake-data/data-live-auction';
 import LiveAuction from '../components/layouts/LiveAuction';
@@ -17,46 +18,62 @@ import img7 from '../assets/images/avatar/avt-2.jpg'
 import imgdetail1 from '../assets/images/box-item/images-item-details.jpg'
 
 const ItemDetails01 = () => {
+    const location = useLocation()
+    const { item } = location.state
+    const {
+        id,
+        img,
+        title,
+        tags,
+        imgAuthor,
+        nameAuthor,
+        price,
+        priceChange,
+        wishlist,
+        imgCollection,
+        nameCollection,
+        saleType
+    } = item;
     const [dataHistory] = useState(
         [
             {
                 img: img1,
-                name:"Mason Woodward",
+                name: "Mason Woodward",
                 time: "8 hours ago",
                 price: "4.89 ETH",
                 priceChange: "$12.246"
             },
             {
                 img: img2,
-                name:"Mason Woodward",
+                name: "Mason Woodward",
                 time: "at 06/10/2021, 3:20 AM",
                 price: "4.89 ETH",
                 priceChange: "$12.246"
             },
             {
                 img: img3,
-                name:"Mason Woodward",
+                name: "Mason Woodward",
                 time: "8 hours ago",
                 price: "4.89 ETH",
                 priceChange: "$12.246"
             },
             {
                 img: img4,
-                name:"Mason Woodward",
+                name: "Mason Woodward",
                 time: "8 hours ago",
                 price: "4.89 ETH",
                 priceChange: "$12.246"
             },
             {
                 img: img5,
-                name:"Mason Woodward",
+                name: "Mason Woodward",
                 time: "8 hours ago",
                 price: "4.89 ETH",
                 priceChange: "$12.246"
             },
             {
                 img: img6,
-                name:"Mason Woodward",
+                name: "Mason Woodward",
                 time: "8 hours ago",
                 price: "4.89 ETH",
                 priceChange: "$12.246"
@@ -83,7 +100,7 @@ const ItemDetails01 = () => {
                             </div>
                         </div>
                     </div>
-                </div>                    
+                </div>
             </section>
             <div className="tf-section tf-item-details">
                 <div className="themesflat-container">
@@ -154,49 +171,56 @@ const ItemDetails01 = () => {
                                             </Countdown>
                                         </div>
                                     </div>
-                                    <Link to="/wallet-connect" className="sc-button loadmore style bag fl-button pri-3"><span>Place a bid</span></Link>
+                                    {
+                                        (item.saleType === "all" || item.saleType === "auction") &&
+                                        <Link to="/wallet-connect" className="sc-button loadmore style bag fl-button pri-3"><span>Place a bid</span></Link>
+                                    }
+                                    {
+                                        (item.saleType === "all" || item.saleType === "immediate") &&
+                                        <Link to="/wallet-connect" className="sc-button loadmore style bag fl-button pri-3"><span>Buy this now</span></Link>
+                                    }
                                     <div className="flat-tabs themesflat-tabs">
-                                    <Tabs>
-                                        <TabList>
-                                        <Tab>Bid History</Tab>
-                                        <Tab>Info</Tab>
-                                        <Tab>Provenance</Tab>
-                                        </TabList>
+                                        <Tabs>
+                                            <TabList>
+                                                <Tab>Bid History</Tab>
+                                                <Tab>Info</Tab>
+                                                <Tab>Provenance</Tab>
+                                            </TabList>
 
-                                        <TabPanel>
-                                            <ul className="bid-history-list">
-                                            {
-                                                dataHistory.map((item, index) => (
-                                                    <li key={index} item={item}>
-                                                        <div className="content">
-                                                            <div className="client">
-                                                                <div className="sc-author-box style-2">
-                                                                    <div className="author-avatar">
-                                                                        <Link to="#">
-                                                                            <img src={item.img} alt="Axies" className="avatar" />
-                                                                        </Link>
-                                                                        <div className="badge"></div>
-                                                                    </div>
-                                                                    <div className="author-infor">
-                                                                        <div className="name">
-                                                                            <h6><Link to="/author-02">{item.name} </Link></h6> <span> place a bid</span>
+                                            <TabPanel>
+                                                <ul className="bid-history-list">
+                                                    {
+                                                        dataHistory.map((item, index) => (
+                                                            <li key={index} item={item}>
+                                                                <div className="content">
+                                                                    <div className="client">
+                                                                        <div className="sc-author-box style-2">
+                                                                            <div className="author-avatar">
+                                                                                <Link to="#">
+                                                                                    <img src={item.img} alt="Axies" className="avatar" />
+                                                                                </Link>
+                                                                                <div className="badge"></div>
+                                                                            </div>
+                                                                            <div className="author-infor">
+                                                                                <div className="name">
+                                                                                    <h6><Link to="/author-02">{item.name} </Link></h6> <span> place a bid</span>
+                                                                                </div>
+                                                                                <span className="time">{item.time}</span>
+                                                                            </div>
                                                                         </div>
-                                                                        <span className="time">{item.time}</span>
+                                                                    </div>
+                                                                    <div className="price">
+                                                                        <h5>{item.price}</h5>
+                                                                        <span>= {item.priceChange}</span>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div className="price">
-                                                                <h5>{item.price}</h5>
-                                                                <span>= {item.priceChange}</span>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                ))
-                                            }
-                                            </ul>
-                                        </TabPanel>
-                                        <TabPanel>
-                                            <ul className="bid-history-list">
+                                                            </li>
+                                                        ))
+                                                    }
+                                                </ul>
+                                            </TabPanel>
+                                            <TabPanel>
+                                                <ul className="bid-history-list">
                                                     <li>
                                                         <div className="content">
                                                             <div className="client">
@@ -217,19 +241,19 @@ const ItemDetails01 = () => {
                                                             </div>
                                                         </div>
                                                     </li>
-                                            </ul>
-                                        </TabPanel>
-                                        <TabPanel>
-                                            <div className="provenance">
-                                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                                                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-                                                    when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
-                                                    It has survived not only five centuries, but also the leap into electronic typesetting, 
-                                                    remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, 
-                                                    and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                                            </div>
-                                        </TabPanel>
-                                    </Tabs>
+                                                </ul>
+                                            </TabPanel>
+                                            <TabPanel>
+                                                <div className="provenance">
+                                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                                                        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                                        It has survived not only five centuries, but also the leap into electronic typesetting,
+                                                        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
+                                                        and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                                                </div>
+                                            </TabPanel>
+                                        </Tabs>
                                     </div>
                                 </div>
                             </div>
