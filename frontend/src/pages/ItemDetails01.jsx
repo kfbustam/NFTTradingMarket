@@ -108,7 +108,7 @@ const ItemDetails01 = () => {
     };
 
     const buyItem = (item) => {
-        fetch(BUY_NFT_URL + "?token=" + token, {
+        fetch(BUY_NFT_URL + "?token=" + token + "&sellerID=" + item.sellerID + "&nftID=" + item.nftID, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
