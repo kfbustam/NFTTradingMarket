@@ -34,7 +34,7 @@ const routes = [
   { path: '/live-auctions', component: <LiveAuctions />},
   { path: '/item-details-01', component: <ItemDetails01 />},
   { path: '/item-details-02', component: <ItemDetails02 />},
-  { path: '/activity-01', component: <Activity01 />},
+  { path: '/my-listings', component: <Activity01 />},
   { path: '/transactions', component: <Activity02 />},
   { path: '/blog', component: <Blog />},
   { path: '/blog-details', component: <BlogDetails />},

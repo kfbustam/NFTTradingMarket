@@ -3,6 +3,7 @@ package com.example.restservice.controller;
 import com.example.restservice.*;
 import com.example.restservice.crypto.CryptoType;
 import com.example.restservice.nft.NFT;
+import com.example.restservice.nft.NftCategory;
 import com.example.restservice.nft.NftService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
@@ -456,7 +457,7 @@ public class NFTTradingMarketRESTController {
             fileNames.append(file.getOriginalFilename());
             Files.write(fileNameAndPath, file.getBytes());
 
-            NFT nft = nftService.createNft(fileNameAndPath.getFileName(), type, walletId, name, description, price);
+            NFT nft = nftService.createNft(fileNameAndPath.getFileName(), type, walletId, name, description, price, NftCategory.ANIME);
 
             JSONObject json = new JSONObject()
                     .put("name", nft.getName())

@@ -41,7 +41,7 @@ public class Listing {
 	private NFT nft;     // Full form only
 
 	@Enumerated(EnumType.STRING)
-	@Column(name="saleType", columnDefinition="VARCHAR(255) default 'IMMEDIATE'")
+	@Column(name="sale_type", columnDefinition="VARCHAR(255) default 'IMMEDIATE'")
 	private SaleType type;
 
   public Listing() {}

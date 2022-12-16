@@ -19,10 +19,10 @@ const Home03 = () => {
             <Header />
             <Slider data={heroSliderData} />
             <Create />
-            <LiveAuction data={liveAuctionData} />
-            <TopSeller data={topSellerData} />
-            <TodayPicks data={todayPickData} />
-            <PopularCollection data={popularCollectionData} />
+            {/* <LiveAuction data={liveAuctionData} /> */}
+            {/* <TopSeller data={topSellerData} /> */}
+            {/* <TodayPicks data={todayPickData} /> */}
+            {/* <PopularCollection data={popularCollectionData} /> */}
             <Footer />
         </div>
     );

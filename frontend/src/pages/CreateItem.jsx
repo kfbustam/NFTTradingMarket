@@ -4,46 +4,68 @@ import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import { Tab, Tabs, TabList, TabPanel  } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import { useForm } from "react-hook-form";
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const POST_CREATE_NFT = "http://localhost:8080/nft/create"
 const CreateItem = () => {
 
+    const { register, handleSubmit } = useForm();
+
     const [price, setPrice] = React.useState(0);
-    const [selectedCrypto, setSelectedCrypto] = React.useState("ETH")
+    const [selectedCrypto, setSelectedCrypto] = React.useState("ETHEREUM")
     const [title, setTitle] = React.useState("")
     const [description, setDescription] = React.useState("")
     const [filePath, setFilePath] = React.useState()
+    let navigate = useNavigate();
 
-    const postItemApi = () => {
+    const postItemApi = (data) => {
+        toast.info("Uploading your NFT...", {
+            toastId: 1
+        })
+
         let email = "nandugop@gmail.com"
         let walletId = "8a8080e185157648018515acabea0005"
         var formData = new FormData();
-        formData.append("nft_image", filePath);
+        formData.append("nft_image", data.file[0]);
         fetch(
             POST_CREATE_NFT +
              "?email=" + email +
              "&name=" + title + 
              "&wallet_id=" + walletId + 
              "&description=" + description + 
+             "&type=" + selectedCrypto + 
              "&price=" + price,
              {
                 method: "POST",
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type':''
+                    'Accept': 'application/json'
                 },
                 body: formData,
                 mode: 'cors'
              }
         ).then(response => {
             if (response.ok) {
+                toast.success("NFT has been created successfully!", {
+                    toastId: 1
+                })
+
                 return response.json()
             }
             throw response
         })
         .then(jsonData => {
+            
+            navigate("/my-listings");
+
             console.log("Upload Successful", jsonData)
         }).catch(error => {
+            toast.error("Please refresh as your file has changed while you were here!", {
+                toastId: 2
+            })
             console.log("error", error)
         })
     }
@@ -57,7 +79,7 @@ const CreateItem = () => {
                     <div className="row">
                         <div className="col-md-12">
                             <div className="page-title-heading mg-bt-12">
-                                <h1 className="heading text-center">Create Item</h1>
+                                <h1 className="heading text-center">Create NFT</h1>
                             </div>
                             <div className="breadcrumbs style2">
                                 <ul>
@@ -70,6 +92,9 @@ const CreateItem = () => {
                     </div>
                 </div>                    
             </section>
+
+            <ToastContainer theme="dark" position="top-center" />
+
             <div className="tf-create-item tf-section">
                 <div className="themesflat-container">
                     <div className="column">
@@ -80,18 +105,18 @@ const CreateItem = () => {
                                 <div className="flat-tabs tab-create-item">
                                     <Tabs>
                                         <TabPanel>
-                                            <form action="#" onSubmit={postItemApi}>
+                                            <form action="#" onSubmit={handleSubmit(postItemApi)}>
                                                 <h4 className="title-create-item">Upload file</h4>
                                                 <label className="uploadFile">
-                                                    <span className="filename">PNG, JPG, GIF, WEBP</span>
-                                                    <input id="nft_selector" type="file" className="inputfile form-control" name="file" onChange={(event) => {setFilePath(event.target.file[0])}} />
+                                                    <span className="filename">PNG, JPG Only</span>
+                                                    <input id="nft_selector" type="file" className="inputfile form-control" name="file" onChange={(event) => {setFilePath(event.target.file[0])}} {...register("file")} />
                                                 </label>
                                                 <div className="seclect-box">
                                                     <div id="item-create" className="dropdown">
                                                         <Link to="#" className="btn-selector nolink">{selectedCrypto}</Link>
                                                         <ul >
-                                                            <li onCLick={(event) => {setSelectedCrypto("ETH")}}><span>ETH</span></li>
-                                                            <li onClick={(event) => {setSelectedCrypto("BTC")}}><span>BTC</span></li>
+                                                            <li onCLick={(event) => {setSelectedCrypto("ETHEREUM")}}><span>ETHEREUM</span></li>
+                                                            <li onClick={(event) => {setSelectedCrypto("BITCOIN")}}><span>BITCOIN</span></li>
                                                         </ul>
                                                     </div>
                                                 </div>
