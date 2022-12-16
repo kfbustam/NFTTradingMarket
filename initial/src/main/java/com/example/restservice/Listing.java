@@ -50,4 +50,8 @@ public class Listing {
 	public BigDecimal getListingPrice() {
 		return this.listingPrice;
 	}
+
+	public NFT getNFT() {
+		return this.nft;
+	}
 }

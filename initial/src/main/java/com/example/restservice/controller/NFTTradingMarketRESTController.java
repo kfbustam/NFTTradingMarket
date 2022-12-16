@@ -509,7 +509,7 @@ public class NFTTradingMarketRESTController {
 		try {
 
 
-			Optional<SessionToken> optionalSession = service.getSessionById(token);
+			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
 
 			if (optionalSession.isEmpty()) {
 				optionalSession = service.getSessionByToken(token);
@@ -577,7 +577,7 @@ public class NFTTradingMarketRESTController {
 		try {
 
 
-			Optional<SessionToken> optionalSession = service.getSessionById(token);
+			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
 
 			if (optionalSession.isEmpty()) {
 				optionalSession = service.getSessionByToken(token);
@@ -633,7 +633,7 @@ public class NFTTradingMarketRESTController {
 		try {
 
 
-			Optional<SessionToken> optionalSession = service.getSessionById(token);
+			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
 
 			if (optionalSession.isEmpty()) {
 				optionalSession = service.getSessionByToken(token);
@@ -645,7 +645,7 @@ public class NFTTradingMarketRESTController {
 
 			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
 
-			ArrayList<Listing> listings = new ArrayList<Listing>(service.getAllListings());
+			ArrayList<NFT> listings = service.getAllListingsAsNFTs();
 			
 			JSONArray json = new JSONArray(listings);
 

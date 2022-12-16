@@ -118,11 +118,6 @@ public class Service {
         return userSession;
     }
 
-    public Optional<SessionToken> getSessionById(String id) {
-        Optional<SessionToken> userSession = sessionRepository.findById(id);
-        return userSession;
-    }
-
     public Optional<Wallet> getWalletByID(String id) {
         return walletRepository.findById(id);
     }
@@ -156,7 +151,9 @@ public class Service {
         offerRepository.saveAndFlush(offer);
     }
 
-    public Collection<Listing> getAllListings() {
-        return listingRepository.findAll();
+    public ArrayList<NFT> getAllListingsAsNFTs() {
+        ArrayList<NFT> nftsListed = new ArrayList<NFT>();
+        // Collection<Listing> listings = nftRepository.findAllListed();
+        return nftsListed;
     }
 }
