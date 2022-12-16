@@ -217,7 +217,7 @@ const Footer = () => {
                                 <p> Total bid amount:</p>
                                 <p className="text-right price color-popup"> 4 ETH </p>
                             </div>
-                            <Link to="#" className="btn btn-primary" data-toggle="modal" data-target="#popup_bid_success" data-dismiss="modal" aria-label="Close"> Place a bid</Link>
+                            <Link to="#" className="btn btn-primary" data-toggle="modal" data-target="#popup_bid_success" data-dismiss="modal" aria-label="Close"> 1Place a bid</Link>
                         </div>
                     </div>
                 </div>

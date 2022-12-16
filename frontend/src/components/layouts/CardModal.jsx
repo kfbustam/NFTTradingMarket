@@ -13,7 +13,7 @@ const CardModal = (props) => {
             <Modal.Header closeButton></Modal.Header>
 
             <div className="modal-body space-y-20 pd-40">
-                <h3>Place a Bid</h3>
+                <h3>!!Place a Bid</h3>
                 <p className="text-center">You must bid at least <span className="price color-popup">4.89 ETH</span>
                 </p>
                 <input type="text" className="form-control"

@@ -29,6 +29,7 @@ import imgCollection7 from '../../../assets/images/avatar/avt-18.jpg'
 import img8 from '../../../assets/images/box-item/image-box-11.jpg'
 import imga8 from '../../../assets/images/avatar/avt-3.jpg'
 import imgCollection8 from '../../../assets/images/avatar/avt-18.jpg'
+import img12 from '../../../alice_video.png'
 
 const LISTINGS_URL = "http://localhost:8080/nft/listings"
 
@@ -42,32 +43,31 @@ const TodayPicks = () => {
                 dataContent: [
                     {
                         id: 1,
-                        img: img1,
+                        img: img12,
                         title: "Alice’s Best Picture",
                         tags: "bsc",
                         imgAuthor: imga1,
-                        nameAuthor: "SalvadorDali",
+                        nameAuthor: "alice",
                         price: "10 BTC",
-                        priceChange: "$12.246",
-                        wishlist: "100",
+                        priceChange: "",
+                        wishlist: "1",
                         imgCollection: imgCollection1,
                         nameCollection: "Creative Art 3D",
                         saleType: "immediate"
                     },
                     {
                         id: 2,
-                        img: img2,
+                        img: img12,
                         title: "Alice’s Best Video",
                         tags: "bsc",
                         imgAuthor: imga2,
-                        nameAuthor: "SalvadorDali",
+                        nameAuthor: "alice",
                         price: "100 BTC",
-                        priceChange: "$12.246",
-                        wishlist: "100",
+                        priceChange: "",
+                        wishlist: "1",
                         imgCollection: imgCollection2,
                         nameCollection: "Creative Art 3D",
-                        feature: 'Coming Soon',
-                        saleType: "auction"
+                        saleType: "all"
                     },
                     {
                         id: 3,

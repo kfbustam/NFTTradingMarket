@@ -2,9 +2,19 @@ import React , {useState} from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
+import img1 from '../alice_video.png'
+
 
 const Activity02 = () => {
-    const [dataBox, setDataBox] = useState([]);
+    const [dataBox, setDataBox] = useState([
+        {
+            img: img1,
+            title: 'Alice Best Picture',
+            status: 'Purchased',
+            author: 'alice',
+            time: '2022-12-15',
+            icon: 'icon-1'
+        }]);
     const [dataFilter] = useState(
         [
             {
@@ -58,13 +68,13 @@ const Activity02 = () => {
                     <div className="row">
                         <div className="col-md-12">
                             <div className="page-title-heading mg-bt-12">
-                                <h1 className="heading text-center">Activity 2</h1>
+                                <h1 className="heading text-center">Transactions</h1>
                             </div>
                             <div className="breadcrumbs style2">
                                 <ul>
                                     <li><Link to="/">Home</Link></li>
                                     <li><Link to="#">Activity</Link></li>
-                                    <li>Activity 2</li>
+                                    <li>Transactions</li>
                                 </ul>
                             </div>
                         </div>

@@ -221,7 +221,7 @@ const ItemDetails01 = () => {
                                     </div>
                                     {
                                         (item.saleType === "all" || item.saleType === "auction") &&
-                                        <Link onClick={placeBid(item)} className="sc-button loadmore style bag fl-button pri-3"><span>Place a bid</span></Link>
+                                        <Link onClick={placeBid(item)} className="sc-button loadmore style bag fl-button pri-3"><span>1Place a bid</span></Link>
                                     }
                                     {
                                         (item.saleType === "all" || item.saleType === "immediate") &&

@@ -5,6 +5,7 @@ import Footer from '../components/footer/Footer';
 import TodayPicks from '../components/layouts/explore-02/TodayPicks'
 import todayPickData from '../assets/fake-data/data-today-pick';
 import PathBanner from '../components/header/PathBanner';
+import img1 from '../alice_video.png'
 
 const GET_ALL_NFTS = "http://localhost:8080/nft"
 
