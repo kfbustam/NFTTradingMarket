@@ -6,8 +6,8 @@ const loggedInMenu = [
     },
     {
         id: 2,
-        name: 'Marketplace',
-        links: '/explore-02',
+        name: 'Browse',
+        links: '/browse',
     },
     {
         id: 3,
@@ -17,12 +17,12 @@ const loggedInMenu = [
             {
                 id: 1,
                 sub: 'My Listings',
-                links: '/activity-01'
+                links: '/my-listings'
             },
             {
                 id: 2,
                 sub: 'My Transactions',
-                links: '/activity-02'
+                links: '/transactions'
             },
             {
                 id: 3,

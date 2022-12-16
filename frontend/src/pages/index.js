@@ -4,7 +4,7 @@ import Browse from "./Browse";
 import LiveAuctions from "./LiveAuctions";
 import ItemDetails01 from "./ItemDetails01";
 import ItemDetails02 from "./ItemDetails02";
-import Activity01 from "./Activity01";
+import Listings from "./Listings";
 import Activity02 from "./Activity02";
 import Blog from "./Blog";
 import BlogDetails from "./BlogDetails";
@@ -25,6 +25,7 @@ import Contact02 from "./Contact02";
 import Deposits from "./Deposits";
 import Withdrawal from "./Withdrawal";
 import SystemDashboard from "./SystemDashboard";
+import ListItem from "./ListItem";
 
 
 const routes = [
@@ -35,7 +36,7 @@ const routes = [
   { path: '/live-auctions', component: <LiveAuctions />},
   { path: '/item-details-01', component: <ItemDetails01 />},
   { path: '/item-details-02', component: <ItemDetails02 />},
-  { path: '/activity-01', component: <Activity01 />},
+  { path: '/my-listings', component: <Listings />},
   { path: '/transactions', component: <Activity02 />},
   { path: '/blog', component: <Blog />},
   { path: '/blog-details', component: <BlogDetails />},
@@ -44,6 +45,7 @@ const routes = [
   { path: '/authors-02', component: <Authors02 />},
   { path: '/wallet-connect', component: <WalletConnect />},
   { path: '/create-item', component: <CreateItem />},
+  { path: '/list-item', component: <ListItem />},
   { path: '/edit-profile', component: <EditProfile />},
   { path: '/ranking', component: <Ranking />},
   { path: '/login', component: <Login />},

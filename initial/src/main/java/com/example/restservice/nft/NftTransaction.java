@@ -41,6 +41,10 @@ public class NftTransaction {
     @Column(name="amount", columnDefinition="Decimal(10,2) default '0.00'")
     private BigDecimal amount;
 
+    // equal to current balance minus nft price
+    @Column(name="post_balance", columnDefinition="Decimal(10,2) default '0.00'")
+    private BigDecimal postPurchaseBalance;
+
     public Long getId() {
         return id;
     }

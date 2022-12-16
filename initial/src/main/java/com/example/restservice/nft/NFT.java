@@ -1,6 +1,7 @@
 package com.example.restservice.nft;
 
 import com.example.restservice.Listing;
+import com.example.restservice.NftUserType;
 import com.example.restservice.Offer;
 import com.example.restservice.Wallet;
 import com.example.restservice.crypto.CryptoType;
@@ -48,6 +49,35 @@ public class NFT {
 	@JoinColumn(name = "listing_id")
 	@Nullable
 	private Listing listing;     // Full form only
+
+	@Enumerated(EnumType.STRING)
+	@Column(name="type", columnDefinition="VARCHAR(255) default 'Anime'")
+	private NftCategory category;
+
+	public List<Offer> getOffers() {
+		return offers;
+	}
+
+	public void setOffers(List<Offer> offers) {
+		this.offers = offers;
+	}
+
+	@Nullable
+	public Listing getListing() {
+		return listing;
+	}
+
+	public void setListing(@Nullable Listing listing) {
+		this.listing = listing;
+	}
+
+	public NftCategory getCategory() {
+		return category;
+	}
+
+	public void setCategory(NftCategory category) {
+		this.category = category;
+	}
 
 	@ManyToOne
 	@JoinColumn(name = "wallet_id")

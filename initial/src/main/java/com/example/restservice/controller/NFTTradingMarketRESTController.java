@@ -3,6 +3,7 @@ package com.example.restservice.controller;
 import com.example.restservice.*;
 import com.example.restservice.crypto.CryptoType;
 import com.example.restservice.nft.NFT;
+import com.example.restservice.nft.NftCategory;
 import com.example.restservice.nft.NftService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
@@ -38,6 +39,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.util.stream.Collectors;
 
 /**
  * The type Airline reservation system rest controller.
@@ -455,7 +457,7 @@ public class NFTTradingMarketRESTController {
             fileNames.append(file.getOriginalFilename());
             Files.write(fileNameAndPath, file.getBytes());
 
-            NFT nft = nftService.createNft(fileNameAndPath.getFileName(), type, walletId, name, description, price);
+            NFT nft = nftService.createNft(fileNameAndPath.getFileName(), type, walletId, name, description, price, NftCategory.Anime);
 
             JSONObject json = new JSONObject()
                     .put("name", nft.getName())
@@ -631,6 +633,9 @@ public class NFTTradingMarketRESTController {
 		}
 	}
 
+	/*
+		GET User's Own NFT listings by Token
+	 */
 	@PostMapping("/nft/listings")
 	@ResponseBody
 	public ResponseEntity<String> listings(
@@ -653,7 +658,7 @@ public class NFTTradingMarketRESTController {
 
 			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
 
-			ArrayList<NFT> listings = service.getAllListingsAsNFTs();
+			List<NFT> listings = service.getAllListingsAsNFTs().stream().filter(x -> x.getWallet().getUser().getID().equals(buyer.getID())).collect(Collectors.toList());
 			
 			ArrayList<JSONObject> json = new ArrayList<>();
 			listings.forEach(listing -> {
@@ -672,6 +677,49 @@ public class NFTTradingMarketRESTController {
 
 			ResponseEntity<String> res = new ResponseEntity<String>(
 				new JSONArray(json).toString(),
+					responseHeaders,
+					200
+			);
+
+			return res;
+		} catch (Exception ex) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			System.out.println(sw.toString());
+			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 500 \",\"msg\": " + ex.getMessage() + "}}", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/listings")
+	@ResponseBody
+	public ResponseEntity<String> allListings(
+	) {
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		try {
+
+			List<NFT> listings = service.getAllListingsAsNFTs();
+
+			ArrayList<JSONObject> json = new ArrayList<>();
+			listings.forEach(listing -> {
+				json.add(
+						new JSONObject()
+								.put("nftId", listing.getId())
+								.put("description", listing.getDescription())
+								.put("assetURL", listing.getAssetUrl())
+								.put("imageURL", listing.getImageUrl())
+								.put("name", listing.getName())
+								.put("nftType", listing.getNftType())
+								.put("saleType", listing.getListing().getType())
+								.put("sellerId", listing.getListing().getSeller().getID())
+								.put("lastRecordedTime", listing.getLastRecordedTime())
+								.put("smartContractAddress", listing.getSmartContractAddress())
+				);
+			});
+
+			ResponseEntity<String> res = new ResponseEntity<String>(
+					new JSONArray(json).toString(),
 					responseHeaders,
 					200
 			);

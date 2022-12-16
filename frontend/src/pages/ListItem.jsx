@@ -10,8 +10,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
-const POST_CREATE_NFT = "http://localhost:8080/nft/create"
-const CreateItem = () => {
+const POST_LIST_NFT = "http://localhost:8080/nft/create"
+const ListItem = () => {
 
     const { register, handleSubmit } = useForm();
 
@@ -32,7 +32,7 @@ const CreateItem = () => {
         var formData = new FormData();
         formData.append("nft_image", data.file[0]);
         fetch(
-            POST_CREATE_NFT +
+            POST_LIST_NFT +
              "?email=" + email +
              "&name=" + title + 
              "&wallet_id=" + walletId + 
@@ -79,13 +79,13 @@ const CreateItem = () => {
                     <div className="row">
                         <div className="col-md-12">
                             <div className="page-title-heading mg-bt-12">
-                                <h1 className="heading text-center">Create NFT</h1>
+                                <h1 className="heading text-center">List NFT for Sale</h1>
                             </div>
                             <div className="breadcrumbs style2">
                                 <ul>
                                     <li><Link to="/">Home</Link></li>
                                     <li><Link to="#">Pages</Link></li>
-                                    <li>Create Item</li>
+                                    <li>List NFT for Sale</li>
                                 </ul>
                             </div>
                         </div>
@@ -154,4 +154,4 @@ const CreateItem = () => {
     );
 }
 
-export default CreateItem;
+export default ListItem;

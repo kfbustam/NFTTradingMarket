@@ -8,8 +8,12 @@ import img3 from '../assets/images/box-item/image-box-11.jpg'
 import img4 from '../assets/images/box-item/image-box-21.jpg'
 import img5 from '../assets/images/box-item/image-box-6.jpg'
 
+const GET_TRANSACTIONS = "http://localhost:8080/nft/listings?token="
 
-const Activity01 = () => {
+const Listings = () => {
+    const [apiResponse, setApiResponse] = useState([])
+
+
     const [dataBox] = useState(
         [
             {
@@ -19,79 +23,7 @@ const Activity01 = () => {
                 author: 'Gayle Hicks',
                 time: 'At 2:30 PM on 19th June, 2021',
                 icon: 'icon-1'
-            },
-            {
-                img: img2,
-                title: 'Wow! That Brain Is Floating',
-                status: '10 editions listed by',
-                author: 'Meowbids',
-                time: 'At 2:30 PM on 19th June, 2021',
-                icon: 'icon-2'
-            },
-            {
-                img: img3,
-                title: 'Erotic 35mm And Polaroid Photography',
-                status: 'started following',
-                author: 'Gayle Hicks',
-                time: 'At 2:30 PM on 19th June, 2021',
-                icon: 'icon-3'
-            },
-            {
-                img: img4,
-                title: 'Our Journey Start',
-                status: 'started following',
-                author: 'Gayle Hicks',
-                time: 'At 2:30 PM on 19th June, 2021',
-                icon: 'icon-4'
-            },
-            {
-                img: img5,
-                title: 'Skrrt Cobain Official',
-                status: 'started following',
-                author: 'Gayle Hicks',
-                time: 'At 2:30 PM on 19th June, 2021',
-                icon: 'icon-5'
-            },
-            {
-                img: img1,
-                title: 'Monica Lucas',
-                status: 'started following',
-                author: 'Gayle Hicks',
-                time: 'At 2:30 PM on 19th June, 2021',
-                icon: 'icon-1'
-            },
-            {
-                img: img2,
-                title: 'Wow! That Brain Is Floating',
-                status: '10 editions listed by',
-                author: 'Meowbids',
-                time: 'At 2:30 PM on 19th June, 2021',
-                icon: 'icon-2'
-            },
-            {
-                img: img3,
-                title: 'Erotic 35mm And Polaroid Photography',
-                status: 'started following',
-                author: 'Gayle Hicks',
-                time: 'At 2:30 PM on 19th June, 2021',
-                icon: 'icon-3'
-            },
-            {
-                img: img4,
-                title: 'Our Journey Start',
-                status: 'started following',
-                author: 'Gayle Hicks',
-                time: 'At 2:30 PM on 19th June, 2021',
-                icon: 'icon-4'
-            },
-            {
-                img: img5,
-                title: 'Skrrt Cobain Official',
-                status: 'started following',
-                author: 'Gayle Hicks',
-                time: 'At 2:30 PM on 19th June, 2021',
-                icon: 'icon-5'
-            },
+            }
         ]);
     const [dataFilter] = useState(
         [
@@ -134,6 +66,35 @@ const Activity01 = () => {
     const showMoreItems = () => {
         setVisible((prevValue) => prevValue + 5);
     }
+
+    const getListingsForUser = () => {
+        let auth_token = "test123"
+        let fetchUrl = GET_TRANSACTIONS + auth_token
+        let debutUrl = "http://localhost:8080/nft/listings"
+        fetch(
+            fetchUrl,
+            {
+                method: "GET",
+                header: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }
+        ).then(response => {
+            if (response.ok) {
+                return response.json()
+            }
+            throw response
+        }).then(jsonData => {
+            setApiResponse(jsonData)
+            console.log("leng", apiResponse.length)
+            console.log("tranactions data", jsonData)
+        }).catch(error => {
+            console.log("transactions fetch failed", error)
+        })
+    } 
+
+
     return (
         <div>
             <Header />
@@ -221,4 +182,4 @@ const Activity01 = () => {
     );
 }
 
-export default Activity01;
+export default Listings;
