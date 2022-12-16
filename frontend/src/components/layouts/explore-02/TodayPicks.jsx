@@ -366,8 +366,8 @@ const TodayPicks = () => {
 
     const buyNowFunc = () => {
         //toast.success("Purchase Successful.")
-        //setModalShow(true)
-        toast.error("Not enough balance.")
+        setModalShow(true)
+        //toast.error("Not enough balance.")
 
 
         //navigate("/wallet-connect");
