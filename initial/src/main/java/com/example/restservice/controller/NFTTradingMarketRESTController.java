@@ -50,7 +50,7 @@ public class NFTTradingMarketRESTController {
 	/**
 	 * The App url.
 	 */
-	public String appURL = "http://localhost:8080";
+	public String appURL = "http://localhost:3000";
 
     @Autowired
     private Service service;
@@ -647,10 +647,23 @@ public class NFTTradingMarketRESTController {
 
 			ArrayList<NFT> listings = service.getAllListingsAsNFTs();
 			
-			JSONArray json = new JSONArray(listings);
+			ArrayList<JSONObject> json = new ArrayList<>();
+			listings.forEach(listing -> {
+				json.add(
+					new JSONObject()
+						.put("price", listing.getPrice())
+						.put("description", listing.getDescription())
+						.put("assetURL", listing.getAssetUrl())
+						.put("imageURL", listing.getImageUrl())
+						.put("name", listing.getName())
+						.put("type", listing.getNftType())
+						.put("lastRecordedTime", listing.getLastRecordedTime())
+						.put("address", listing.getSmartContractAddress())
+				);
+			});
 
 			ResponseEntity<String> res = new ResponseEntity<String>(
-				json.toString(),
+				new JSONArray(json).toString(),
 					responseHeaders,
 					200
 			);

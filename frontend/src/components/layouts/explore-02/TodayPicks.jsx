@@ -43,31 +43,31 @@ const TodayPicks = () => {
                     {
                         id: 1,
                         img: img1,
-                        title: "The NFT for School",
+                        title: "Alice’s Best Picture",
                         tags: "bsc",
                         imgAuthor: imga1,
                         nameAuthor: "SalvadorDali",
-                        price: "4.89 ETH",
+                        price: "10 BTC",
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection1,
                         nameCollection: "Creative Art 3D",
-                        saleType: "auction"
+                        saleType: "immediate"
                     },
                     {
                         id: 2,
                         img: img2,
-                        title: "New Balance NFT",
+                        title: "Alice’s Best Video",
                         tags: "bsc",
                         imgAuthor: imga2,
                         nameAuthor: "SalvadorDali",
-                        price: "4.89 ETH",
+                        price: "100 BTC",
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection2,
                         nameCollection: "Creative Art 3D",
                         feature: 'Coming Soon',
-                        saleType: "immediate"
+                        saleType: "auction"
                     },
                     {
                         id: 3,
@@ -332,26 +332,26 @@ const TodayPicks = () => {
     )
 
     useEffect(() => {
-        // fetch(LISTINGS_URL + "?token=" + token, {
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json'
-        //     },
-        //     method: "POST"
-        // })
-        //     .then(response => {
-        //         if (response.ok) {
-        //             return response.json()
-        //         }
-        //         throw response
-        //     })
-        //     .then(data => {
-        //         setDataPanel(data)
-        //     })
-        //     .catch(error => {
-        //         console.error(error)
-        //     }).finally(() => {
-        //     });
+        fetch(LISTINGS_URL + "?token=" + token, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw response
+            })
+            .then(data => {
+                setDataPanel(data)
+            })
+            .catch(error => {
+                console.error(error)
+            }).finally(() => {
+            });
     }, []);
 
     const [visible, setVisible] = useState(8);
