@@ -40,6 +40,10 @@ public class Listing {
 	@JsonIgnore
 	private NFT nft;     // Full form only
 
+	@Enumerated(EnumType.STRING)
+	@Column(name="saleType", columnDefinition="VARCHAR(255) default 'IMMEDIATE'")
+	private SaleType type;
+
   public Listing() {}
 
 
@@ -53,5 +57,21 @@ public class Listing {
 
 	public NFT getNFT() {
 		return this.nft;
+	}
+
+	public SaleType getType() {
+		return type;
+	}
+
+	public void setType(SaleType type) {
+		this.type = type;
+	}
+
+	public User getSeller() {
+		return seller;
+	}
+
+	public void setSeller(User seller) {
+		this.seller = seller;
 	}
 }
