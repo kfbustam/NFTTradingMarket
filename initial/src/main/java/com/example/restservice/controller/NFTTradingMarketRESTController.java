@@ -502,7 +502,6 @@ public class NFTTradingMarketRESTController {
 	public ResponseEntity<String> buyNFT(
 		@RequestParam(name="token", required=true) String token,
 		@RequestParam(name = "nftID", required = true) @NotEmpty String nftID,
-		@RequestParam(name = "cryptoType", required = true) @NotEmpty CryptoType cryptoType,
 		@RequestParam(name = "sellerID", required = true) @NotEmpty String sellerID
 	) {
 
@@ -510,7 +509,7 @@ public class NFTTradingMarketRESTController {
 		try {
 
 
-			Optional<SessionToken> optionalSession = service.getSessionById(token);
+			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
 
 			if (optionalSession.isEmpty()) {
 				optionalSession = service.getSessionByToken(token);
@@ -519,10 +518,10 @@ public class NFTTradingMarketRESTController {
 			if (optionalSession.isEmpty()) {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
 			}
-
+			
+			NFT nft = nftService.getNFT(nftID).orElseThrow();
 			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
 			User seller = service.findUser(sellerID).orElseThrow();
-			NFT nft = nftService.getNFT(nftID).orElseThrow();
 		
 			Wallet buyerWallet;
 			Wallet sellerWallet;
@@ -578,7 +577,7 @@ public class NFTTradingMarketRESTController {
 		try {
 
 
-			Optional<SessionToken> optionalSession = service.getSessionById(token);
+			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
 
 			if (optionalSession.isEmpty()) {
 				optionalSession = service.getSessionByToken(token);
@@ -634,7 +633,7 @@ public class NFTTradingMarketRESTController {
 		try {
 
 
-			Optional<SessionToken> optionalSession = service.getSessionById(token);
+			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
 
 			if (optionalSession.isEmpty()) {
 				optionalSession = service.getSessionByToken(token);
@@ -646,7 +645,7 @@ public class NFTTradingMarketRESTController {
 
 			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
 
-			ArrayList<Listing> listings = new ArrayList<Listing>(service.getAllListings());
+			ArrayList<NFT> listings = service.getAllListingsAsNFTs();
 			
 			JSONArray json = new JSONArray(listings);
 
