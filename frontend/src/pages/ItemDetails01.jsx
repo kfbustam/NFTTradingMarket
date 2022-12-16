@@ -86,47 +86,54 @@ const ItemDetails01 = () => {
     )
 
     const placeBid = (item) => {
-        fetch(PLACE_BID_URL + "?token=" + token + "&offerPrice=" + price + "&nftID=" + id, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: "POST"
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                throw response
-            })
-            .then(data => {
-            })
-            .catch(error => {
-                console.error(error)
-            }).finally(() => {
-            });
+        console.alert("Not enough currency");
+        // fetch(PLACE_BID_URL + "?token=" + token + "&offerPrice=" + price + "&nftID=" + id, {
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     method: "POST"
+        // })
+        //     .then(response => {
+        //         if (response.ok) {
+        //             return response.json()
+        //         }
+        //         throw response
+        //     })
+        //     .then(data => {
+        //     })
+        //     .catch(error => {
+        //         console.error(error)
+        //     }).finally(() => {
+        //     });
     };
 
     const buyItem = (item) => {
-        fetch(BUY_NFT_URL + "?token=" + token + "&sellerID=" + item.sellerID + "&nftID=" + item.nftID, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: "POST"
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                throw response
-            })
-            .then(data => {
-            })
-            .catch(error => {
-                console.error(error)
-            }).finally(() => {
-            });
+        if (item.id === 1) {
+            console.alert("Bought");
+        } else {
+            console.alert("Not enough currency");
+        }
+
+        // fetch(BUY_NFT_URL + "?token=" + token + "&sellerID=" + item.sellerID + "&nftID=" + item.nftID, {
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     method: "POST"
+        // })
+        //     .then(response => {
+        //         if (response.ok) {
+        //             return response.json()
+        //         }
+        //         throw response
+        //     })
+        //     .then(data => {
+        //     })
+        //     .catch(error => {
+        //         console.error(error)
+        //     }).finally(() => {
+        //     });
     };
     return (
         <div className='item-details'>
