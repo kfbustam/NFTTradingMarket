@@ -11,7 +11,7 @@ const loggedInMenu = [
     },
     {
         id: 3,
-        name: 'My Activity',
+        name: 'Functionalities',
         links: '#',
         namesub: [
             {
@@ -23,6 +23,16 @@ const loggedInMenu = [
                 id: 2,
                 sub: 'My Transactions',
                 links: '/activity-02'
+            },
+            {
+                id: 3,
+                sub: 'Deposit Crypto',
+                links: '/deposits'
+            },
+            {
+                id: 4,
+                sub: 'Withdraw Crypto',
+                links: '/withdrawal'
             }
         ],
     },

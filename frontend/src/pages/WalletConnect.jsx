@@ -1,4 +1,4 @@
-import React , { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
@@ -11,12 +11,10 @@ const GET_WALLET_API = "http://localhost:8080/wallets"
 
 const WalletConnect = () => {
     const [data, setData] = useState([])
-    
-    const AUTH_TOKEN = "test123"
 
     useEffect(() => {
         fetch(
-            GET_WALLET_API + "?token=" + AUTH_TOKEN ,
+            GET_WALLET_API + "?token=" + localStorage.getItem("token"),
             {
                 method: "GET",
                 headers: {
@@ -31,12 +29,12 @@ const WalletConnect = () => {
             }
             throw response
         })
-        .then(json => {
-            setData(json)
-            console.log("wallet response", json)
-        }).catch((ex) => {
-            console.log(ex)
-        })
+            .then(json => {
+                setData(json)
+                console.log("wallet response", json)
+            }).catch((ex) => {
+                console.log(ex)
+            })
     }, [])
 
     const getWalletLink = (type) => {
@@ -75,14 +73,14 @@ const WalletConnect = () => {
                         <div className='col-12'>
 
                             <div className="sc-box-icon-inner style-2 ct col-12">
-                                
+
                                 {
-                                    (data === undefined || data.length == 0) ? 
+                                    (data === undefined || data.length == 0) ?
                                         <></> :
                                         <>
                                             <div key="1" className="sc-box-icon">
                                                 <div className="img">
-                                                    <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" alt="Axies" height="50" width="50"/>
+                                                    <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" alt="Axies" height="50" width="50" />
                                                 </div>
                                                 <h4 className="heading">
                                                     {getWalletLink("BITCOIN")}
@@ -94,7 +92,7 @@ const WalletConnect = () => {
 
                                             <div key="2" className="sc-box-icon">
                                                 <div className="img">
-                                                    <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" alt="Axies" height="50" width="50"/>
+                                                    <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" alt="Axies" height="50" width="50" />
                                                 </div>
                                                 <h4 className="heading">
                                                     {getWalletLink("ETHEREUM")}
@@ -108,7 +106,7 @@ const WalletConnect = () => {
 
                                 <div key="3" className="sc-box-icon">
                                     <div className="img">
-                                        <img src={img3} alt="Axies" height="50" width="50"/>
+                                        <img src={img3} alt="Axies" height="50" width="50" />
                                     </div>
                                     <h4 className="heading">
                                         {getWalletLink("CREATE")}
@@ -120,7 +118,7 @@ const WalletConnect = () => {
 
                                 <div key="4" className="sc-box-icon">
                                     <div className="img">
-                                        <img src={img3} alt="Axies" height="50" width="50"/>
+                                        <img src={img3} alt="Axies" height="50" width="50" />
                                     </div>
                                     <h4 className="heading">
                                         {getWalletLink("COLLECTION")}
@@ -129,9 +127,9 @@ const WalletConnect = () => {
                                         View your NFT Collection. Add new NFTs to your collection or sell the ones you have.
                                     </p>
                                 </div>
-                            </div>  
-                        </div>    
-                    </div>              
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <Footer />
