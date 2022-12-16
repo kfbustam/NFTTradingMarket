@@ -10,8 +10,8 @@ import img3 from '../../assets/images/box-item/item-h5.3.png'
 
 const SliderStyle2 = () => {
     const subtitle = 'NFT MARKETPLACE'
-    const title = 'Discover, find and sell extraordinary monster NFTs'
-    const description = 'Marketplace for monster character cllections non fungible token NFTs'
+    const title = 'Discover, find and sell extraordinary popular NFTs'
+    const description = 'Marketplace for trading NFTs'
     return (
         <section className="flat-title-page home5">
             <div className="overlay"></div>

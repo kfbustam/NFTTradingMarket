@@ -289,7 +289,7 @@ public class NFTTradingMarketRESTController {
 	 * Get wallets
 	 *
 	 */
-	@PostMapping(value = "/wallets", produces = "application/json")
+	@GetMapping(value = "/wallets", produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<String> wallets(
 			@RequestParam(name="token", required=true) String token
@@ -329,7 +329,7 @@ public class NFTTradingMarketRESTController {
 			}
 
 			ResponseEntity<String> res = new ResponseEntity<String>(
-					"success",
+					listOfWallets.toString(),
 					responseHeaders,
 					200
 			);

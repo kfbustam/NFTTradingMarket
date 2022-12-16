@@ -24,6 +24,7 @@ const Login = ({ fromSignUp = false }) => {
         // onSuccess -> Go to Sign in page
         if (profileData !== null) {
             localStorage.setItem("profileData", profileData)
+            localStorage.setItem("token", "test123")
             window.sessionStorage.setItem("profileData", profileData);
             toast.success("Login Successful!")
             navigate("/wallet-connect");
@@ -187,7 +188,7 @@ const Login = ({ fromSignUp = false }) => {
                                         onSuccess={responseGoogleSuccess}
                                         onFailure={responseGoogleFailure}
                                         cookiePolicy={'single_host_origin'}
-                                        isSignedIn={true}
+                                        isSignedIn={false}
                                     />
                                 </div>
 

@@ -16,6 +16,7 @@ import CreateItem from "./CreateItem";
 import EditProfile from "./EditProfile";
 import Ranking from "./Ranking";
 import Login from "./Login";
+import Logout from "./Logout";
 import SignUp from "./SignUp";
 import NoResult from "./NoResult";
 import FAQ from "./FAQ";
@@ -45,6 +46,7 @@ const routes = [
   { path: '/edit-profile', component: <EditProfile />},
   { path: '/ranking', component: <Ranking />},
   { path: '/login', component: <Login />},
+  { path: '/logout', component: <Logout />},
   { path: '/sign-up', component: <SignUp />},
   { path: '/no-result', component: <NoResult />},
   { path: '/faq', component: <FAQ />},
