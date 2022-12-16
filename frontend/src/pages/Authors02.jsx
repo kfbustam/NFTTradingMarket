@@ -1,6 +1,6 @@
-import React , { useState} from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Tab, Tabs, TabList, TabPanel  } from 'react-tabs';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
@@ -65,7 +65,7 @@ const Authors02 = () => {
                 dataContent: [
                     {
                         img: img1,
-                        title: "The RenaiXance Rising the sun ",
+                        title: "The RenaiXance Rising the dawn ",
                         tags: "bsc",
                         imgAuthor: imga1,
                         nameAuthor: "SalvadorDali",
@@ -501,7 +501,7 @@ const Authors02 = () => {
         ]
     )
 
-    const [visible , setVisible] = useState(8);
+    const [visible, setVisible] = useState(8);
     const showMoreItems = () => {
         setVisible((prevValue) => prevValue + 4);
     }
@@ -528,7 +528,7 @@ const Authors02 = () => {
                             </div>
                         </div>
                     </div>
-                </div>                    
+                </div>
             </section>
             <section className="tf-section authors">
                 <div className="themesflat-container">
@@ -559,7 +559,7 @@ const Authors02 = () => {
                         <Tabs>
                             <TabList>
                                 {
-                                    menuTab.map((item,index) => (
+                                    menuTab.map((item, index) => (
                                         <Tab key={index}>{item.name}</Tab>
                                     ))
                                 }
@@ -568,58 +568,58 @@ const Authors02 = () => {
                             <div className="content-tab">
                                 <div className="content-inner">
                                     <div className="row">
-                                    {
-                                        panelTab.map((item, index) => (
-                                            <TabPanel key={index}>
-                                                {
-                                                    item.dataContent.slice(0,visible).map((data,index) => (
-                                                        <div key={index} className="col-xl-3 col-lg-4 col-md-6 col-12">
-                                                            <div className="sc-card-product explode ">
-                                                                <div className="card-media">
-                                                                    <Link to="/item-details-01"><img src={data.img} alt="Axies" /></Link>
-                                                                    <div className="button-place-bid ">
-                                                                        <button onClick={() => setModalShow(true)} className="sc-button style-place-bid style bag fl-button pri-3"><span>Place Bid</span></button>
-                                                                    </div>
-                                                                    <Link to="/login" className="wishlist-button heart"><span className="number-like"> {data.wishlist}</span></Link>
-                                                                </div>
-                                                                <div className="card-title mg-bt-16">
-                                                                    <h5><Link to="/item-details-01">"{data.title}"</Link></h5>
-                                                                </div>
-                                                                <div className="meta-info">
-                                                                    <div className="author">
-                                                                        <div className="avatar">
-                                                                            <img src={data.imgAuthor} alt="Axies" />
+                                        {
+                                            panelTab.map((item, index) => (
+                                                <TabPanel key={index}>
+                                                    {
+                                                        item.dataContent.slice(0, visible).map((data, index) => (
+                                                            <div key={index} className="col-xl-3 col-lg-4 col-md-6 col-12">
+                                                                <div className="sc-card-product explode ">
+                                                                    <div className="card-media">
+                                                                        <Link to="/item-details-01"><img src={data.img} alt="Axies" /></Link>
+                                                                        <div className="button-place-bid ">
+                                                                            <button onClick={() => setModalShow(true)} className="sc-button style-place-bid style bag fl-button pri-3"><span>Place Bid</span></button>
                                                                         </div>
-                                                                        <div className="info">
-                                                                            <span>Creator</span>
-                                                                            <h6> <Link to="/author-02">{data.nameAuthor}</Link> </h6>
-                                                                        </div>
+                                                                        <Link to="/login" className="wishlist-button heart"><span className="number-like"> {data.wishlist}</span></Link>
                                                                     </div>
-                                                                    <div className="tags">{data.tags}</div>
-                                                                </div>
-                                                                <div className="card-bottom style-explode">
-                                                                    <div className="price">
-                                                                        <span>Current Bid</span>
-                                                                        <div className="price-details">
-                                                                            <h5>{data.price}</h5>
-                                                                            <span>= {data.priceChange}</span>
-                                                                        </div>
+                                                                    <div className="card-title mg-bt-16">
+                                                                        <h5><Link to="/item-details-01">"{data.title}"</Link></h5>
                                                                     </div>
-                                                                    <Link to="/activity-01" className="view-history reload">View History</Link>
+                                                                    <div className="meta-info">
+                                                                        <div className="author">
+                                                                            <div className="avatar">
+                                                                                <img src={data.imgAuthor} alt="Axies" />
+                                                                            </div>
+                                                                            <div className="info">
+                                                                                <span>Creator</span>
+                                                                                <h6> <Link to="/author-02">{data.nameAuthor}</Link> </h6>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="tags">{data.tags}</div>
+                                                                    </div>
+                                                                    <div className="card-bottom style-explode">
+                                                                        <div className="price">
+                                                                            <span>Current Bid</span>
+                                                                            <div className="price-details">
+                                                                                <h5>{data.price}</h5>
+                                                                                <span>= {data.priceChange}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <Link to="/activity-01" className="view-history reload">View History</Link>
+                                                                    </div>
                                                                 </div>
                                                             </div>
+                                                        ))
+                                                    }
+                                                    {
+                                                        visible < item.dataContent.length &&
+                                                        <div className="col-md-12 wrap-inner load-more text-center">
+                                                            <Link to="#" id="load-more" className="sc-button loadmore fl-button pri-3" onClick={showMoreItems}><span>Load More</span></Link>
                                                         </div>
-                                                    ))
-                                                }
-                                                {
-                                                    visible < item.dataContent.length && 
-                                                    <div className="col-md-12 wrap-inner load-more text-center"> 
-                                                        <Link to="#" id="load-more" className="sc-button loadmore fl-button pri-3" onClick={showMoreItems}><span>Load More</span></Link>
-                                                    </div>
-                                                }
-                                            </TabPanel>
-                                        ))
-                                    }
+                                                    }
+                                                </TabPanel>
+                                            ))
+                                        }
                                     </div>
                                 </div>
                             </div>

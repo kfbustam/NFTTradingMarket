@@ -6,10 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.Path;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @org.springframework.stereotype.Service
 @Transactional
@@ -17,6 +16,9 @@ public class NftService {
 
     @Autowired
     private NFTRepository nftRepository;
+
+    @Autowired
+    private NftTransactionRepository transactionRepository;
 
     @Autowired
     private WalletRepository walletRepository;
@@ -47,5 +49,14 @@ public class NftService {
 
     public Optional<NFT> getNFT(String id) {
         return nftRepository.findById(id);
+    }
+
+    public Collection<NftTransaction> getTransactions(User user) {
+        var buyerStream = transactionRepository.findBuyerTransactions(user.getID());
+        var sellerStream = transactionRepository.findSellerTransactions(user.getID());
+
+        buyerStream.addAll(sellerStream);
+
+        return buyerStream;
     }
 }
