@@ -50,7 +50,7 @@ public class NFTTradingMarketRESTController {
 	/**
 	 * The App url.
 	 */
-	public String appURL = "http://localhost:8080";
+	public String appURL = "http://localhost:3000";
 
     @Autowired
     private Service service;
