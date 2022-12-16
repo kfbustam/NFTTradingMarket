@@ -332,26 +332,26 @@ const TodayPicks = () => {
     )
 
     useEffect(() => {
-        fetch(LISTINGS_URL + "?token=" + token, {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            method: "POST"
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json()
-                }
-                throw response
-            })
-            .then(data => {
-                setDataPanel(data)
-            })
-            .catch(error => {
-                console.error(error)
-            }).finally(() => {
-            });
+        // fetch(LISTINGS_URL + "?token=" + token, {
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     method: "POST"
+        // })
+        //     .then(response => {
+        //         if (response.ok) {
+        //             return response.json()
+        //         }
+        //         throw response
+        //     })
+        //     .then(data => {
+        //         setDataPanel(data)
+        //     })
+        //     .catch(error => {
+        //         console.error(error)
+        //     }).finally(() => {
+        //     });
     }, []);
 
     const [visible, setVisible] = useState(8);
