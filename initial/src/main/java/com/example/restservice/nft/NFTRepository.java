@@ -3,6 +3,7 @@ package com.example.restservice.nft;
 import java.util.Collection;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 /**
@@ -17,4 +18,8 @@ public interface NFTRepository extends JpaRepository<NFT, String> {
 
   @Query(value="SELECT * FROM nft n WHERE n.listing_id IS NOT NULL", nativeQuery = true)
   public Collection<NFT> findAllListed();
+
+  @Modifying
+  @Query(value="UPDATE nft n SET n.listing_id=NULL WHERE id=?1", nativeQuery = true)
+  public void removeListing(String nft_id);
 }

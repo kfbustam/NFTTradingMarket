@@ -2,7 +2,7 @@ const loggedInMenu = [
     {
         id: 1,
         name: 'Home',
-        links: '/home-03',
+        links: '/',
     },
     {
         id: 2,

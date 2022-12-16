@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
@@ -6,15 +6,29 @@ import TodayPicks from '../components/layouts/explore-02/TodayPicks'
 import todayPickData from '../assets/fake-data/data-today-pick';
 import PathBanner from '../components/header/PathBanner';
 import img1 from '../alice_video.png'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const GET_ALL_NFTS = "http://localhost:8080/nft"
+const LISTINGS_URL = "http://localhost:8080/listings"
 
 const Browse = () => {
     const [assetCollection, setAssetCollection] = React.useState([]);
     const [dataPanel, setDataPanel] = useState([{ id: 1, dataContent: [] }]);
-    React.useEffect(() => {
+    const [successfulToastMessage, setSuccessfulToastMessage] = useState();
+    const [errorToastMessage, setErrorToastMessage] = useState();
+
+    useEffect(() => {
+        toast.error(successfulToastMessage)
+    }, [successfulToastMessage]);
+
+    useEffect(() => {
+        toast.error(errorToastMessage)
+    }, [errorToastMessage]);
+
+    useEffect(() => {
         fetch(
-            GET_ALL_NFTS,
+            LISTINGS_URL, // replace with LISTINGS_URL
             {
                 method: "GET",
                 headers: {
@@ -25,13 +39,15 @@ const Browse = () => {
             }
         ).then(response => {
             if (response.ok) {
+                console.log("listings request successful");
                 return response.json();
             }
             throw response
         })
             .then(collection => {
+                console.log("listings response data: ");
+                console.log(collection);
                 setDataPanel([{ id: 1, dataContent: collection }]);
-                console.log("remote collection", dataPanel);
             })
     }, [])
 
@@ -40,7 +56,7 @@ const Browse = () => {
         <div className='explore'>
             <Header />
             <PathBanner heading="Marketplace" />
-            <TodayPicks dataPanel={dataPanel} />
+            <TodayPicks dataPanel={dataPanel} setSuccessfulToastMessage={setSuccessfulToastMessage} setErrorToastMessage={setErrorToastMessage} />
             <Footer />
         </div>
     );

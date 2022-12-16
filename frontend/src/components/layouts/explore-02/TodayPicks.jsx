@@ -7,10 +7,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 
-const LISTINGS_URL = "http://localhost:8080/nft/listings"
-const IMAGE_BASE_URL = "http://localhost:8080/images?image_name=";
+const IMAGE_BASE_URL = "http://localhost:8080/images?image_name="
 
-const TodayPicks = ({ dataPanel }) => {
+
+const TodayPicks = ({ dataPanel, setSuccessfulToastMessage, setErrorToastMessage }) => {
     const token = "test123";
 
 
@@ -44,18 +44,7 @@ const TodayPicks = ({ dataPanel }) => {
 
     let navigate = useNavigate();
 
-
-    const buyNowFunc = () => {
-        //toast.success("Purchase Successful.")
-        setModalShow(true)
-        //toast.error("Not enough balance.")
-
-
-        //navigate("/wallet-connect");
-
-    }
-
-
+    const [itemShown, setItemShown] = useState();
     const [modalShow, setModalShow] = useState(false);
 
     return (
@@ -105,11 +94,11 @@ const TodayPicks = ({ dataPanel }) => {
                                                     data.dataContent.slice(0, visible).map(item => (
                                                         <div key={item.id} className={`sc-card-product explode style2 mg-bt ${item.nftType} `}>
                                                             <div className="card-media">
-                                                                <Link to="/item-details-01"><img src={IMAGE_BASE_URL + item.imageUrl} alt="Axies" state={{ item }} /></Link>
+                                                                <Link to="/item-details-01"><img src={IMAGE_BASE_URL + item.imageURL} alt="Axies" state={{ item }} /></Link>
                                                                 <div className="button-place-bid">
-                                                                    <button onClick={() => buyNowFunc()} className="sc-button style-place-bid style bag fl-button pri-3"><span>Purchase</span></button>
+                                                                    <button onClick={() => { setModalShow(true); setItemShown(item); }} className="sc-button style-place-bid style bag fl-button pri-3"><span>Purchase</span></button>
                                                                 </div>
-                                                                <Link to="/login" className="wishlist-button heart"><span className="number-like">{item.lastRecordedTime}</span></Link>
+                                                                <Link to="/login" className="wishlist-button heart"><span className="number-like"></span></Link>
                                                                 <div className="coming-soon">{item.nftType}</div>
                                                             </div>
                                                             <div className="card-title">
@@ -175,8 +164,11 @@ const TodayPicks = ({ dataPanel }) => {
                 </div>
             </div>
             <CardModal
+                setSuccessfulToastMessage={setSuccessfulToastMessage}
+                setErrorToastMessage={setErrorToastMessage}
+                item={itemShown}
                 show={modalShow}
-                onHide={() => setModalShow(false)}
+                onHide={() => { setModalShow(false); setItemShown(null); }}
             />
         </Fragment>
     );

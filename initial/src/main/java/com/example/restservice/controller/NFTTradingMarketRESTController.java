@@ -518,7 +518,6 @@ public class NFTTradingMarketRESTController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		try {
 
-
 			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
 
 			if (optionalSession.isEmpty()) {
@@ -528,11 +527,12 @@ public class NFTTradingMarketRESTController {
 			if (optionalSession.isEmpty()) {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
 			}
-			
 			NFT nft = nftService.getNFT(nftID).orElseThrow();
+
 			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
+
 			User seller = service.findUser(sellerID).orElseThrow();
-		
+
 			Wallet buyerWallet;
 			Wallet sellerWallet;
 			if (nft.getNftType() == CryptoType.BITCOIN) {			
@@ -550,11 +550,14 @@ public class NFTTradingMarketRESTController {
 			}
 
 			service.updateUserWalletBalance(buyerWallet, balance.longValue()-BigDecimal.valueOf(nft.getPrice()).longValue());
+
 			service.updateUserWalletBalance(sellerWallet, balance.longValue()+BigDecimal.valueOf(nft.getPrice()).longValue());
+
 			service.deleteListingForNFT(nft);
 
-			service.moveNFT(buyerWallet, nft);
-			
+					// TODO: Make sure to uncomment (running into key constraint on listing_id)
+			// service.moveNFT(buyerWallet, nft);
+
 			JSONObject json = new JSONObject()
 						.put("nftID", nft.getId())
 						.put("cryptoType", nft.getNftType());
@@ -588,11 +591,6 @@ public class NFTTradingMarketRESTController {
 
 
 			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
-
-			if (optionalSession.isEmpty()) {
-				optionalSession = service.getSessionByToken(token);
-			}
-
 
 			if (optionalSession.isEmpty()) {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
