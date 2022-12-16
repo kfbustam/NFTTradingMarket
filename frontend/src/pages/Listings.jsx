@@ -1,4 +1,4 @@
-import React , {useState} from 'react';
+import React , {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
@@ -7,12 +7,14 @@ import img2 from '../assets/images/box-item/image-box-10.jpg'
 import img3 from '../assets/images/box-item/image-box-11.jpg'
 import img4 from '../assets/images/box-item/image-box-21.jpg'
 import img5 from '../assets/images/box-item/image-box-6.jpg'
+import { useNavigate } from 'react-router-dom';
 
 const GET_TRANSACTIONS = "http://localhost:8080/nft/listings?token="
 
 const Listings = () => {
     const [apiResponse, setApiResponse] = useState([])
 
+    let navigate = useNavigate();
 
     const [dataBox] = useState(
         [
@@ -29,36 +31,8 @@ const Listings = () => {
         [
             {
                 icon: 'icon-fl-sort-filled',
-                name: 'Listings'
-            },
-            {
-                icon: 'icon-fl-heart-filled',
-                name: 'Like'
-            },
-            {
-                icon: 'icon-fl-buy',
-                name: 'Purchases'
-            },
-            {
-                icon: 'icon-fl-discount',
-                name: 'Sales'
-            },
-            {
-                icon: 'icon-fl-logout',
-                name: 'Transfer'
-            },
-            {
-                icon: 'icon-fl-star',
-                name: 'Burns'
-            },
-            {
-                icon: 'icon-fl-credit-card',
-                name: 'Bids'
-            },
-            {
-                icon: 'icon-fl-users-filled',
-                name: 'Followings'
-            },
+                name: 'All'
+            }
         ]
     )
 
@@ -67,14 +41,26 @@ const Listings = () => {
         setVisible((prevValue) => prevValue + 5);
     }
 
+    useEffect(() => {
+        getListingsForUser();
+    }, [])
+
     const getListingsForUser = () => {
         let auth_token = "test123"
+
+        if (typeof(localStorage.getItem("token")) !== undefined && localStorage.getItem("token") !== null
+        && localStorage.getItem("token") !== 'undefined') {
+            auth_token = localStorage.getItem("token")
+        } else {
+            localStorage.clear();
+            navigate("/login");
+        }
+        
         let fetchUrl = GET_TRANSACTIONS + auth_token
-        let debutUrl = "http://localhost:8080/nft/listings"
         fetch(
             fetchUrl,
             {
-                method: "GET",
+                method: "POST",
                 header: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -104,13 +90,13 @@ const Listings = () => {
                     <div className="row">
                         <div className="col-md-12">
                             <div className="page-title-heading mg-bt-12">
-                                <h1 className="heading text-center">Activity 1</h1>
+                                <h1 className="heading text-center">My Transactions</h1>
                             </div>
                             <div className="breadcrumbs style2">
                                 <ul>
                                     <li><Link to="/">Home</Link></li>
-                                    <li><Link to="#">Activity</Link></li>
-                                    <li>Activity 1</li>
+                                    <li><Link to="#">Pages</Link></li>
+                                    <li>My Transactions</li>
                                 </ul>
                             </div>
                         </div>
@@ -119,22 +105,25 @@ const Listings = () => {
             </section>
             <section className="tf-activity s1 tf-section">
                 <div className="themesflat-container">
+                    
                     <div className="row">
                         <div className="col-lg-8 col-md-8 col-12">
                             {
-                                dataBox.slice(0,visible).map((item,index) =>(
+                                 apiResponse.map((item,index) =>(
                                     <div className="sc-card-activity style1" key={index}>
                                         <div className="content">
                                             <div className="media">
-                                                <img src={item.img} alt="Axies" />
+                                                <img src={'http://localhost:8080/images?image_name='+item.imageURL} alt="Axies" />
                                             </div>
                                             <div className="infor">
-                                                <h3> <Link to="/item-details-01">{item.title}</Link></h3>
-                                                <div className="status">{item.status} <span className="author">{item.author}</span></div>
-                                                <div className="time">{item.time}</div>
+                                                <h3> <Link to="#">{item.name}</Link></h3>
+                                                <p>{item.description}</p>
+
+                                                <div className="status">{item.price} <span className="author">{item.type}</span></div>
+                                                <div className="time">{item.lastRecordedTime}</div>
                                             </div>
                                         </div>
-                                        <div className={`button-active icon ${item.icon}`}></div>
+                                        <div className={`button-active icon`}></div>
                                     </div>
                                 ))
                             }
@@ -175,6 +164,7 @@ const Listings = () => {
 
                         </div>
                     </div>
+
                 </div>
             </section>
             <Footer />
