@@ -73,6 +73,8 @@ const Login = ({ fromSignUp = false }) => {
             .then(response => {
                 if (response.ok) {
                     return response.json()
+                } else {
+                    toast.error("Please verify your email.");
                 }
                 throw response
             })
