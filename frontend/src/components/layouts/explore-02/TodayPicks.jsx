@@ -43,7 +43,7 @@ const TodayPicks = () => {
                     {
                         id: 1,
                         img: img1,
-                        title: "The RenaiXance Rising the moon ",
+                        title: "The NFT for School",
                         tags: "bsc",
                         imgAuthor: imga1,
                         nameAuthor: "SalvadorDali",
@@ -57,7 +57,7 @@ const TodayPicks = () => {
                     {
                         id: 2,
                         img: img2,
-                        title: "The RenaiXance Rising the sun ",
+                        title: "New Balance NFT",
                         tags: "bsc",
                         imgAuthor: imga2,
                         nameAuthor: "SalvadorDali",
@@ -72,7 +72,7 @@ const TodayPicks = () => {
                     {
                         id: 3,
                         img: img3,
-                        title: "The RenaiXance Rising the sun ",
+                        title: "Event Wide NFT ",
                         tags: "bsc",
                         imgAuthor: imga3,
                         nameAuthor: "SalvadorDali",
@@ -86,7 +86,7 @@ const TodayPicks = () => {
                     {
                         id: 4,
                         img: img4,
-                        title: "The RenaiXance Rising the sun ",
+                        title: "Pokemon NFT ",
                         tags: "bsc",
                         imgAuthor: imga4,
                         nameAuthor: "SalvadorDali",
