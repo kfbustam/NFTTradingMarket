@@ -182,20 +182,20 @@ public class NFTTradingMarketCryptoController {
         }
     }
 
-    @GetMapping("/transactions")
+    @GetMapping("/listings")
     @ResponseBody
-    public ResponseEntity<List<Listing>> getListings(
+    public ResponseEntity<List<NFT>> getListings(
     ) {
 
         HttpHeaders responseHeaders = new HttpHeaders();
 
         try {
 
-            List<Listing> transactions = service.getAllListings()
+            List<NFT> transactions = service.getAllListingsAsNFTs()
                     .stream().collect(Collectors.toList());
 
 
-            ResponseEntity<List<Listing>> res = new ResponseEntity<List<Listing>>(
+            ResponseEntity<List<NFT>> res = new ResponseEntity<List<NFT>>(
                     transactions,
                     responseHeaders,
                     200
@@ -207,7 +207,7 @@ public class NFTTradingMarketCryptoController {
             PrintWriter pw = new PrintWriter(sw);
             ex.printStackTrace(pw);
             System.out.println(sw.toString());
-            return new ResponseEntity<List<Listing>>(List.of(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<List<NFT>>(List.of(), HttpStatus.BAD_REQUEST);
         }
     }
 }
