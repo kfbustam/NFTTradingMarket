@@ -1,9 +1,11 @@
 import React, { useState, Fragment, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import CardModal from '../CardModal';
+import { ToastContainer, toast } from 'react-toastify';
 
+import { Link, useNavigate } from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
 
 import img1 from '../../../assets/images/box-item/card-item-3.jpg'
 import imga1 from '../../../assets/images/avatar/avt-1.jpg'
@@ -359,10 +361,27 @@ const TodayPicks = () => {
         setVisible((prevValue) => prevValue + 4);
     }
 
+    let navigate = useNavigate();
+
+
+    const buyNowFunc = () => {
+        //toast.success("Purchase Successful.")
+        //setModalShow(true)
+        toast.error("Not enough balance.")
+
+
+        //navigate("/wallet-connect");
+
+    }
+    
+
+
     const [modalShow, setModalShow] = useState(false);
 
     return (
         <Fragment>
+                        <ToastContainer theme="dark" position="top-center" />
+
             <div className="tf-section sc-explore-2">
                 <div className="themesflat-container">
                     <div className="row">
@@ -408,7 +427,7 @@ const TodayPicks = () => {
                                                             <div className="card-media">
                                                                 <Link to="/item-details-01"><img src={item.img} alt="Axies" state={{ item }} /></Link>
                                                                 <div className="button-place-bid">
-                                                                    <button onClick={() => setModalShow(true)} className="sc-button style-place-bid style bag fl-button pri-3"><span>Place Bid</span></button>
+                                                                    <button onClick={() => buyNowFunc()} className="sc-button style-place-bid style bag fl-button pri-3"><span>Purchase</span></button>
                                                                 </div>
                                                                 <Link to="/login" className="wishlist-button heart"><span className="number-like">{item.wishlist}</span></Link>
                                                                 <div className="coming-soon">{item.feature}</div>

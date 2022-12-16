@@ -9,7 +9,7 @@ import img1 from '../alice_video.png'
 
 const GET_ALL_NFTS = "http://localhost:8080/nft"
 
-const Explore02 = () => {
+const Browse = () => {
     const [assetCollection, setAssetCollection] = React.useState([]);
 
     React.useEffect(() => {
@@ -45,4 +45,4 @@ const Explore02 = () => {
     );
 }
 
-export default Explore02;
+export default Browse;

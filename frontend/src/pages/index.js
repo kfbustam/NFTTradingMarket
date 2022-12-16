@@ -1,5 +1,5 @@
 import Home03 from "./Home03";
-import Explore02 from "./Explore02";
+import Browse from "./Browse";
 
 import LiveAuctions from "./LiveAuctions";
 import ItemDetails01 from "./ItemDetails01";
@@ -30,7 +30,7 @@ const routes = [
   // { path: '/', component: <Home01 />},
   { path: '/', component: <Home03 />},
   { path: '/home-03', component: <Home03 />},
-  { path: '/browse', component: <Explore02 />},
+  { path: '/browse', component: <Browse />},
   { path: '/live-auctions', component: <LiveAuctions />},
   { path: '/item-details-01', component: <ItemDetails01 />},
   { path: '/item-details-02', component: <ItemDetails02 />},
