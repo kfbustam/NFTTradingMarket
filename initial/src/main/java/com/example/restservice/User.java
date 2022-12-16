@@ -3,6 +3,8 @@ package com.example.restservice;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.example.restservice.nft.NFT;
+
 import java.util.List;
 
 import javax.persistence.*;

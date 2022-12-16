@@ -17,7 +17,11 @@ import img6 from '../assets/images/avatar/avt-8.jpg'
 import img7 from '../assets/images/avatar/avt-2.jpg'
 import imgdetail1 from '../assets/images/box-item/images-item-details.jpg'
 
+const BUY_NFT_URL = "http://localhost:8080/nft/buy";
+const PLACE_BID_URL = "http://localhost:8080/nft/auction/offer";
+
 const ItemDetails01 = () => {
+    const token = "test123";
     const location = useLocation()
     const { item } = location.state
     const {
@@ -80,6 +84,50 @@ const ItemDetails01 = () => {
             },
         ]
     )
+
+    const placeBid = (item) => {
+        fetch(PLACE_BID_URL + "?token=" + token + "&offerPrice=" + price + "&nftID=" + id, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw response
+            })
+            .then(data => {
+            })
+            .catch(error => {
+                console.error(error)
+            }).finally(() => {
+            });
+    };
+
+    const buyItem = (item) => {
+        fetch(BUY_NFT_URL + "?token=" + token, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw response
+            })
+            .then(data => {
+            })
+            .catch(error => {
+                console.error(error)
+            }).finally(() => {
+            });
+    };
     return (
         <div className='item-details'>
             <Header />
@@ -156,7 +204,7 @@ const ItemDetails01 = () => {
                                         Facilisi lobortisal morbi fringilla urna amet sed ipsum</p>
                                     <div className="meta-item-details style2">
                                         <div className="item meta-price">
-                                            <span className="heading">Current Bid</span>
+                                            <span className="heading">Current Bid/Price</span>
                                             <div className="price">
                                                 <div className="price-box">
                                                     <h5> 4.89 ETH</h5>
@@ -173,11 +221,11 @@ const ItemDetails01 = () => {
                                     </div>
                                     {
                                         (item.saleType === "all" || item.saleType === "auction") &&
-                                        <Link to="/wallet-connect" className="sc-button loadmore style bag fl-button pri-3"><span>Place a bid</span></Link>
+                                        <Link onClick={placeBid(item)} className="sc-button loadmore style bag fl-button pri-3"><span>Place a bid</span></Link>
                                     }
                                     {
                                         (item.saleType === "all" || item.saleType === "immediate") &&
-                                        <Link to="/wallet-connect" className="sc-button loadmore style bag fl-button pri-3"><span>Buy this now</span></Link>
+                                        <Link onClick={buyItem(item)} className="sc-button loadmore style bag fl-button pri-3"><span>Buy this now</span></Link>
                                     }
                                     <div className="flat-tabs themesflat-tabs">
                                         <Tabs>

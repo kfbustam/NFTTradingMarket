@@ -26,9 +26,6 @@ public class NFT {
 
 	private String smartContractAddress;
 
-
-	private String userId;
-
 	private String name;
 
 	private String imageUrl;
