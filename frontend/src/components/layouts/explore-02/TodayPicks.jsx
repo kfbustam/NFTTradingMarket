@@ -1,6 +1,6 @@
-import React , { useState , Fragment } from 'react';
-import {Link} from 'react-router-dom';
-import { Tab, Tabs, TabList, TabPanel  } from 'react-tabs';
+import React, { useState, Fragment } from 'react';
+import { Link } from 'react-router-dom';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import CardModal from '../CardModal';
 
@@ -63,7 +63,7 @@ const TodayPicks = () => {
                     {
                         id: 1,
                         img: img1,
-                        title: "The RenaiXance Rising the sun ",
+                        title: "The RenaiXance Rising the moon ",
                         tags: "bsc",
                         imgAuthor: imga1,
                         nameAuthor: "SalvadorDali",
@@ -71,7 +71,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection1,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "auction"
                     },
                     {
                         id: 2,
@@ -85,7 +86,8 @@ const TodayPicks = () => {
                         wishlist: "100",
                         imgCollection: imgCollection2,
                         nameCollection: "Creative Art 3D",
-                        feature: 'Coming Soon'
+                        feature: 'Coming Soon',
+                        saleType: "immediate"
                     },
                     {
                         id: 3,
@@ -98,7 +100,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection3,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "all"
                     },
                     {
                         id: 4,
@@ -111,7 +114,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection4,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "immediate"
                     },
                     {
                         id: 5,
@@ -124,7 +128,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection5,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "immediate"
                     },
                     {
                         id: 6,
@@ -137,7 +142,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection6,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "auction"
                     },
                     {
                         id: 7,
@@ -150,7 +156,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection7,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "auction"
                     },
                     {
                         id: 8,
@@ -163,7 +170,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection8,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "all"
                     },
                     {
                         id: 9,
@@ -176,7 +184,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection1,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "all"
                     },
                     {
                         id: 10,
@@ -189,7 +198,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection2,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "auction"
                     },
                     {
                         id: 11,
@@ -202,7 +212,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection3,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "auction"
                     },
                     {
                         id: 12,
@@ -215,7 +226,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection4,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "immediate"
                     },
                     {
                         id: 13,
@@ -228,7 +240,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection5,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "auction"
                     },
                     {
                         id: 14,
@@ -241,7 +254,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection6,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "immediate"
                     },
                     {
                         id: 15,
@@ -254,7 +268,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection7,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "immediate"
                     },
                     {
                         id: 16,
@@ -267,7 +282,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection8,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "all"
                     },
                 ]
             },
@@ -285,7 +301,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection2,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "immediate"
                     },
                     {
                         id: 3,
@@ -298,7 +315,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection3,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "immediate"
                     },
                     {
                         id: 4,
@@ -311,7 +329,8 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection4,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "auction"
                     },
                     {
                         id: 5,
@@ -324,14 +343,15 @@ const TodayPicks = () => {
                         priceChange: "$12.246",
                         wishlist: "100",
                         imgCollection: imgCollection5,
-                        nameCollection: "Creative Art 3D"
+                        nameCollection: "Creative Art 3D",
+                        saleType: "immediate"
                     },
                 ]
             }
         ]
     )
 
-    const [visible , setVisible] = useState(8);
+    const [visible, setVisible] = useState(8);
     const showMoreItems = () => {
         setVisible((prevValue) => prevValue + 4);
     }
@@ -376,52 +396,70 @@ const TodayPicks = () => {
                                         }
                                     </TabList> */}
                                     {
-                                        dataPanel.map(data =>(
+                                        dataPanel.map(data => (
                                             <TabPanel key={data.id}>
                                                 {
-                                                    
-                                                    data.dataContent.slice(0,visible).map (item=>(
-                                                    <div key={item.id} className={`sc-card-product explode style2 mg-bt ${item.feature ? 'comingsoon' : '' } `}>                               
-                                                        <div className="card-media">
-                                                            <Link to="/item-details-01"><img src={item.img} alt="Axies" /></Link>
-                                                            <div className="button-place-bid">
-                                                                <button onClick={() => setModalShow(true)} className="sc-button style-place-bid style bag fl-button pri-3"><span>Place Bid</span></button>
-                                                            </div>
-                                                            <Link to="/login" className="wishlist-button heart"><span className="number-like">{item.wishlist}</span></Link>
-                                                            <div className="coming-soon">{item.feature}</div>
-                                                        </div>
-                                                        <div className="card-title">
-                                                            <h5><Link to="/item-details-01">"{item.title}"</Link></h5>
-                                                            
-                                                        </div>
-                                                        <div className="meta-info">
-                                                            <div className="author">
-                                                                <div className="avatar">
-                                                                    <img src={item.imgAuthor} alt="Axies" />
+
+                                                    data.dataContent.slice(0, visible).map(item => (
+                                                        <div key={item.id} className={`sc-card-product explode style2 mg-bt ${item.feature ? 'comingsoon' : ''} `}>
+                                                            <div className="card-media">
+                                                                <Link to="/item-details-01"><img src={item.img} alt="Axies" /></Link>
+                                                                <div className="button-place-bid">
+                                                                    <button onClick={() => setModalShow(true)} className="sc-button style-place-bid style bag fl-button pri-3"><span>Place Bid</span></button>
                                                                 </div>
-                                                                <div className="info">
-                                                                    <span>Creator</span>
-                                                                    <h6> <Link to="/authors-02">{item.nameAuthor}</Link> </h6>
-                                                                </div>
+                                                                <Link to="/login" className="wishlist-button heart"><span className="number-like">{item.wishlist}</span></Link>
+                                                                <div className="coming-soon">{item.feature}</div>
                                                             </div>
-                                                            <div className="tags">{item.tags}</div>
-                                                        </div>
-                                                        <div className="card-bottom style-explode">
-                                                            <div className="price">
-                                                                <span>Current Bid</span>
-                                                                <div className="price-details">
-                                                                    <h5>{item.price}</h5>
-                                                                    <span>= {item.priceChange}</span>
-                                                                </div>
+                                                            <div className="card-title">
+                                                                <h5><Link to="/item-details-01">"{item.title}"</Link></h5>
+
                                                             </div>
-                                                            <Link to="/activity-01" className="view-history reload">View History</Link>
+                                                            <div className="meta-info">
+                                                                <div className="author">
+                                                                    <div className="avatar">
+                                                                        <img src={item.imgAuthor} alt="Axies" />
+                                                                    </div>
+                                                                    <div className="info">
+                                                                        <span>Creator</span>
+                                                                        <h6> <Link to="/authors-02">{item.nameAuthor}</Link> </h6>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="tags">{item.tags}</div>
+                                                            </div>
+                                                            <div className="card-bottom style-explode">
+                                                                <div className="price">
+                                                                    {
+                                                                        (item.saleType === "immediate" || item.saleType === "auction")
+                                                                        &&
+                                                                        <>
+                                                                            <span>Current Price</span>
+                                                                            <div className="price-details">
+                                                                                <h5>{item.price}</h5>
+                                                                                <span>= {item.priceChange}</span>
+                                                                            </div>
+                                                                        </>
+
+                                                                    }
+                                                                    {
+                                                                        (item.saleType === "all" || item.saleType === "auction")
+                                                                        &&
+                                                                        <>
+                                                                            <span>Current Bid</span>
+                                                                            <div className="price-details">
+                                                                                <h5>{item.price}</h5>
+                                                                                <span>= {item.priceChange}</span>
+                                                                            </div>
+                                                                        </>
+                                                                    }
+                                                                </div>
+                                                                <Link to="/activity-01" className="view-history reload">View History</Link>
+                                                            </div>
                                                         </div>
-                                                    </div>
                                                     ))
                                                 }
                                                 {
-                                                    visible < data.dataContent.length && 
-                                                    <div className="col-md-12 wrap-inner load-more text-center"> 
+                                                    visible < data.dataContent.length &&
+                                                    <div className="col-md-12 wrap-inner load-more text-center">
                                                         <Link to="#" id="load-more" className="sc-button loadmore fl-button pri-3" onClick={showMoreItems}><span>Load More</span></Link>
                                                     </div>
                                                 }
@@ -429,8 +467,8 @@ const TodayPicks = () => {
                                         ))
                                     }
                                 </Tabs>
-                            </div> 
-                        </div>   
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
