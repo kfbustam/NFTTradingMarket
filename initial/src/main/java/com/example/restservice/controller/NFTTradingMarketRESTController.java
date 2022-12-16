@@ -431,7 +431,7 @@ public class NFTTradingMarketRESTController {
     @ResponseBody
     public ResponseEntity<String> createNft(
             @RequestParam(name = "email", required = true) @NotEmpty String email,
-            @RequestParam(name = "nft_image", required = true) @NotNull MultipartFile file,
+			@RequestPart("nft_image") MultipartFile file,
             @RequestParam(name = "name", required = true) @NotEmpty String name,
 			@RequestParam(name = "wallet_id", required = true) @NotEmpty String walletId,
 			@RequestParam(name = "description", required = true) @NotNull String description,

@@ -29,7 +29,8 @@ const CreateItem = () => {
              {
                 method: "POST",
                 headers: {
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'Content-Type':''
                 },
                 body: formData,
                 mode: 'cors'

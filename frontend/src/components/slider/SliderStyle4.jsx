@@ -29,8 +29,8 @@ const SliderStyle4 = () => {
                                 </h2>	
                                 <h1 className="heading mb-style"><span className="tf-text s1">Sell extraordinary</span>                                          
                                 </h1>
-                                <h1 className="heading">Monster NFTs</h1>
-                                <p className="sub-heading mt-19 mb-40">Marketplace for monster character cllections non fungible token NFTs
+                                <h1 className="heading">Popular NFTs</h1>
+                                <p className="sub-heading mt-19 mb-40">Marketplace for Popular character cllections non fungible token NFTs
                                 </p>
                                 <div className="flat-bt-slider flex style2">
                                     <Link to="/explore-01" className="sc-button header-slider style style-1 rocket fl-button pri-1"><span>Explore

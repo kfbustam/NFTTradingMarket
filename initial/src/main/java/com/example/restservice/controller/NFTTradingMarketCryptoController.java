@@ -181,4 +181,33 @@ public class NFTTradingMarketCryptoController {
             return new ResponseEntity<List<NftTransaction>>(List.of(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/transactions")
+    @ResponseBody
+    public ResponseEntity<List<Listing>> getListings(
+    ) {
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+
+        try {
+
+            List<Listing> transactions = service.getAllListings()
+                    .stream().collect(Collectors.toList());
+
+
+            ResponseEntity<List<Listing>> res = new ResponseEntity<List<Listing>>(
+                    transactions,
+                    responseHeaders,
+                    200
+            );
+
+            return res;
+        } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            ex.printStackTrace(pw);
+            System.out.println(sw.toString());
+            return new ResponseEntity<List<Listing>>(List.of(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
