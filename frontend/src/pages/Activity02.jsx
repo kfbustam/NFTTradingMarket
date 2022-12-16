@@ -1,21 +1,15 @@
-import React , {useState} from 'react';
+import React , {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import img1 from '../alice_video.png'
 
+const GET_TRANSACTIONS = "http://localhost:8080/transactions?token="
 
 const Activity02 = () => {
-    const [dataBox, setDataBox] = useState([
-        {
-            img: img1,
-            title: 'Alice Best Picture',
-            status: 'Purchased',
-            author: 'alice',
-            time: '2022-12-15',
-            icon: 'icon-1'
-        }]);
-    const [dataFilter] = useState(
+    const [apiResponse, setApiResponse] = useState([])
+
+    const [dataFilter, setDataFilter] = useState(
         [
             {
                 name: 'Current Listings',
@@ -56,9 +50,84 @@ const Activity02 = () => {
     )
 
     const [visible , setVisible] = useState(8);
-    const showMoreItems = () => {
-        setVisible((prevValue) => prevValue + 4);
+
+    const applyFilter = () => {
+
     }
+
+    const clearAllFilters = () => {
+        setDataFilter(
+            [
+                {
+                    name: 'Current Listings',
+                    checked: '',
+                    type: "current"
+                },
+                {
+                    name: 'Past Listings',
+                    checked: '',
+                    type: "past"
+                },
+                {
+                    name: 'Ethereum',
+                    checked: '',
+                    type: "ETHEREUM"
+                },
+                {
+                    name: 'Bitcoin',
+                    checked: '',
+                    type: "BITCOIN"
+                },
+                {
+                    name: 'Last 24 hours',
+                    checked: '',
+                    type: "24H"
+                },
+                {
+                    name: 'Last Week',
+                    checked: '',
+                    type: "1W"
+                },
+                {
+                    name: 'Last Month',
+                    checked: '',
+                    type: "1M"
+                }
+            ]
+        )
+    }
+
+    useEffect(() => {
+        getTransactionsForUser();
+    }, [])
+
+    const getTransactionsForUser = () => {
+        let auth_token = "test123"
+        let fetchUrl = GET_TRANSACTIONS + auth_token
+        let debutUrl = "https://60261217186b4a001777fbd7.mockapi.io/api/ndkshr/transactions"
+        fetch(
+            fetchUrl,
+            {
+                method: "GET",
+                header: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }
+        ).then(response => {
+            if (response.ok) {
+                return response.json()
+            }
+            throw response
+        }).then(jsonData => {
+            setApiResponse(jsonData)
+            console.log("leng", apiResponse.length)
+            console.log("tranactions data", jsonData)
+        }).catch(error => {
+            console.log("transactions fetch failed", error)
+        })
+    } 
+
     return (
         <div>
             <Header />
@@ -87,28 +156,28 @@ const Activity02 = () => {
                         <div className="col-xl-8 col-lg-9 col-md-8 col-12">
                             <div className="box-activity">
                                 {
-                                    dataBox.slice(0,visible).map((item,index) => (
+                                    apiResponse.map((item,index) => (
                                         <div key={index} className="sc-card-activity style-2">
                                             <div className="content">
                                                 <div className="media">
-                                                    <img src={item.img} alt="" />
+                                                    <img src={"http://localhost:8080/images?image_name=" + item.nft.imageUrl} alt="" />
                                                 </div>
                                                 <div className="infor">
-                                                    <h4><Link to="/item-details-01">{item.title}</Link></h4>
-                                                    <div className="status">{item.status1} <span className="author">{item.author}</span></div>
-                                                    <div className="time">{item.time}</div>
+                                                    <h4><Link to="/item-details-01">{item.nft.name}</Link></h4>
+                                                    <div className="status">{item.seller.nickName} <span className="author">{item.buyer.nickName}</span></div>
+                                                    <div className="time">{item.status}</div>
+                                                    <div className="time">
+                                                        <h3>
+                                                        {item.type == "BITCOIN" ? "₿" : "Ξ" } {item.amount}/-
+                                                        </h3>
+                                                    </div>
+                                                    <div className="time">{item.date}</div>
                                                 </div>
                                             </div>
                                         </div>
                                     ))
                                 }
                             </div>
-                            {
-                                visible < dataBox.length && 
-                                <div className="btn-activity mg-t-10 center"> 
-                                    <Link to="#" id="load-more" className="sc-button loadmore fl-button pri-3" onClick={showMoreItems}><span>Load More</span></Link>
-                                </div>
-                            }
                         </div>
                         <div className="col-xl-4 col-lg-3 col-md-4 col-12">
 
@@ -116,7 +185,7 @@ const Activity02 = () => {
                                 <div className="widget widget-filter style-1 mgbt-0">
                                     <div className="header-widget-filter">
                                         <h3 className="title-widget">Filter</h3>
-                                        <Link to="#" className="clear-checkbox btn-filter style-2">
+                                        <Link to="#" className="clear-checkbox btn-filter style-2" onClick={clearAllFilters}>
                                             Clear All
                                         </Link>
                                     </div>
@@ -126,7 +195,7 @@ const Activity02 = () => {
                                                 <div key={index}>
                                                 <label >
                                                     {item.name}
-                                                    <input type="checkbox" defaultChecked={item.checked} />
+                                                    <input type="checkbox" defaultChecked={item.checked.length !== 0} />
                                                     <span className="btn-checkbox"></span>
                                                 </label><br/>
                                                 </div>
