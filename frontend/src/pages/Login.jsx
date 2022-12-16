@@ -91,6 +91,8 @@ const Login = ({ fromSignUp = false }) => {
 
     const responseGoogleSuccess = (response) => {
         console.log("Successful");
+        localStorage.setItem("token", response.googleId)
+
         console.log(response);
         setProfileData({
             email: response.profileObj.email,
@@ -110,7 +112,7 @@ const Login = ({ fromSignUp = false }) => {
             + response.profileObj.familyName
             + "&nickname="
             + response.profileObj.name
-            + "&token="
+            + "&social_token="
             + response.googleId //use google id as token for safety as access tokens have higher refresh rate
             ,
             {
@@ -122,9 +124,8 @@ const Login = ({ fromSignUp = false }) => {
                 mode: 'cors'
             })
             .then(response => {
-                if (response.ok) {
-                    localStorage.setItem("token", response.googleId)
 
+                if (response.ok) {
                     return response.json()
                 }
                 throw response
