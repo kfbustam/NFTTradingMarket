@@ -632,12 +632,13 @@ public class NFTTradingMarketRESTController {
 	}
 
 	/*
-		GET User's Own NFT listings by Token
+		GET User's Own NFT offers by nftID
 	 */
-	@PostMapping("/nft/listings")
+	@GetMapping("/nft/auction/offers")
 	@ResponseBody
-	public ResponseEntity<String> listings(
-		@RequestParam(name="token", required=true) String token
+	public ResponseEntity<String> nftOffers(
+		@RequestParam(name="token", required=true) String token,
+				@RequestParam(name = "nftID", required = true) @NotEmpty String nftID
 	) {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -654,22 +655,20 @@ public class NFTTradingMarketRESTController {
 				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
 			}
 
-			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
-
-			List<NFT> listings = service.getAllListingsAsNFTs().stream().filter(x -> x.getWallet().getUser().getID().equals(buyer.getID())).collect(Collectors.toList());
+			ArrayList<Offer> offerHistory = service.getOfferHistory(nftID);
 			
 			ArrayList<JSONObject> json = new ArrayList<>();
-			listings.forEach(listing -> {
+			offerHistory.forEach(offer -> {
+						User userThatMadeOffer = offer.getUser();
 				json.add(
 					new JSONObject()
-						.put("price", listing.getPrice())
-						.put("description", listing.getDescription())
-						.put("assetURL", listing.getAssetUrl())
-						.put("imageURL", listing.getImageUrl())
-						.put("name", listing.getName())
-						.put("type", listing.getNftType())
-						.put("lastRecordedTime", listing.getLastRecordedTime())
-						.put("address", listing.getSmartContractAddress())
+						.put("price", offer.getOfferPrice())
+						.put("user", 
+									new JSONObject()
+									.put("firstName", userThatMadeOffer.getFirstName())
+									.put("lastName", userThatMadeOffer.getLastName())
+									.put("nickName", userThatMadeOffer.getNickName())
+						)
 				);
 			});
 

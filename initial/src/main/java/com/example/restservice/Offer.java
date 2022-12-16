@@ -44,4 +44,8 @@ public class Offer {
 	public Double getOfferPrice() {
 		return this.offerPrice;
 	}
+
+	public User getUser() {
+		return this.user;
+	}
 }

@@ -162,4 +162,8 @@ public class Service {
         Collection<NFT> nftsListed = nftRepository.findAllListed();
         return new ArrayList<>(nftsListed);
     }
+
+    public ArrayList<Offer> getOfferHistory(String nft_id) {
+        return new ArrayList<Offer>(offerRepository.findAllNFTOffers(nft_id));
+    }
 }
