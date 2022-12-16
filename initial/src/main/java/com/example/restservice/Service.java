@@ -68,6 +68,7 @@ public class Service {
     }
 
     public void deleteListingForNFT(NFT nft) {
+        nftRepository.removeListing(nft.getId());
         listingRepository.deleteListingByNFTID(nft.getId());
     }
 
@@ -94,7 +95,7 @@ public class Service {
         cal.setTime(new Date());
         cal.add(Calendar.DATE, 7); //minus number would decrement the days
         SessionToken sessionToken = new SessionToken(user, token, cal.getTime());
-        sessionRepository.save(sessionToken);
+        sessionRepository.saveAndFlush(sessionToken);
         return sessionToken;
     }
 
@@ -160,5 +161,9 @@ public class Service {
     public ArrayList<NFT> getAllListingsAsNFTs() {
         Collection<NFT> nftsListed = nftRepository.findAllListed();
         return new ArrayList<>(nftsListed);
+    }
+
+    public ArrayList<Offer> getOfferHistory(String nft_id) {
+        return new ArrayList<Offer>(offerRepository.findAllNFTOffers(nft_id));
     }
 }
