@@ -6,6 +6,7 @@ import com.example.restservice.Wallet;
 import com.example.restservice.crypto.CryptoType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -26,9 +27,6 @@ public class NFT {
 
 	private String smartContractAddress;
 
-
-	private String userId;
-
 	private String name;
 
 	private String imageUrl;
@@ -47,6 +45,8 @@ public class NFT {
 	private List<Offer> offers;     // Full form only
 
 	@OneToOne
+	@JoinColumn(name = "listing_id")
+	@Nullable
 	private Listing listing;     // Full form only
 
 	@ManyToOne
