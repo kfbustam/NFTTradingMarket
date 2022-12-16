@@ -457,7 +457,7 @@ public class NFTTradingMarketRESTController {
             fileNames.append(file.getOriginalFilename());
             Files.write(fileNameAndPath, file.getBytes());
 
-            NFT nft = nftService.createNft(fileNameAndPath.getFileName(), type, walletId, name, description, price, NftCategory.ANIME);
+            NFT nft = nftService.createNft(fileNameAndPath.getFileName(), type, walletId, name, description, price, NftCategory.Anime);
 
             JSONObject json = new JSONObject()
                     .put("name", nft.getName())
