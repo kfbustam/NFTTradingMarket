@@ -7,6 +7,7 @@ import org.springframework.lang.Nullable;
 
 import com.example.restservice.nft.NFT;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -27,7 +28,8 @@ public class Listing {
 	@JsonIgnore
 	private User seller;
 
-	private double listingPrice;
+	@Column(name="listing_price", columnDefinition="Decimal(10,2) default '0.00'")
+	private BigDecimal listingPrice;
 
 	@JsonFormat(pattern="HH:mm:ss")
 	@Nullable
@@ -41,11 +43,11 @@ public class Listing {
   public Listing() {}
 
 
-  public Listing(double listingPrice) {
+  public Listing(BigDecimal listingPrice) {
 		this.listingPrice = listingPrice;
 	}
 
-	public double getListingPrice() {
+	public BigDecimal getListingPrice() {
 		return this.listingPrice;
 	}
 }

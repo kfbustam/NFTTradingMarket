@@ -3,10 +3,6 @@ import { Link , useLocation } from "react-router-dom";
 import menus from "../../pages/menu";
 import loggedInMenu from '../../pages/loggedInMenu';
 import DarkMode from './DarkMode';
-import logoheader from '../../assets/images/logo/logo.png'
-import logoheader2x from '../../assets/images/logo/logo@2x.png'
-import logodark from '../../assets/images/logo/logo_dark.png'
-import logodark2x from '../../assets/images/logo/logo_dark@2x.png'
 import imgsun from '../../assets/images/icon/sun.png'
 import avt from '../../assets/images/avatar/avt-2.jpg'
 
@@ -14,7 +10,15 @@ import avt from '../../assets/images/avatar/avt-2.jpg'
 const Header = () => {
     const { pathname } = useLocation();
 
+    const [loggedIn, setLoggedIn] = useState(menus);
+
     const headerRef = useRef (null)
+    useEffect(() => {
+        if(localStorage.getItem("profileData") !== null) {
+            setLoggedIn(loggedInMenu);
+        }
+    }, [loggedIn]);
+
     useEffect(() => {
         window.addEventListener('scroll', isSticky);
         return () => {
@@ -56,16 +60,15 @@ const Header = () => {
                                 <div id="site-logo" className="clearfix">
                                     <div id="site-logo-inner">
                                         <Link to="/" rel="home" className="main-logo">
-                                            <img className='logo-dark'  id="logo_header" src={logodark} srcSet={`${logodark2x}`} alt="nft-gaming" />
-                                            <img className='logo-light'  id="logo_header" src={logoheader} srcSet={`${logoheader2x}`} alt="nft-gaming" />
-                                        </Link>
+                                            <h2> NFT Market </h2>
+                                            </Link>
                                     </div>
                                 </div>
                                 <div className="mobile-button" ref={btnToggle} onClick={menuToggle}><span></span></div>
                                 <nav id="main-nav" className="main-nav" ref={menuLeft} >
                                     <ul id="menu-primary-menu" className="menu">
                                         {
-                                            loggedInMenu.map((data,index) => (
+                                            loggedIn.map((data,index) => (
                                                 <li key={index} onClick={()=> handleOnClick(index)} className={`menu-item ${data.namesub ? 'menu-item-has-children' : '' } ${activeIndex === index ? 'active' : ''} ` }   >
                                                     <Link to={data.links}>{data.name}</Link>
                                                     {

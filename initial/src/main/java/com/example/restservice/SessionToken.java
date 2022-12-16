@@ -31,7 +31,7 @@ public class SessionToken {
   /**
    * Epoch time.
    */
-	private int expirationDate;
+	private Date expirationDate;
 
   /**
    * Instantiates a new Session.
@@ -43,7 +43,7 @@ public class SessionToken {
    *
    * 
    */
-  public SessionToken(User user, String token, int expirationDate) {
+  public SessionToken(User user, String token, Date expirationDate) {
 		this.user = user;
     this.token = token;
     this.expirationDate = expirationDate;
@@ -71,7 +71,7 @@ public class SessionToken {
     return this.token;
   }
 
-  public int getExpirationDate() {
+  public Date getExpirationDate() {
     return this.expirationDate;
   }
 }
