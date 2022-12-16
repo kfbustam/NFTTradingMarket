@@ -9,9 +9,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const CLIENT_ID = "104101427642-9kkv6e3v2hk1rd01k96nqk1pmgu81vpe.apps.googleusercontent.com"
 const SIGN_IN_URL = "http://localhost:8080/signin"
+const SIGN_UP_URL = "http://localhost:8080/signup"
 
-
-const Login = ({ fromSignUp=false }) => {
+const Login = ({ fromSignUp = false }) => {
     const [profileData, setProfileData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState()
@@ -23,6 +23,8 @@ const Login = ({ fromSignUp=false }) => {
     React.useEffect(() => {
         // onSuccess -> Go to Sign in page
         if (profileData !== null) {
+            localStorage.setItem("profileData", profileData)
+            window.sessionStorage.setItem("profileData", profileData);
             toast.success("Login Successful!")
             navigate("/wallet-connect");
         }
@@ -30,7 +32,7 @@ const Login = ({ fromSignUp=false }) => {
 
     React.useEffect(() => {
         // Render the error msg
-        if(profileData !== null && error !== null) {
+        if (profileData !== null && error !== null) {
             toast.error("Something went wrong: " + error)
         }
     }, [error]);
@@ -51,11 +53,6 @@ const Login = ({ fromSignUp=false }) => {
         gapi.load('client:auth2', initClient);
     });
 
-    useEffect(() => {
-        window.sessionStorage.setItem("auth_data", JSON.stringify(profileData));
-        console.log("my profile data", profileData)
-    }, [profileData])
-
     const handleSubmit = (event) => {
         event.preventDefault();
         // const data = new FormData(event.currentTarget);
@@ -73,37 +70,71 @@ const Login = ({ fromSignUp=false }) => {
             }),
             mode: 'cors'
         })
-        .then(response => {
-            if (response.ok) {
-                return response.json()
-            }
-            throw response
-        })
-        .then(data => {
-            setProfileData(data)
-        })
-        .catch(error => {
-            console.error(error)
-            setProfileData(null)
-            setError(error)
-        }).finally(() => {
-            setLoading(false)
-        });
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw response
+            })
+            .then(data => {
+                setProfileData(data)
+            })
+            .catch(error => {
+                console.error(error)
+                setProfileData(null)
+                setError(error)
+            }).finally(() => {
+                setLoading(false)
+            });
     };
 
     const responseGoogleSuccess = (response) => {
-		console.log("Successful");
+        console.log("Successful");
         console.log(response);
         setProfileData({
-            email: response.profileObj.email
+            email: response.profileObj.email,
+            ...response
         })
-        setProfileData(response);
-	};
+        fetch(
+            SIGN_UP_URL
+            + "?email="
+            + response.profileObj.email
+            + "&password="
+            + ""
+            + "&firstname="
+            + response.profileObj.givenName
+            + "&type="
+            + "GOOGLE"
+            + "&lastname="
+            + response.profileObj.familyName
+            + "&nickname="
+            + response.profileObj.name,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: "POST",
+                mode: 'cors'
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw response
+            })
+            .then(data => {
+                console.log("sign up response", data);
+            })
+            .catch(error => {
+                console.error(error)
+            }).finally(() => { });
+    };
 
-	const responseGoogleFailure = (response) => {
-		console.log("Failure");
-    console.log(response);
-	};
+    const responseGoogleFailure = (response) => {
+        console.log("Failure");
+        console.log(response);
+    };
 
     return (
         <div>
@@ -125,7 +156,7 @@ const Login = ({ fromSignUp=false }) => {
                             </div>
                         </div>
                     </div>
-                </div>                    
+                </div>
             </section>
             <section className="tf-login tf-section">
                 <div className="themesflat-container">
@@ -147,20 +178,20 @@ const Login = ({ fromSignUp=false }) => {
                                         </Link>
                                     </li>
                                     <li> */}
-                                    <div >
-                                        <GoogleLogin
-                                            theme="dark"
-                                            className="sc-button style-2 fl-button pri-3"
-                                            clientId={CLIENT_ID}
-                                            buttonText="Sign in with Google"
-                                            onSuccess={responseGoogleSuccess}
-                                            onFailure={responseGoogleFailure}
-                                            cookiePolicy={'single_host_origin'}
-                                            isSignedIn={true}
-                                        />
-                                    </div>
-                                        
-                                    {/* </li>
+                                <div >
+                                    <GoogleLogin
+                                        theme="dark"
+                                        className="sc-button style-2 fl-button pri-3"
+                                        clientId={CLIENT_ID}
+                                        buttonText="Sign in with Google"
+                                        onSuccess={responseGoogleSuccess}
+                                        onFailure={responseGoogleFailure}
+                                        cookiePolicy={'single_host_origin'}
+                                        isSignedIn={true}
+                                    />
+                                </div>
+
+                                {/* </li>
                                 </ul> */}
                             </div>
 
@@ -171,8 +202,8 @@ const Login = ({ fromSignUp=false }) => {
 
                                 <div className="form-inner">
                                     <form action="#" id="contactform" onSubmit={handleSubmit}>
-                                        <input id="email" name="email" tabIndex="1"  aria-required="true" type="email" placeholder="Email Address" required value={email} onChange={(event) => {setEmail(event.target.value)}} />
-                                        <input id="password" name="password" tabIndex="2" aria-required="true" required type="password" placeholder="Password" value={password} onChange={(event) => {setPassword(event.target.value)}} />
+                                        <input id="email" name="email" tabIndex="1" aria-required="true" type="email" placeholder="Email Address" required value={email} onChange={(event) => { setEmail(event.target.value) }} />
+                                        <input id="password" name="password" tabIndex="2" aria-required="true" required type="password" placeholder="Password" value={password} onChange={(event) => { setPassword(event.target.value) }} />
                                         <div className="row-form style-1">
                                             <label>Remember me
                                                 <input type="checkbox" />

@@ -13,7 +13,7 @@ const SignUp = () => {
     const [firstName, setFirstName] = React.useState("")
     const [lastName, setLastName] = React.useState("")
     const [nickName, setNickName] = React.useState("")
-    
+
 
     const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
     const SIGN_UP_URL = "http://localhost:8080/signup"
@@ -29,7 +29,7 @@ const SignUp = () => {
 
     React.useEffect(() => {
         // Render the error msg
-        if(errorText !== null) {
+        if (errorText !== null) {
             toast.error("Something went wrong:")
         }
     }, [errorText]);
@@ -45,6 +45,8 @@ const SignUp = () => {
             + password
             + "&firstname="
             + firstName
+            + "&type="
+            + "LOCAL"
             + "&lastname="
             + lastName
             + "&nickname="
@@ -125,11 +127,11 @@ const SignUp = () => {
 
                                 <div className="form-inner">
                                     <form action="#" id="contactform" onSubmit={handleSubmit}>
-                                        <input id="email" name="email" tabIndex="1" aria-required="true" type="email" placeholder="Your Email Address" required value={email} onChange={(event) => {setEmail(event.target.value)}} />
-                                        <input id="firstname" name="firstname" tabIndex="2" aria-required="true" required type="text" placeholder="Your First Name" value={firstName} onChange={(event) => {setFirstName(event.target.value)}} />
-                                        <input id="lastname" name="lastname" tabIndex="3" aria-required="true" required type="text" placeholder="Your Last Name" value={lastName} onChange={(event) => {setLastName(event.target.value)}}/>
-                                        <input id="nickname" name="nickname" tabIndex="4" aria-required="true" required type="text" placeholder="Your Nick Name" value={nickName} onChange={(event) => {setNickName(event.target.value)}} />
-                                        <input id="password" name="password" tabIndex="5" aria-required="true" type="password" placeholder="Set Your Password" required value={password} onChange={(event) => {setPassword(event.target.value)}} />
+                                        <input id="email" name="email" tabIndex="1" aria-required="true" type="email" placeholder="Your Email Address" required value={email} onChange={(event) => { setEmail(event.target.value) }} />
+                                        <input id="firstname" name="firstname" tabIndex="2" aria-required="true" required type="text" placeholder="Your First Name" value={firstName} onChange={(event) => { setFirstName(event.target.value) }} />
+                                        <input id="lastname" name="lastname" tabIndex="3" aria-required="true" required type="text" placeholder="Your Last Name" value={lastName} onChange={(event) => { setLastName(event.target.value) }} />
+                                        <input id="nickname" name="nickname" tabIndex="4" aria-required="true" required type="text" placeholder="Your Nick Name" value={nickName} onChange={(event) => { setNickName(event.target.value) }} />
+                                        <input id="password" name="password" tabIndex="5" aria-required="true" type="password" placeholder="Set Your Password" required value={password} onChange={(event) => { setPassword(event.target.value) }} />
                                         <button className="submit">Sign Up</button>
                                     </form>
                                 </div>

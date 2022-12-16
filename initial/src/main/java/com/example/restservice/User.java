@@ -35,17 +35,17 @@ public class User {
   @NotEmpty
   private String password;
 
-  @Pattern(regexp = "[A-Za-z0-9]+", message = "{invalid.firstname}")
+  @Pattern(regexp = "[A-Za-z0-9 ]+", message = "{invalid.firstname}")
   @NotEmpty
   @Column(unique = false)
   private String firstname;
 
-  @Pattern(regexp = "[A-Za-z0-9]+", message = "{invalid.lastname}")
+  @Pattern(regexp = "[A-Za-z0-9 ]+", message = "{invalid.lastname}")
   @NotEmpty
   @Column(unique = false)
   private String lastname;
 
-  @Pattern(regexp = "[A-Za-z0-9]+", message = "{invalid.nickname}")
+  @Pattern(regexp = "[A-Za-z0-9 ]+", message = "{invalid.nickname}")
   @NotEmpty
   @Column(unique = true)
 	private String nickname;
