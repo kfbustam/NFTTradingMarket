@@ -22,6 +22,7 @@ public class SessionToken {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
+  @Column(name = "token")
   private String token;
 
   @ManyToOne(targetEntity = User.class)
