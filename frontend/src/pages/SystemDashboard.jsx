@@ -17,7 +17,7 @@ const SystemDashboard = () => {
     }, [selectedCurrency, selectedTime])
 
     const fetchStats = () => {
-        alert("in here")
+        // alert("in here")
         let FETCH_API = "https://localhost:8080/stats?currency="+ selectedCurrency + "&time=" + selectedTime;
         let fetchStatsApiDebug = "https://60261217186b4a001777fbd7.mockapi.io/api/ndkshr/stats";
 
