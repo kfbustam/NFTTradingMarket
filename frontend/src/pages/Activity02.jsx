@@ -2,179 +2,46 @@ import React , {useState} from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
-import img1 from '../assets/images/box-item/imgactivity2.jpg'
-import img2 from '../assets/images/box-item/image-box-21.jpg'
-import img3 from '../assets/images/box-item/image-box-6.jpg'
-import img4 from '../assets/images/box-item/card-item-7.jpg'
-import img5 from '../assets/images/box-item/card-item-9.jpg'
-import img6 from '../assets/images/box-item/image-box-11.jpg'
-import img7 from '../assets/images/box-item/card-item-4.jpg'
-import img8 from '../assets/images/box-item/card-item-3.3.jpg'
+
 const Activity02 = () => {
-    const [dataBox] = useState(
-        [
-            {
-                img: img1,
-                title: 'Pinky Ocean',
-                status1: 'following',
-                author: 'Gayle Hicks',
-                time: '19th June, 2021',
-            },
-            {
-                img: img2,
-                title: 'Deep Sea Plan',
-                status1: 'listed by',
-                status2: 'for',
-                price: '0.049 ETH',
-                author: 'Trista Francis',
-                time: '10 minutes ago',
-            },
-            {
-                img: img3,
-                title: 'Rainbow Style',
-                status1: 'following',
-                author: 'Gayle Hicks',
-                time: '19th June, 2021',
-            },
-            {
-                img: img4,
-                title: 'This is Our Story',
-                status1: 'listed by',
-                status2: 'for',
-                price: '0.049 ETH',
-                author: 'Trista Francis',
-                time: '10 minutes ago',
-            },
-            {
-                img: img5,
-                title: 'I Believe I Can Fly',
-                status1: 'following',
-                author: 'Gayle Hicks',
-                time: '19th June, 2021',
-            },
-            {
-                img: img6,
-                title: 'Cute Astronout',
-                status1: 'listed by',
-                status2: 'for',
-                price: '0.049 ETH',
-                author: 'Trista Francis',
-                time: '05 minutes ago',
-            },
-            {
-                img: img7,
-                title: 'USA Wordmation',
-                status1: 'listed by',
-                status2: 'for',
-                price: '0.049 ETH',
-                author: 'Trista Francis',
-                time: '10 minutes ago',
-            },
-            {
-                img: img8,
-                title: 'Running Puppets',
-                status1: 'transferred from',
-                price: '0.049 ETH',
-                author: 'Gayle Hicks',
-                time: '19th June, 2021',
-            },
-            {
-                img: img1,
-                title: 'Pinky Ocean',
-                status1: 'following',
-                author: 'Gayle Hicks',
-                time: '19th June, 2021',
-            },
-            {
-                img: img2,
-                title: 'Deep Sea Plan',
-                status1: 'listed by',
-                status2: 'for',
-                price: '0.049 ETH',
-                author: 'Trista Francis',
-                time: '10 minutes ago',
-            },
-            {
-                img: img3,
-                title: 'Rainbow Style',
-                status1: 'following',
-                author: 'Gayle Hicks',
-                time: '19th June, 2021',
-            },
-            {
-                img: img4,
-                title: 'This is Our Story',
-                status1: 'listed by',
-                status2: 'for',
-                price: '0.049 ETH',
-                author: 'Trista Francis',
-                time: '10 minutes ago',
-            },
-            {
-                img: img5,
-                title: 'I Believe I Can Fly',
-                status1: 'following',
-                author: 'Gayle Hicks',
-                time: '19th June, 2021',
-            },
-            {
-                img: img6,
-                title: 'Cute Astronout',
-                status1: 'listed by',
-                status2: 'for',
-                price: '0.049 ETH',
-                author: 'Trista Francis',
-                time: '05 minutes ago',
-            },
-            {
-                img: img7,
-                title: 'USA Wordmation',
-                status1: 'listed by',
-                status2: 'for',
-                price: '0.049 ETH',
-                author: 'Trista Francis',
-                time: '10 minutes ago',
-            },
-            {
-                img: img8,
-                title: 'Running Puppets',
-                status1: 'transferred from',
-                price: '0.049 ETH',
-                author: 'Gayle Hicks',
-                time: '19th June, 2021',
-            },
-        ]);
+    const [dataBox, setDataBox] = useState([]);
     const [dataFilter] = useState(
         [
             {
-                name: 'Listings',
-                checked: 'checked'
+                name: 'Current Listings',
+                checked: 'checked',
+                type: "current"
             },
             {
-                name: 'Purchases',
-                checked: 'checked'
+                name: 'Past Listings',
+                checked: 'checked',
+                type: "past"
             },
             {
-                name: 'Sales',
-                checked: ''
+                name: 'Ethereum',
+                checked: 'checked',
+                type: "ETHEREUM"
             },
             {
-                name: 'Transfer',
-                checked: ''
-            },
-
-            {
-                name: 'Burns',
-                checked: 'checked'
+                name: 'Bitcoin',
+                checked: 'checked',
+                type: "BITCOIN"
             },
             {
-                name: 'Bids',
-                checked: ''
+                name: 'Last 24 hours',
+                checked: 'checked',
+                type: "24H"
             },
             {
-                name: 'Followings',
-                checked: ''
+                name: 'Last Week',
+                checked: '',
+                type: "1W"
             },
+            {
+                name: 'Last Month',
+                checked: '',
+                type: "1M"
+            }
         ]
     )
 
@@ -236,14 +103,6 @@ const Activity02 = () => {
                         <div className="col-xl-4 col-lg-3 col-md-4 col-12">
 
                             <div id="side-bar" className="side-bar style-2">
-
-                                <div className="widget widget-search mgbt-24">
-                                    <form action="#">
-                                        <input className="style-2" type="text" placeholder="Enter your word art" required />
-                                        <button className="style-2"><i className="icon-fl-search-filled"></i></button>
-                                    </form>
-                                </div>
-
                                 <div className="widget widget-filter style-1 mgbt-0">
                                     <div className="header-widget-filter">
                                         <h3 className="title-widget">Filter</h3>
