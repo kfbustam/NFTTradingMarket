@@ -152,8 +152,7 @@ public class Service {
     }
 
     public ArrayList<NFT> getAllListingsAsNFTs() {
-        ArrayList<NFT> nftsListed = new ArrayList<NFT>();
-        // Collection<Listing> listings = nftRepository.findAllListed();
-        return nftsListed;
+        Collection<NFT> nftsListed = nftRepository.findAllListed();
+        return new ArrayList<>(nftsListed);
     }
 }
