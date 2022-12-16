@@ -13,37 +13,37 @@ const Activity02 = () => {
         [
             {
                 name: 'Current Listings',
-                checked: 'checked',
+                checked: true,
                 type: "current"
             },
             {
                 name: 'Past Listings',
-                checked: 'checked',
+                checked: true,
                 type: "past"
             },
             {
                 name: 'Ethereum',
-                checked: 'checked',
+                checked: true,
                 type: "ETHEREUM"
             },
             {
                 name: 'Bitcoin',
-                checked: 'checked',
+                checked: true,
                 type: "BITCOIN"
             },
             {
                 name: 'Last 24 hours',
-                checked: 'checked',
+                checked: true,
                 type: "24H"
             },
             {
                 name: 'Last Week',
-                checked: '',
+                checked: false,
                 type: "1W"
             },
             {
                 name: 'Last Month',
-                checked: '',
+                checked: false,
                 type: "1M"
             }
         ]
@@ -55,42 +55,46 @@ const Activity02 = () => {
 
     }
 
+    useEffect(() => {
+        console.log("fron useeffect")
+    }, [dataFilter])
+
     const clearAllFilters = () => {
         setDataFilter(
             [
                 {
-                    name: 'Current Listings',
-                    checked: '',
+                    name: 'Current List',
+                    checked: false,
                     type: "current"
                 },
                 {
                     name: 'Past Listings',
-                    checked: '',
+                    checked: false,
                     type: "past"
                 },
                 {
                     name: 'Ethereum',
-                    checked: '',
+                    checked: false,
                     type: "ETHEREUM"
                 },
                 {
                     name: 'Bitcoin',
-                    checked: '',
+                    checked: false,
                     type: "BITCOIN"
                 },
                 {
                     name: 'Last 24 hours',
-                    checked: '',
+                    checked: false,
                     type: "24H"
                 },
                 {
                     name: 'Last Week',
-                    checked: '',
+                    checked: false,
                     type: "1W"
                 },
                 {
                     name: 'Last Month',
-                    checked: '',
+                    checked: false,
                     type: "1M"
                 }
             ]
@@ -195,7 +199,7 @@ const Activity02 = () => {
                                                 <div key={index}>
                                                 <label >
                                                     {item.name}
-                                                    <input type="checkbox" defaultChecked={item.checked.length !== 0} />
+                                                    <input type="checkbox" defaultChecked={item.checked} />
                                                     <span className="btn-checkbox"></span>
                                                 </label><br/>
                                                 </div>

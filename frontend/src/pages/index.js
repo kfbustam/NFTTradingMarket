@@ -24,6 +24,7 @@ import Contact01 from "./Contact01";
 import Contact02 from "./Contact02";
 import Deposits from "./Deposits";
 import Withdrawal from "./Withdrawal";
+import SystemDashboard from "./SystemDashboard";
 
 
 const routes = [
@@ -53,7 +54,8 @@ const routes = [
   { path: '/contact-01', component: <Contact01 />},
   { path: '/contact-02', component: <Contact02 />},
   { path: '/deposits', component: <Deposits />},
-  { path: '/withdrawal', component: <Withdrawal />}
+  { path: '/withdrawal', component: <Withdrawal />},
+  { path: '/stats', component: <SystemDashboard />}
 ]
 
 export default routes;
