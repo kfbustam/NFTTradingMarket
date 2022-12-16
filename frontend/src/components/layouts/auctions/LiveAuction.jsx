@@ -1,4 +1,4 @@
-import React , { useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
@@ -8,28 +8,28 @@ import Countdown from "react-countdown";
 const LiveAuction = props => {
     const data = props.data;
 
-    const [visible , setVisible] = useState(8);
+    const [visible, setVisible] = useState(8);
     const showMoreItems = () => {
         setVisible((prevValue) => prevValue + 4);
     }
 
     return (
-        
+
         <section className="tf-section live-auctions">
             <div className="themesflat-container">
                 <div className="row">
                     <div className="col-md-12">
                         <h2 className="tf-title-heading style-1 ct">Live Auctions</h2>
                     </div>
-                    
+
                     {
-                        data.slice(0,visible).map((item,index) => (
+                        data.slice(0, visible).map((item, index) => (
                             <LiveAuctionItem key={index} item={item} />
                         ))
                     }
                     {
-                        visible < data.length && 
-                        <div className="col-md-12 wrap-inner load-more text-center"> 
+                        visible < data.length &&
+                        <div className="col-md-12 wrap-inner load-more text-center">
                             <Link to="#" id="load-more" className="sc-button loadmore fl-button pri-3" onClick={showMoreItems}><span>Load More</span></Link>
                         </div>
                     }
@@ -81,8 +81,8 @@ const LiveAuctionItem = props => (
             </div>
         </div>
     </div>
-    
-    
+
+
 )
 
 export default LiveAuction;

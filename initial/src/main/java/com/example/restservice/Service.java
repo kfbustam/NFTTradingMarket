@@ -3,6 +3,9 @@ package com.example.restservice;
 import com.example.restservice.crypto.CryptoType;
 import com.example.restservice.nft.NFT;
 import com.example.restservice.nft.NFTRepository;
+import com.example.restservice.nft.NftTransaction;
+import com.example.restservice.nft.NftTransactionRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +15,10 @@ import java.util.*;
 @org.springframework.stereotype.Service
 @Transactional
 public class Service {
+
+    @Autowired
+    private NftTransactionRepository nftTransactionRepository;
+
     @Autowired
     private OfferRepository offerRepository;
 
@@ -159,8 +166,13 @@ public class Service {
         walletRepository.saveAndFlush(wallet);
     }
 
+    public void deleteAllOffersByAuthorOnNft(User user,NFT nft) {
+        offerRepository.deleteAllByAuthorOnNft(user.getID(), nft.getId());
+    }
+
     public void createOffer(User user, Double price, NFT nft) {
         Offer offer = new Offer(user, price, nft);
+        this.deleteAllOffersByAuthorOnNft(user, nft);
         offerRepository.saveAndFlush(offer);
     }
 
@@ -171,5 +183,15 @@ public class Service {
 
     public ArrayList<Offer> getOfferHistory(String nft_id) {
         return new ArrayList<Offer>(offerRepository.findAllNFTOffers(nft_id));
+    }
+
+    public Double getMinimumOfferPrice(String nft_id) {
+        Double maxOfferPrice = (offerRepository.findMinimumOfferPrice(nft_id));
+        return maxOfferPrice;
+    }
+
+    public void createNftTrancsaction(User buyer, User seller, NFT nft, CryptoType type, Date date, BigDecimal amount, BigDecimal postPurchaseBalance) {
+        NftTransaction newNftTransaction  = new NftTransaction(buyer,seller,nft,type,date,amount,postPurchaseBalance);
+        nftTransactionRepository.saveAndFlush(newNftTransaction);
     }
 }

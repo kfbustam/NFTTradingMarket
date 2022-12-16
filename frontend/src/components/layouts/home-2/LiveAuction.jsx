@@ -1,8 +1,8 @@
-import React , { useState , Fragment } from 'react';
+import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Scrollbar, A11y , Autoplay } from 'swiper';
+import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper';
 import Countdown from "react-countdown";
 import CardModal from '../CardModal';
 
@@ -29,17 +29,17 @@ const LiveAuction = props => {
                         </div>
                         <div className="col-md-12">
                             <Swiper
-                                modules={[Navigation, Pagination, Scrollbar, A11y ,Autoplay]}
+                                modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
                                 spaceBetween={30}
                                 breakpoints={{
                                     0: {
                                         slidesPerView: 1,
                                     },
                                     767: {
-                                    slidesPerView: 2,
+                                        slidesPerView: 2,
                                     },
                                     991: {
-                                    slidesPerView: 3,
+                                        slidesPerView: 3,
                                     },
                                     1300: {
                                         slidesPerView: 4,
@@ -49,21 +49,21 @@ const LiveAuction = props => {
                                 pagination={{ clickable: true }}
                                 scrollbar={{ draggable: true }}
                             >
-                                    {
-                                        data.slice(0,7).map((item,index) => (
-                                            <SwiperSlide key={index}>
-                                                <div className="swiper-container show-shadow carousel auctions">
-                                                    <div className="swiper-wrapper">
-                                                        <div className="swiper-slide">
-                                                            <div className="slider-item">
+                                {
+                                    data.slice(0, 7).map((item, index) => (
+                                        <SwiperSlide key={index}>
+                                            <div className="swiper-container show-shadow carousel auctions">
+                                                <div className="swiper-wrapper">
+                                                    <div className="swiper-slide">
+                                                        <div className="slider-item">
                                                             <div className="sc-card-product explode style2">
                                                                 <div className="card-media">
                                                                     <Link to="/item-details-01"><img src={item.img} alt="axies" /></Link>
                                                                     <div className="featured-countdown">
                                                                         <span className="slogan"></span>
                                                                         <Countdown date={Date.now() + 500000000}>
-                                                                                <span>You are good to go!</span>
-                                                                            </Countdown>
+                                                                            <span>You are good to go!</span>
+                                                                        </Countdown>
                                                                     </div>
                                                                     <div className="button-place-bid">
                                                                         <button onClick={() => setModalShow(true)} className="sc-button style-place-bid style bag fl-button pri-3"><span>Place Bid</span></button>
@@ -94,14 +94,14 @@ const LiveAuction = props => {
                                                                     </div>
                                                                     <Link to="/login" className="wishlist-button public heart"><span className="number-like">{item.wishlist}</span></Link>
                                                                 </div>
-                                                            </div>										    	
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </SwiperSlide>
-                                        ))
-                                    }
+                                            </div>
+                                        </SwiperSlide>
+                                    ))
+                                }
                             </Swiper>
                         </div>
                     </div>
@@ -112,7 +112,7 @@ const LiveAuction = props => {
                 onHide={() => setModalShow(false)}
             />
         </Fragment>
-        
+
     );
 }
 

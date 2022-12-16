@@ -55,6 +55,10 @@ public class Listing {
 		return this.listingPrice;
 	}
 
+	public Date getExpirationTime() {
+		return this.expirationTime;
+	}
+
 	public NFT getNFT() {
 		return this.nft;
 	}

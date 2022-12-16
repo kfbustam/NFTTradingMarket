@@ -3,16 +3,82 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import CardModal from '../CardModal';
 import { ToastContainer, toast } from 'react-toastify';
+import img1 from '../../../assets/images/avatar/avt-3.jpg'
 
 import { Link, useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 
 const IMAGE_BASE_URL = "http://localhost:8080/images?image_name="
+const BUY_NOW_URL = "http://localhost:8080/nft/buy"
+const PLACE_BID_URL = "http://localhost:8080/nft/auction/offer"
 
-
-const TodayPicks = ({ dataPanel, setSuccessfulToastMessage, setErrorToastMessage }) => {
+const TodayPicks = ({ dataPanel }) => {
     const token = "test123";
+    const [itemShown, setItemShown] = useState();
+    const [modalShow, setModalShow] = useState(false);
+    const [successfulToastMessage, setSuccessfulToastMessage] = useState();
+    const [errorToastMessage, setErrorToastMessage] = useState();
+    const [currencyAmount, setCurrencyAmount] = useState(0);
 
+    const buyItem = (nftID, sellerID) => {
+        fetch(BUY_NOW_URL + "?token=" + token + "&nftID=" + nftID + "&sellerID=" + sellerID, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw response
+            })
+            .then(data => {
+            })
+            .catch(error => {
+                setSuccessfulToastMessage(null);
+                setErrorToastMessage("Not enough balance.");
+                console.error(error)
+            }).finally(() => {
+                setModalShow(false);
+                setItemShown(null);
+                setErrorToastMessage(null);
+                setSuccessfulToastMessage("Purchase Successful.");
+            });
+
+    }
+
+    const placeBid = (nftID) => {
+        fetch(PLACE_BID_URL + "?token=" + token + "&nftID=" + nftID + "&offerPrice=" + currencyAmount, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json()
+                }
+                throw response
+            })
+            .then(data => {
+            })
+            .catch(error => {
+                setSuccessfulToastMessage(null);
+                setErrorToastMessage("Not enough balance.");
+                console.error(error)
+            }).finally(() => {
+                setModalShow(false); setItemShown(null);
+                setErrorToastMessage(null);
+                setSuccessfulToastMessage("Offer Successfully Sent.")
+            });
+
+
+        //navigate("/wallet-connect");
+
+    }
 
     useEffect(() => {
         // fetch(LISTINGS_URL + "?token=" + token, {
@@ -44,8 +110,14 @@ const TodayPicks = ({ dataPanel, setSuccessfulToastMessage, setErrorToastMessage
 
     let navigate = useNavigate();
 
-    const [itemShown, setItemShown] = useState();
-    const [modalShow, setModalShow] = useState(false);
+
+    useEffect(() => {
+        if (successfulToastMessage != null) {
+            toast.success(successfulToastMessage)
+        } else if (errorToastMessage != null) {
+            toast.error(errorToastMessage);
+        }
+    }, [modalShow, errorToastMessage, successfulToastMessage]);
 
     return (
         <Fragment>
@@ -79,13 +151,13 @@ const TodayPicks = ({ dataPanel, setSuccessfulToastMessage, setErrorToastMessage
                             <div className="flat-tabs explore-tab">
                                 <Tabs >
                                     {/* Tab names list */}
-                                    {/* <TabList>
+                                    <TabList>
                                         {
-                                            dataTab.map(data=> (
-                                                <Tab key={data.id} >{data.title}</Tab>
+                                            (dataPanel).map(data => (
+                                                <Tab key={data.id}>Tab {data.id}</Tab>
                                             ))
                                         }
-                                    </TabList> */}
+                                    </TabList>
                                     {
                                         dataPanel.map(data => (
                                             <TabPanel key={data.id}>
@@ -94,28 +166,28 @@ const TodayPicks = ({ dataPanel, setSuccessfulToastMessage, setErrorToastMessage
                                                     data.dataContent.slice(0, visible).map(item => (
                                                         <div key={item.id} className={`sc-card-product explode style2 mg-bt ${item.nftType} `}>
                                                             <div className="card-media">
-                                                                <Link to="/item-details-01"><img src={IMAGE_BASE_URL + item.imageURL} alt="Axies" state={{ item }} /></Link>
+                                                                <Link to="/item-details-01" state={{ item: item }}><img src={IMAGE_BASE_URL + item.imageURL} alt="Axies" state={{ item }} /></Link>
                                                                 <div className="button-place-bid">
                                                                     <button onClick={() => { setModalShow(true); setItemShown(item); }} className="sc-button style-place-bid style bag fl-button pri-3"><span>Purchase</span></button>
                                                                 </div>
-                                                                <Link to="/login" className="wishlist-button heart"><span className="number-like"></span></Link>
-                                                                <div className="coming-soon">{item.nftType}</div>
+                                                                {/* <Link to="/login" className="wishlist-button heart"><span className="number-like"></span></Link>
+                                                                <div className="coming-soon">{item.nftType}</div> */}
                                                             </div>
                                                             <div className="card-title">
-                                                                <h5><Link to="/item-details-01" state={{ item }}>"{item.name}"</Link></h5>
+                                                                <h5><Link to="/item-details-01" state={{ item: item }}>"{item.name}"</Link></h5>
 
                                                             </div>
                                                             <div className="meta-info">
                                                                 <div className="author">
                                                                     <div className="avatar">
-                                                                        <img src={item.imgAuthor} alt="Axies" />
+                                                                        <img src={item.imgAuthor ?? img1} alt="Axies" />
                                                                     </div>
                                                                     <div className="info">
                                                                         <span>Creator</span>
-                                                                        <h6> <Link to="/authors-02">{item.nameAuthor}</Link> </h6>
+                                                                        <h6> <Link to="/authors-02">{item.seller.name}</Link> </h6>
                                                                     </div>
                                                                 </div>
-                                                                <div className="tags">{item.tags}</div>
+                                                                <div className="tags">{item.tags ?? ["BTC"]}</div>
                                                             </div>
                                                             <div className="card-bottom style-explode">
                                                                 <div className="price">
@@ -164,6 +236,9 @@ const TodayPicks = ({ dataPanel, setSuccessfulToastMessage, setErrorToastMessage
                 </div>
             </div>
             <CardModal
+                placeBid={placeBid}
+                buyItem={buyItem}
+                setCurrencyAmount={setCurrencyAmount}
                 setSuccessfulToastMessage={setSuccessfulToastMessage}
                 setErrorToastMessage={setErrorToastMessage}
                 item={itemShown}

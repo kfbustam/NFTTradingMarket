@@ -5,7 +5,6 @@ import Footer from '../components/footer/Footer';
 import TodayPicks from '../components/layouts/explore-02/TodayPicks'
 import todayPickData from '../assets/fake-data/data-today-pick';
 import PathBanner from '../components/header/PathBanner';
-import img1 from '../alice_video.png'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,17 +13,7 @@ const LISTINGS_URL = "http://localhost:8080/listings"
 
 const Browse = () => {
     const [assetCollection, setAssetCollection] = React.useState([]);
-    const [dataPanel, setDataPanel] = useState([{ id: 1, dataContent: [] }]);
-    const [successfulToastMessage, setSuccessfulToastMessage] = useState();
-    const [errorToastMessage, setErrorToastMessage] = useState();
-
-    useEffect(() => {
-        toast.error(successfulToastMessage)
-    }, [successfulToastMessage]);
-
-    useEffect(() => {
-        toast.error(errorToastMessage)
-    }, [errorToastMessage]);
+    const [dataPanel, setDataPanel] = useState();
 
     useEffect(() => {
         fetch(
@@ -56,7 +45,7 @@ const Browse = () => {
         <div className='explore'>
             <Header />
             <PathBanner heading="Marketplace" />
-            <TodayPicks dataPanel={dataPanel} setSuccessfulToastMessage={setSuccessfulToastMessage} setErrorToastMessage={setErrorToastMessage} />
+            {dataPanel != null && <TodayPicks dataPanel={dataPanel} />}
             <Footer />
         </div>
     );

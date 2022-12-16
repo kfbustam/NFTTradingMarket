@@ -24,7 +24,12 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -679,8 +684,9 @@ public class NFTTradingMarketRESTController {
 
 			service.deleteListingForNFT(nft);
 
-					// TODO: Make sure to uncomment (running into key constraint on listing_id)
-			// service.moveNFT(buyerWallet, nft);
+			service.createNftTrancsaction(buyer, seller, nft, nft.getNftType(),new Date(), BigDecimal.valueOf(nft.getPrice()),BigDecimal.valueOf(balance.longValue()-BigDecimal.valueOf(nft.getPrice()).longValue()));
+
+			service.moveNFT(buyerWallet, nft);
 
 			JSONObject json = new JSONObject()
 						.put("nftID", nft.getId())
@@ -702,12 +708,53 @@ public class NFTTradingMarketRESTController {
 		}
 	}
 
+	@PostMapping("/nft/auction/offer/cancel")
+	@ResponseBody
+	public ResponseEntity<String> buyNFT(
+		@RequestParam(name="token", required=true) String token,
+		@RequestParam(name = "nftID", required = true) @NotEmpty String nftID
+	) {
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		try {
+
+			Optional<SessionToken> optionalSession = service.getSessionByToken(token);
+
+			if (optionalSession.isEmpty()) {
+				optionalSession = service.getSessionByToken(token);
+			}
+
+			if (optionalSession.isEmpty()) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Token expired. Please login again.\"}}", HttpStatus.BAD_REQUEST);
+			}
+			NFT nft = nftService.getNFT(nftID).orElseThrow();
+
+			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
+
+			service.deleteAllOffersByAuthorOnNft(buyer, nft);
+
+			ResponseEntity<String> res = new ResponseEntity<String>(
+				"Successfully deleted",
+					responseHeaders,
+					200
+			);
+
+			return res;
+		} catch (Exception ex) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			System.out.println(sw.toString());
+			return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 500 \",\"msg\": " + ex.getMessage() + "}}", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
 	@PostMapping("/nft/auction/offer")
 	@ResponseBody
 	public ResponseEntity<String> auctionOfferNFT(
 		@RequestParam(name="token", required=true) String token,
-		@RequestParam(name = "offerPrice", required = true) @NotEmpty Double offerPrice,
-		@RequestParam(name = "nftID", required = true) @NotEmpty String nftID
+		@RequestParam(name = "offerPrice", required = true) Double offerPrice,
+		@RequestParam(name = "nftID", required = true) String nftID
 	) {
 
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -722,7 +769,19 @@ public class NFTTradingMarketRESTController {
 
 			User buyer = service.getSessionByToken(token).orElseThrow().getUser();
 			NFT nft = nftService.getNFT(nftID).orElseThrow();
+
+			if ((new Date()).compareTo(nft.getListing().getExpirationTime()) > 0) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"This auction is done\"}}", HttpStatus.BAD_REQUEST);
+			}
 			
+			Double minimumPrice = service.getMinimumOfferPrice(nftID);
+				if (minimumPrice == null) {
+					minimumPrice = 0.0;
+				}
+			if (offerPrice <= minimumPrice) {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"You must offer a price higher than: "+minimumPrice.toString()+"\"}}", HttpStatus.BAD_REQUEST);
+			}
+
 			Wallet buyerWallet;
 			if (nft.getNftType() == CryptoType.BITCOIN) {			
 				buyerWallet = service.findUsersWalletByType(buyer, CryptoType.BITCOIN);
@@ -787,8 +846,10 @@ public class NFTTradingMarketRESTController {
 				json.add(
 					new JSONObject()
 						.put("price", offer.getOfferPrice())
+						.put("time", offer.getCreatedDate())
 						.put("user", 
 									new JSONObject()
+									.put("id", userThatMadeOffer.getID())
 									.put("firstName", userThatMadeOffer.getFirstName())
 									.put("lastName", userThatMadeOffer.getLastName())
 									.put("nickName", userThatMadeOffer.getNickName())
@@ -824,16 +885,24 @@ public class NFTTradingMarketRESTController {
 
 			ArrayList<JSONObject> json = new ArrayList<>();
 			listings.forEach(listing -> {
+				Double minimumPrice = service.getMinimumOfferPrice(listing.getId());
 				json.add(
 						new JSONObject()
 								.put("nftId", listing.getId())
+								.put("minimumPrice", minimumPrice)
+								.put("expirationTime", listing.getListing().getExpirationTime())
+								.put("price", listing.getPrice())
 								.put("description", listing.getDescription())
 								.put("assetURL", listing.getAssetUrl())
 								.put("imageURL", listing.getImageUrl())
 								.put("name", listing.getName())
 								.put("nftType", listing.getNftType())
 								.put("saleType", listing.getListing().getType())
-								.put("sellerId", listing.getListing().getSeller().getID())
+								.put("seller", 
+									new JSONObject()
+									.put("name", listing.getListing().getSeller().getNickName())
+											.put("id", listing.getListing().getSeller().getID())
+								)
 								.put("lastRecordedTime", listing.getLastRecordedTime())
 								.put("smartContractAddress", listing.getSmartContractAddress())
 				);

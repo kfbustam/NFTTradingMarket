@@ -8,7 +8,6 @@ import LiveAuction from '../components/layouts/home-3/LiveAuction';
 import TopSeller from '../components/layouts/home-3/TopSeller';
 import Slider from '../components/slider/Slider';
 import topSellerData from '../assets/fake-data/data-top-seller';
-import TodayPicks from '../components/layouts/home-3/TodayPicks';
 import todayPickData from '../assets/fake-data/data-today-pick';
 import PopularCollection from '../components/layouts/home-3/PopularCollection';
 import popularCollectionData from '../assets/fake-data/data-popular-collection';

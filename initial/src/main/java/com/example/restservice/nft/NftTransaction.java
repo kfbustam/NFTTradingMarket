@@ -45,6 +45,18 @@ public class NftTransaction {
     @Column(name="post_balance", columnDefinition="Decimal(10,2) default '0.00'")
     private BigDecimal postPurchaseBalance;
 
+    public NftTransaction(){}
+
+    public NftTransaction(User buyer, User seller, NFT nft, CryptoType type, Date date, BigDecimal amount, BigDecimal postPurchaseBalance) {
+        this.buyer = buyer;
+        this.seller = seller;
+        this.nft = nft;
+        this.type = type;
+        this.date=date;
+        this.amount = amount;
+        this.postPurchaseBalance = postPurchaseBalance;
+    }
+
     public Long getId() {
         return id;
     }

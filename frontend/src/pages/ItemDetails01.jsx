@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom'
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
@@ -16,29 +16,26 @@ import img5 from '../assets/images/avatar/avt-7.jpg'
 import img6 from '../assets/images/avatar/avt-8.jpg'
 import img7 from '../assets/images/avatar/avt-2.jpg'
 import imgdetail1 from '../assets/images/box-item/images-item-details.jpg'
+import CardModal from '../components/layouts/CardModal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const BUY_NFT_URL = "http://localhost:8080/nft/buy";
-const PLACE_BID_URL = "http://localhost:8080/nft/auction/offer";
+const BID_HISTORY_URL = "http://localhost:8080/nft/auction/offers"
+const IMAGE_BASE_URL = "http://localhost:8080/images?image_name="
+const BUY_NOW_URL = "http://localhost:8080/nft/buy"
+const PLACE_BID_URL = "http://localhost:8080/nft/auction/offer"
+const CANCEL_BID_URL = "http://localhost:8080/nft/auction/offer/cancel"
 
 const ItemDetails01 = () => {
     const token = "test123";
     const location = useLocation()
-    const { item } = location.state
-    const {
-        id,
-        img,
-        title,
-        tags,
-        imgAuthor,
-        nameAuthor,
-        price,
-        priceChange,
-        wishlist,
-        imgCollection,
-        nameCollection,
-        saleType
-    } = item;
-    const [dataHistory] = useState(
+    const [item] = useState(location.state != null ? location.state.item : null);
+    const [successfulToastMessage, setSuccessfulToastMessage] = useState();
+    const [errorToastMessage, setErrorToastMessage] = useState();
+    const [currencyAmount, setCurrencyAmount] = useState(0);
+    const [itemShown, setItemShown] = useState(item);
+    const [modalShow, setModalShow] = useState(false);
+    const [dataHistory, setDataHistory] = useState(
         [
             {
                 img: img1,
@@ -85,72 +82,134 @@ const ItemDetails01 = () => {
         ]
     )
 
-    const placeBid = (item) => {
-        console.alert("Not enough currency");
-        // fetch(PLACE_BID_URL + "?token=" + token + "&offerPrice=" + price + "&nftID=" + id, {
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json'
-        //     },
-        //     method: "POST"
-        // })
-        //     .then(response => {
-        //         if (response.ok) {
-        //             return response.json()
-        //         }
-        //         throw response
-        //     })
-        //     .then(data => {
-        //     })
-        //     .catch(error => {
-        //         console.error(error)
-        //     }).finally(() => {
-        //     });
-    };
+    const cancelBid = (nftID) => {
+        fetch(CANCEL_BID_URL + "?token=" + token + "&nftID=" + nftID, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    toast.success("Canceled Bid")
+                    return response.json()
+                }
+                throw response
+            })
+            .then(data => {
+            })
+            .catch(error => {
+                toast.error("Something went wrong")
+                console.error(error)
+            }).finally(() => {
+                setModalShow(false)
+            });
+    }
 
-    const buyItem = (item) => {
-        if (item.id === 1) {
-            console.alert("Bought");
-        } else {
-            console.alert("Not enough currency");
+    const buyItem = (nftID, sellerID) => {
+        fetch(BUY_NOW_URL + "?token=" + token + "&nftID=" + nftID + "&sellerID=" + sellerID, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    toast.success("Item successfully bought!")
+                    return response.json()
+                }
+                throw response
+            })
+            .then(data => {
+            })
+            .catch(error => {
+                toast.error("Something went wrong!")
+                console.error(error)
+            }).finally(() => {
+                setModalShow(false)
+            });
+
+    }
+
+    const placeBid = (nftID) => {
+        fetch(PLACE_BID_URL + "?token=" + token + "&nftID=" + nftID + "&offerPrice=" + currencyAmount, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "POST"
+        })
+            .then(response => {
+                if (response.ok) {
+                    toast.success("Offer Successfully Placed!")
+                    return response.json()
+                }
+                throw response
+            })
+            .then(data => {
+            })
+            .catch(error => {
+                toast.error("Something went wrong!")
+                console.error(error)
+            }).finally(() => {
+                setModalShow(false)
+            });
+
+
+        //navigate("/wallet-connect");
+
+    }
+
+    useEffect(
+        () => {
+            if (item && item.nftId) {
+                console.log("Fetching History...");
+                fetch(BID_HISTORY_URL + "?token=" + token + "&nftID=" + item.nftId, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: "GET"
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log("History Fetched Successfully!");
+                            return response.json()
+                        }
+                        throw response
+                    })
+                    .then(data => {
+                        console.log(data);
+                        setDataHistory(data)
+                    })
+                    .catch(error => {
+                        console.error(error)
+                    }).finally(() => {
+                    });
+            }
         }
+        , [item, item.nftId]
+    )
 
-        // fetch(BUY_NFT_URL + "?token=" + token + "&sellerID=" + item.sellerID + "&nftID=" + item.nftID, {
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json'
-        //     },
-        //     method: "POST"
-        // })
-        //     .then(response => {
-        //         if (response.ok) {
-        //             return response.json()
-        //         }
-        //         throw response
-        //     })
-        //     .then(data => {
-        //     })
-        //     .catch(error => {
-        //         console.error(error)
-        //     }).finally(() => {
-        //     });
-    };
     return (
         <div className='item-details'>
             <Header />
+            <ToastContainer theme="dark" position="top-center" />
             <section className="flat-title-page inner">
                 <div className="overlay"></div>
                 <div className="themesflat-container">
                     <div className="row">
                         <div className="col-md-12">
                             <div className="page-title-heading mg-bt-12">
-                                <h1 className="heading text-center">Item Details 1</h1>
+                                <h1 className="heading text-center">Item Details</h1>
                             </div>
                             <div className="breadcrumbs style2">
                                 <ul>
                                     <li><Link to="/">Home</Link></li>
                                     <li><Link to="#">Explore</Link></li>
-                                    <li>Item Details 1</li>
+                                    <li>Item Details</li>
                                 </ul>
                             </div>
                         </div>
@@ -163,14 +222,14 @@ const ItemDetails01 = () => {
                         <div className="col-xl-6 col-md-12">
                             <div className="content-left">
                                 <div className="media">
-                                    <img src={imgdetail1} alt="Axies" />
+                                    <img src={IMAGE_BASE_URL + item.imageURL ?? imgdetail1} alt="Axies" />
                                 </div>
                             </div>
                         </div>
                         <div className="col-xl-6 col-md-12">
                             <div className="content-right">
                                 <div className="sc-item-details">
-                                    <h2 className="style2">“The Fantasy Flower illustration ” </h2>
+                                    <h2 className="style2">{item.name ?? "The Fantasy Flower illustration"}</h2>
                                     <div className="meta-item">
                                         <div className="left">
                                             <span className="viewed eye">225</span>
@@ -205,6 +264,7 @@ const ItemDetails01 = () => {
                                             </div>
                                         </div>
                                     </div>
+                                    <p>Smart Contract Address: {item.smartContractAddress}</p>
                                     <p>Habitant sollicitudin faucibus cursus lectus pulvinar dolor non ultrices eget.
                                         Facilisi lobortisal morbi fringilla urna amet sed ipsum vitae ipsum malesuada.
                                         Habitant sollicitudin faucibus cursus lectus pulvinar dolor non ultrices eget.
@@ -214,25 +274,29 @@ const ItemDetails01 = () => {
                                             <span className="heading">Current Bid/Price</span>
                                             <div className="price">
                                                 <div className="price-box">
-                                                    <h5> 4.89 ETH</h5>
-                                                    <span>= $12.246</span>
+                                                    <h5>{(parseFloat(item.price) > parseFloat(item.minimumPrice ?? 0) ? item.price : item.minimumPrice)} {item.nftType}</h5>
+                                                    {/* <span>= $12.246</span> */}
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="item count-down">
                                             <span className="heading style-2">Countdown</span>
-                                            <Countdown date={Date.now() + 500000000}>
+                                            <Countdown date={item.expirationTime ?? (Date.now() + 500000000)}>
                                                 <span>You are good to go!</span>
                                             </Countdown>
                                         </div>
                                     </div>
                                     {
-                                        (item.saleType === "all" || item.saleType === "auction") &&
-                                        <Link onClick={placeBid(item)} className="sc-button loadmore style bag fl-button pri-3"><span>1Place a bid</span></Link>
+                                        (item.saleType === "BOTH" || item.saleType === "AUCTION") &&
+                                        <Link onClick={() => { setModalShow(true); }} className="sc-button loadmore style bag fl-button pri-3"><span>Place a bid</span></Link>
                                     }
                                     {
-                                        (item.saleType === "all" || item.saleType === "immediate") &&
-                                        <Link onClick={buyItem(item)} className="sc-button loadmore style bag fl-button pri-3"><span>Buy this now</span></Link>
+                                        (item.saleType === "BOTH" || item.saleType === "AUCTION") &&
+                                        <Link onClick={() => cancelBid(item.nftId)} className="sc-button loadmore style bag fl-button pri-3"><span>Cancel bid</span></Link>
+                                    }
+                                    {
+                                        (item.saleType === "BOTH" || item.saleType === "IMMEDIATE") &&
+                                        <Link onClick={() => { setModalShow(true); }} className="sc-button loadmore style bag fl-button pri-3"><span>Buy this now</span></Link>
                                     }
                                     <div className="flat-tabs themesflat-tabs">
                                         <Tabs>
@@ -245,28 +309,27 @@ const ItemDetails01 = () => {
                                             <TabPanel>
                                                 <ul className="bid-history-list">
                                                     {
-                                                        dataHistory.map((item, index) => (
-                                                            <li key={index} item={item}>
+                                                        dataHistory.map((dataItem, index) => (
+                                                            <li key={index} item={dataItem}>
                                                                 <div className="content">
                                                                     <div className="client">
                                                                         <div className="sc-author-box style-2">
                                                                             <div className="author-avatar">
                                                                                 <Link to="#">
-                                                                                    <img src={item.img} alt="Axies" className="avatar" />
+                                                                                    <img src={img1} alt="Axies" className="avatar" />
                                                                                 </Link>
                                                                                 <div className="badge"></div>
                                                                             </div>
                                                                             <div className="author-infor">
                                                                                 <div className="name">
-                                                                                    <h6><Link to="/author-02">{item.name} </Link></h6> <span> place a bid</span>
+                                                                                    <h6><Link to="/author-02">{item.seller.name ?? "someone"} </Link></h6> <span> placed a bid</span>
                                                                                 </div>
-                                                                                <span className="time">{item.time}</span>
+                                                                                <span className="time">{dataItem.time}</span>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div className="price">
-                                                                        <h5>{item.price}</h5>
-                                                                        <span>= {item.priceChange}</span>
+                                                                        <h5>{dataItem.price} {item.nftType}</h5>
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -299,6 +362,7 @@ const ItemDetails01 = () => {
                                                 </ul>
                                             </TabPanel>
                                             <TabPanel>
+
                                                 <div className="provenance">
                                                     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                                                         Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
@@ -316,6 +380,16 @@ const ItemDetails01 = () => {
                     </div>
                 </div>
             </div>
+            <CardModal
+                placeBid={placeBid}
+                buyItem={buyItem}
+                setCurrencyAmount={setCurrencyAmount}
+                setSuccessfulToastMessage={setSuccessfulToastMessage}
+                setErrorToastMessage={setErrorToastMessage}
+                item={itemShown}
+                show={modalShow}
+                onHide={() => { setModalShow(false); }}
+            />
             <LiveAuction data={liveAuctionData} />
             <Footer />
         </div>

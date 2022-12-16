@@ -3,6 +3,8 @@ package com.example.restservice;
 import com.example.restservice.Wallet;
 import com.example.restservice.crypto.CryptoType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import com.example.restservice.nft.NFT;
 
@@ -24,6 +26,9 @@ public class Offer {
 	@JoinColumn(name = "user_id")
 	@JsonIgnore
 	private User user;
+
+	@CreationTimestamp
+	private Date createdDate;
 
 	private Double offerPrice;
 
@@ -47,5 +52,9 @@ public class Offer {
 
 	public User getUser() {
 		return this.user;
+	}
+
+	public Date getCreatedDate() {
+		return this.createdDate;
 	}
 }
