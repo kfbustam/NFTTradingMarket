@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 @org.springframework.stereotype.Service
 @Transactional
@@ -90,6 +87,15 @@ public class Service {
     public void createVerificationToken(User user, String token) {
         VerificationToken myToken = new VerificationToken(token, user);
         verificationTokenRepository.save(myToken);
+    }
+
+    public SessionToken createSessionToken(User user, String token) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, 7); //minus number would decrement the days
+        SessionToken sessionToken = new SessionToken(user, token, cal.getTime());
+        sessionRepository.save(sessionToken);
+        return sessionToken;
     }
 
     public Optional<Wallet> getUserWallet(Wallet wallet) {

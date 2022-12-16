@@ -24,7 +24,6 @@ const Login = ({ fromSignUp = false }) => {
         // onSuccess -> Go to Sign in page
         if (profileData !== null) {
             localStorage.setItem("profileData", profileData)
-            localStorage.setItem("token", "test123")
             window.sessionStorage.setItem("profileData", profileData);
             toast.success("Login Successful!")
             navigate("/wallet-connect");
@@ -79,6 +78,7 @@ const Login = ({ fromSignUp = false }) => {
             })
             .then(data => {
                 setProfileData(data)
+                localStorage.setItem("token", data.token)
             })
             .catch(error => {
                 console.error(error)
@@ -109,7 +109,10 @@ const Login = ({ fromSignUp = false }) => {
             + "&lastname="
             + response.profileObj.familyName
             + "&nickname="
-            + response.profileObj.name,
+            + response.profileObj.name
+            + "&token="
+            + response.googleId //use google id as token for safety as access tokens have higher refresh rate
+            ,
             {
                 headers: {
                     'Accept': 'application/json',
@@ -120,6 +123,8 @@ const Login = ({ fromSignUp = false }) => {
             })
             .then(response => {
                 if (response.ok) {
+                    localStorage.setItem("token", response.googleId)
+
                     return response.json()
                 }
                 throw response

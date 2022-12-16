@@ -101,8 +101,11 @@ public class NFTTradingMarketRESTController {
                 return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"User is not yet verified. Please check your email for the verification link.\"}}", HttpStatus.BAD_REQUEST);
             }
 
+			SessionToken sessionToken = service.createSessionToken(userFound, UUID.randomUUID().toString());
+
             JSONObject json = new JSONObject()
-                    .put("email", userFound.getEmail());
+                    .put("email", userFound.getEmail())
+					.put("token", sessionToken.getToken());
 
             ResponseEntity<String> res = new ResponseEntity<String>(
                     json.toString(),
@@ -139,7 +142,9 @@ public class NFTTradingMarketRESTController {
             @RequestParam(name = "firstname", required = true) String firstname,
             @RequestParam(name = "lastname", required = true) String lastname,
             @RequestParam(name = "nickname", required = true) String nickname,
-			@RequestParam(name = "type", required = true) NftUserType type
+			@RequestParam(name = "type", required = true) NftUserType type,
+			@RequestParam(name = "social_token", required = false) String socialToken
+
 
 	) {
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -151,13 +156,13 @@ public class NFTTradingMarketRESTController {
                 return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Another user with the same email already exists.\"}}", HttpStatus.BAD_REQUEST);
             }
 
-							if (type == NftUserType.LOCAL && password == "") {
-								return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Missing password\"}}", HttpStatus.BAD_REQUEST);
-							}
+			if (type == NftUserType.LOCAL && password == "") {
+				return new ResponseEntity<String>("{\"BadRequest\": {\"code\": \" 400 \",\"msg\": \"Missing password\"}}", HttpStatus.BAD_REQUEST);
+			}
 
-							if (password == "") {
-								password = "token";
-							}
+			if (password == "") {
+				password = "token";
+			}
 
             User user = service.createUser(email, password, firstname, lastname, nickname, type);
             String token = UUID.randomUUID().toString();
@@ -175,11 +180,14 @@ public class NFTTradingMarketRESTController {
                     .put("firstname", user.getFirstName())
                     .put("lastname", user.getLastName())
                     .put("nickname", user.getNickName());
+
             ResponseEntity<String> res = new ResponseEntity<String>(
                     json.toString(),
                     responseHeaders,
                     200
             );
+
+			service.createSessionToken(user, socialToken);
 
 			service.createWallet(user, CryptoType.ETHEREUM);
 
@@ -447,7 +455,7 @@ public class NFTTradingMarketRESTController {
             fileNames.append(file.getOriginalFilename());
             Files.write(fileNameAndPath, file.getBytes());
 
-            NFT nft = nftService.createNft(fileNameAndPath, type, walletId, name, description, price);
+            NFT nft = nftService.createNft(fileNameAndPath.getFileName(), type, walletId, name, description, price);
 
             JSONObject json = new JSONObject()
                     .put("name", nft.getName())
